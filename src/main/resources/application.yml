@@ -8,3 +8,8 @@ spring:
 server:
   servlet:
     context-path: "/api/v2"
+
+cyan:
+  app:
+    jwtSecret: "cyan-super-long-secret-password-123"
+    jwtExpirationMs: 86400000

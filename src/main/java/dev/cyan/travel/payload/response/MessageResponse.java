@@ -1,14 +1,12 @@
-package dev.cyan.travel.advice;
+package dev.cyan.travel.payload.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class Response {
+public class MessageResponse {
     private String message;
 }

@@ -7,6 +7,7 @@ import dev.cyan.travel.service.HotelService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,16 +30,19 @@ public class CountryController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<CountryDTO> create(@RequestBody CountryDTO countryDTO) {
         return ResponseEntity.ok(countryService.create(countryDTO));
     }
 
     @PatchMapping("/{id}")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<CountryDTO> update(@PathVariable String id, @RequestBody CountryDTO countryDTO) {
         return ResponseEntity.ok(countryService.update(id, countryDTO));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<Void> delete(@PathVariable String id) {
         countryService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
