@@ -1,24 +1,33 @@
 package dev.cyan.travel.payload.response;
 
 import com.mongodb.MongoWriteException;
+import dev.cyan.travel.DTO.ErrorDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.NoSuchElementException;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class Advice {
     @ExceptionHandler(MongoWriteException.class)
-    public ResponseEntity<MessageResponse> handleMongoWriteException() {
-        MessageResponse response = new MessageResponse("Object already exists");
-        return new ResponseEntity<>(response, HttpStatus.NOT_ACCEPTABLE);
+    public ResponseEntity<ErrorDTO> handleMongoWriteException(MongoWriteException exception) {
+        String details = exception.getMessage();
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
+                .body(ErrorDTO.builder()
+                        .timestamp(System.currentTimeMillis())
+                        .details(details)
+                        .build());
     }
 
     @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<MessageResponse> handleNoSuchElementException() {
-        MessageResponse response = new MessageResponse("Object not found");
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    public ResponseEntity<ErrorDTO> handleNoSuchElementException(NoSuchElementException exception) {
+        String details = exception.getMessage();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(ErrorDTO.builder()
+                        .timestamp(System.currentTimeMillis())
+                        .details(details)
+                        .build());
     }
 }
