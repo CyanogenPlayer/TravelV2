@@ -5,7 +5,7 @@ import dev.cyan.travel.entity.Room;
 import dev.cyan.travel.repository.HotelRepository;
 import org.mapstruct.*;
 
-@Mapper(componentModel = "spring", uses = { HotelRepository.class })
+@Mapper(componentModel = "spring", uses = {HotelRepository.class})
 public interface RoomMapper {
     @Mapping(source = "hotel.id", target = "hotelId")
     RoomDTO toDTO(Room room);

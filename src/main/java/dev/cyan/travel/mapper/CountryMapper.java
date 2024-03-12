@@ -2,7 +2,10 @@ package dev.cyan.travel.mapper;
 
 import dev.cyan.travel.DTO.CountryDTO;
 import dev.cyan.travel.entity.Country;
-import org.mapstruct.*;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper
 public interface CountryMapper {

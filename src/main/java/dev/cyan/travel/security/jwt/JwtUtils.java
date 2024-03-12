@@ -2,7 +2,6 @@ package dev.cyan.travel.security.jwt;
 
 import dev.cyan.travel.security.services.UserDetailsImpl;
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;

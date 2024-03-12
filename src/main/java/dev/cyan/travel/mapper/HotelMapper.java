@@ -5,7 +5,7 @@ import dev.cyan.travel.entity.Hotel;
 import dev.cyan.travel.repository.CountryRepository;
 import org.mapstruct.*;
 
-@Mapper(componentModel = "spring", uses = { CountryRepository.class })
+@Mapper(componentModel = "spring", uses = {CountryRepository.class})
 public interface HotelMapper {
     @Mapping(source = "country.id", target = "countryId")
     HotelDTO toDTO(Hotel hotel);
