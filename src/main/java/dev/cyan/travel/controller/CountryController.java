@@ -4,6 +4,7 @@ import dev.cyan.travel.DTO.CountryDTO;
 import dev.cyan.travel.DTO.HotelDTO;
 import dev.cyan.travel.service.CountryService;
 import dev.cyan.travel.service.HotelService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,13 +32,13 @@ public class CountryController {
 
     @PostMapping
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<CountryDTO> create(@RequestBody CountryDTO countryDTO) {
+    public ResponseEntity<CountryDTO> create(@Valid @RequestBody CountryDTO countryDTO) {
         return ResponseEntity.ok(countryService.create(countryDTO));
     }
 
     @PatchMapping("/{id}")
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<CountryDTO> update(@PathVariable String id, @RequestBody CountryDTO countryDTO) {
+    public ResponseEntity<CountryDTO> update(@PathVariable String id, @Valid @RequestBody CountryDTO countryDTO) {
         return ResponseEntity.ok(countryService.update(id, countryDTO));
     }
 

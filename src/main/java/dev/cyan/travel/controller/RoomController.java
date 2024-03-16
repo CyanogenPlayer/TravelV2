@@ -1,7 +1,10 @@
 package dev.cyan.travel.controller;
 
+import dev.cyan.travel.DTO.BookingDTO;
 import dev.cyan.travel.DTO.RoomDTO;
+import dev.cyan.travel.service.BookingService;
 import dev.cyan.travel.service.RoomService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +18,7 @@ import java.util.List;
 @RequestMapping("/rooms")
 public class RoomController {
     private final RoomService roomService;
+    private final BookingService bookingService;
 
     @GetMapping
     public ResponseEntity<List<RoomDTO>> getAll() {
@@ -22,20 +26,19 @@ public class RoomController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<RoomDTO> getById(@PathVariable String id) {
         return ResponseEntity.of(roomService.getById(id));
     }
 
     @PostMapping
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<RoomDTO> create(@RequestBody RoomDTO roomDTO) {
+    public ResponseEntity<RoomDTO> create(@Valid @RequestBody RoomDTO roomDTO) {
         return ResponseEntity.ok(roomService.create(roomDTO));
     }
 
     @PatchMapping("/{id}")
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<RoomDTO> update(@PathVariable String id, @RequestBody RoomDTO roomDTO) {
+    public ResponseEntity<RoomDTO> update(@PathVariable String id, @Valid @RequestBody RoomDTO roomDTO) {
         return ResponseEntity.ok(roomService.update(id, roomDTO));
     }
 
@@ -46,5 +49,9 @@ public class RoomController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    //TODO add booking for role USER
+    @GetMapping("/{id}/bookings")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ResponseEntity<List<BookingDTO>> getBookingsByRoom(@PathVariable String id) {
+        return ResponseEntity.ok(bookingService.getBookingsByRoomId(id));
+    }
 }

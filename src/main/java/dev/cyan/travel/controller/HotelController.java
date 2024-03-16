@@ -4,6 +4,7 @@ import dev.cyan.travel.DTO.HotelDTO;
 import dev.cyan.travel.DTO.RoomDTO;
 import dev.cyan.travel.service.HotelService;
 import dev.cyan.travel.service.RoomService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,13 +32,13 @@ public class HotelController {
 
     @PostMapping
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<HotelDTO> create(@RequestBody HotelDTO hotelDTO) {
+    public ResponseEntity<HotelDTO> create(@Valid @RequestBody HotelDTO hotelDTO) {
         return ResponseEntity.ok(hotelService.create(hotelDTO));
     }
 
     @PatchMapping("/{id}")
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<HotelDTO> update(@PathVariable String id, @RequestBody HotelDTO hotelDTO) {
+    public ResponseEntity<HotelDTO> update(@PathVariable String id, @Valid @RequestBody HotelDTO hotelDTO) {
         return ResponseEntity.ok(hotelService.update(id, hotelDTO));
     }
 

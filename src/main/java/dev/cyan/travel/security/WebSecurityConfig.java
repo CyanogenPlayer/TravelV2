@@ -54,7 +54,8 @@ public class WebSecurityConfig {
                         .requestMatchers(
                                 "/countries/**",
                                 "/hotels/**",
-                                "/rooms/**")
+                                "/rooms/**",
+                                "/bookings/**")
                         .permitAll().anyRequest().authenticated());
 
         http.authenticationProvider(authenticationProvider());

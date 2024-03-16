@@ -11,6 +11,8 @@ import java.util.Optional;
 public interface RoomRepository extends MongoRepository<Room, ObjectId> {
     Optional<Room> findById(String id);
 
+    Room getById(String id);
+
     List<Room> findRoomsByHotel(Hotel hotel);
 
     void deleteById(String id);
