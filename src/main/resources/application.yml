@@ -2,12 +2,13 @@ spring:
   data:
     mongodb:
       database: "travel-api-db"
-      uri: "mongodb://user:user@localhost:27017"
+#      uri: "mongodb://user:user@localhost:27017"
+      uri: "mongodb://user:user@db:27017"
       auto-index-creation: true
 
-server:
-  servlet:
-    context-path: "/api/v2"
+#server:
+#  servlet:
+#    context-path: "/api/v2"
 
 cyan:
   app:

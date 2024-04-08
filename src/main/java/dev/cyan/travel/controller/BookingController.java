@@ -32,7 +32,7 @@ public class BookingController {
     @PostMapping
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<BookingDTO> create(@Valid @RequestBody BookingDTO bookingDTO) {
-        return ResponseEntity.ok(bookingService.create(bookingDTO));
+        return ResponseEntity.of(bookingService.create(bookingDTO));
     }
 
     @PatchMapping("/{id}")

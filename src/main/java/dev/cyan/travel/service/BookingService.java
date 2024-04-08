@@ -37,16 +37,16 @@ public class BookingService {
                 .map(bookingMapper::toDTO);
     }
 
-    public BookingDTO create(BookingDTO bookingDTO) {
+    public Optional<BookingDTO> create(BookingDTO bookingDTO) {
         roomRepository.findById(bookingDTO.getRoomId()).orElseThrow();
         userRepository.findById(bookingDTO.getUserId()).orElseThrow();
         Booking booking = bookingMapper.fromDTO(bookingDTO);
         if (checkIfBooleanIsAvailable(booking.getRoom(), booking.getBookedSince(), booking.getBookedTo())) {
             Booking createdBooking = bookingRepository.save(booking);
-            return bookingMapper.toDTO(createdBooking);
+            return Optional.of(bookingMapper.toDTO(createdBooking));
         }
 
-        return null;
+        return Optional.empty();
     }
 
     private Boolean checkIfBooleanIsAvailable(Room room, LocalDate bookedSince, LocalDate bookedTo) {
