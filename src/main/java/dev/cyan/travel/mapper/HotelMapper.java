@@ -10,10 +10,13 @@ public interface HotelMapper {
     @Mapping(source = "country.id", target = "countryId")
     HotelDTO toDTO(Hotel hotel);
 
-    @Mapping(source = "countryId", target = "country")
+    @Mappings({
+            @Mapping(target = "id", ignore = true),
+            @Mapping(source = "countryId", target = "country")
+    })
     Hotel fromDTO(HotelDTO hotelDTO);
 
     @InheritConfiguration
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void updateHotel(@MappingTarget Hotel target, HotelDTO hotelDTO);
+    void updateHotel(@MappingTarget Hotel target, HotelDTO source);
 }

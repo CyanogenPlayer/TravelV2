@@ -10,10 +10,13 @@ public interface RoomMapper {
     @Mapping(source = "hotel.id", target = "hotelId")
     RoomDTO toDTO(Room room);
 
-    @Mapping(source = "hotelId", target = "hotel")
+    @Mappings({
+            @Mapping(target = "id", ignore = true),
+            @Mapping(source = "hotelId", target = "hotel")
+    })
     Room fromDTO(RoomDTO roomDTO);
 
     @InheritConfiguration
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void updateRoom(@MappingTarget Room room, RoomDTO roomDTO);
+    void updateRoom(@MappingTarget Room target, RoomDTO source);
 }

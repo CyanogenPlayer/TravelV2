@@ -9,4 +9,6 @@ import java.util.Optional;
 
 public interface RoleRepository extends MongoRepository<Role, ObjectId> {
     Optional<Role> findByName(ERole name);
+
+    Role getByName(ERole name);
 }

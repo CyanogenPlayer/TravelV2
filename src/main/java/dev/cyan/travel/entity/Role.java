@@ -15,8 +15,4 @@ public class Role {
     @MongoId
     private String id;
     private ERole name;
-
-    public Role(ERole name) {
-        this.name = name;
-    }
 }

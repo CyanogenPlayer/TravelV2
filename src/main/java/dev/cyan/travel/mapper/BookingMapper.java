@@ -8,15 +8,20 @@ import org.mapstruct.*;
 
 @Mapper(componentModel = "spring", uses = {RoomRepository.class, UserRepository.class})
 public interface BookingMapper {
-    @Mapping(source = "room.id", target = "roomId")
-    @Mapping(source = "user.id", target = "userId")
+    @Mappings({
+            @Mapping(source = "room.id", target = "roomId"),
+            @Mapping(source = "user.id", target = "userId")
+    })
     BookingDTO toDTO(Booking booking);
 
-    @Mapping(source = "roomId", target = "room")
-    @Mapping(source = "userId", target = "user")
+    @Mappings({
+            @Mapping(target = "id", ignore = true),
+            @Mapping(source = "roomId", target = "room"),
+            @Mapping(source = "userId", target = "user")
+    })
     Booking fromDTO(BookingDTO bookingDTO);
 
     @InheritConfiguration
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void updateBooking(@MappingTarget Booking booking, BookingDTO bookingDTO);
+    void updateBooking(@MappingTarget Booking target, BookingDTO source);
 }
