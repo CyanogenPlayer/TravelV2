@@ -6,11 +6,10 @@ const hotels = '/hotels'
 const urls = {
     countries: {
         allCountries: `${countries}`,
-        byId: (countryId: string): string => `${countries}/${countryId}`
     },
     hotels: {
         allHotels: `${hotels}`,
-        byId: (hotelId: string): string => `${hotels}/${hotelId}`
+        hotelsByCountryId: (countryId: string): string => `${countries}/${countryId}${hotels}`
     }
 }
 

@@ -3,7 +3,7 @@ import {Outlet} from "react-router-dom";
 const MainLayout = () => {
     return (
         <div>
-            MainLayout
+            TODO add header
             <Outlet/>
         </div>
     );
