@@ -3,13 +3,13 @@ import {CountryList} from "../../components/CountryListContainer";
 import {useSearchParams} from "react-router-dom";
 
 const HotelsPage = () => {
-    const [query,  setQuery] = useSearchParams();
+    const [query] = useSearchParams();
 
     const countryId = query.get('country');
 
     return (
         <div>
-            <CountryList setQuery={setQuery}/>
+            <CountryList/>
             <HotelsList countryId={countryId}/>
         </div>
     );

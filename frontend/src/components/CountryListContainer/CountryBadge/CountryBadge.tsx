@@ -1,25 +1,20 @@
 import {FC} from "react";
-import {SetURLSearchParams} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 interface IProp {
     id?: string,
-    name: string,
-    setQuery: SetURLSearchParams
+    name: string
 }
 
-const CountryBadge: FC<IProp> = ({id, name, setQuery}) => {
+const CountryBadge: FC<IProp> = ({id, name}) => {
+    const navigate = useNavigate();
+
     const toAllHotels = () => {
-        setQuery(prev => {
-            prev.delete('country');
-            return prev;
-        })
+        navigate(`/hotels`)
     }
 
     const toHotelsByCountry = (id: string) => {
-        setQuery(prev => {
-            prev.set('country', `${id}`);
-            return prev;
-        })
+        navigate(`/hotels?country=${id}`)
     }
 
     const navigateToHotels = () => {

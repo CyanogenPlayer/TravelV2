@@ -1,15 +1,10 @@
-import {FC, useEffect} from "react";
-import {SetURLSearchParams} from "react-router-dom";
+import {useEffect} from "react";
 
 import {useAppDispatch, useAppSelector} from "../../../hooks";
 import {countryActions} from "../../../redux";
 import {CountryBadge} from "../CountryBadge";
 
-interface IProp {
-    setQuery: SetURLSearchParams
-}
-
-const CountryList: FC<IProp> = ({setQuery}) => {
+const CountryList = () => {
     const {countries} = useAppSelector(state => state.countries);
     const dispatch = useAppDispatch();
 
@@ -19,9 +14,8 @@ const CountryList: FC<IProp> = ({setQuery}) => {
 
     return (
         <div>
-            <CountryBadge name={'All'} setQuery={setQuery}/>
-            {countries.map(country => <CountryBadge key={country.id} id={country.id} name={country.name}
-                                                    setQuery={setQuery}/>)}
+            <CountryBadge name={'All'}/>
+            {countries.map(country => <CountryBadge key={country.id} id={country.id} name={country.name}/>)}
         </div>
     );
 };
