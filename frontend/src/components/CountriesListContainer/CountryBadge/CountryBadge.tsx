@@ -1,5 +1,6 @@
 import {FC} from "react";
 import {useNavigate} from "react-router-dom";
+import {Button} from "react-bootstrap";
 
 interface IProp {
     id?: string,
@@ -27,9 +28,9 @@ const CountryBadge: FC<IProp> = ({id, name}) => {
     }
 
     return (
-        <div>
-            <button onClick={navigateToHotels}>{name}</button>
-        </div>
+        <>
+            <Button variant="secondary" onClick={navigateToHotels}>{name}</Button>
+        </>
     );
 };
 

@@ -1,2 +1,2 @@
 export * from './HotelsList'
-export * from './HotelsListCard'
+export * from './HotelCard'

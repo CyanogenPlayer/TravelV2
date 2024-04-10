@@ -2,7 +2,7 @@ import {FC, useEffect} from "react";
 
 import {useAppDispatch, useAppSelector} from "../../../hooks";
 import {hotelActions} from "../../../redux";
-import {HotelsListCard} from "../HotelsListCard";
+import {HotelCard} from "../HotelCard";
 
 interface IProp {
     countryId: string
@@ -22,7 +22,7 @@ const HotelsList: FC<IProp> = ({countryId}) => {
 
     return (
         <div>
-            {hotels.map(hotel => <HotelsListCard key={hotel.id} hotel={hotel}/>)}
+            {hotels.map(hotel => <HotelCard key={hotel.id} hotel={hotel}/>)}
         </div>
     );
 };

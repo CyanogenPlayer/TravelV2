@@ -1,4 +1,5 @@
 export * from './CountriesListContainer'
+export * from './Header'
 export * from './HotelInfo'
 export * from './HotelsListContainer'
 export * from './RoomsListContainer'
