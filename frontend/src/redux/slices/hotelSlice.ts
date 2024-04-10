@@ -5,10 +5,12 @@ import {IHotel} from "../../interfaces";
 import {hotelService} from "../../services";
 
 interface IState {
+    hotel: IHotel,
     hotels: IHotel[]
 }
 
 const initialState: IState = {
+    hotel: null,
     hotels: []
 }
 
@@ -38,18 +40,31 @@ const getByCountryId = createAsyncThunk<IHotel[], { countryId: string }>(
     }
 )
 
+const getById = createAsyncThunk <IHotel, { hotelId: string }>(
+    'hotelSlice/getById',
+    async ({hotelId}, {rejectWithValue}) => {
+        try {
+            const {data} = await hotelService.getById(hotelId)
+            return data
+        } catch (e) {
+            const err = e as AxiosError
+            return rejectWithValue(err.response.data);
+        }
+    }
+)
+
 const hotelSlice = createSlice({
     name: 'hotelSlice',
     initialState,
     reducers: {},
     extraReducers: builder => {
         builder
-            // .addCase(getAll.fulfilled, (state, action) => {
-            //     state.hotels = action.payload;
-            // })
-
             .addMatcher(isFulfilled(getAll, getByCountryId), (state, action) => {
                 state.hotels = action.payload;
+            })
+
+            .addMatcher(isFulfilled(getById), (state, action) => {
+                state.hotel = action.payload
             })
     }
 })
@@ -59,7 +74,8 @@ const {reducer: hotelReducer, actions} = hotelSlice;
 const hotelActions = {
     ...actions,
     getAll,
-    getByCountryId
+    getByCountryId,
+    getById
 }
 
 export {

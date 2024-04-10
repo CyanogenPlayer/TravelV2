@@ -4,7 +4,7 @@ import {useAppDispatch, useAppSelector} from "../../../hooks";
 import {countryActions} from "../../../redux";
 import {CountryBadge} from "../CountryBadge";
 
-const CountryList = () => {
+const CountriesList = () => {
     const {countries} = useAppSelector(state => state.countries);
     const dispatch = useAppDispatch();
 
@@ -21,5 +21,5 @@ const CountryList = () => {
 };
 
 export {
-    CountryList
+    CountriesList
 }

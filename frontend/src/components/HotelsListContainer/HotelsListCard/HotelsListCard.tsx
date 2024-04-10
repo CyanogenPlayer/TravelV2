@@ -1,6 +1,8 @@
 import {FC} from "react";
+import {useNavigate} from "react-router-dom";
 
 import {IHotel} from "../../../interfaces";
+import css from './HotelsListCard.module.css'
 
 interface IProp {
     hotel: IHotel
@@ -9,11 +11,19 @@ interface IProp {
 const HotelsListCard: FC<IProp> = ({hotel}) => {
     const {id, name, countryId} = hotel;
 
+    const navigate = useNavigate();
+
+    const navigateToHotelInfo = () => {
+        navigate(`${id}`)
+    }
+
     return (
-        <div>
-            <div>id: {id}</div>
-            <div>name: {name}</div>
-            <div>countryId: {countryId}</div>
+        <div className={css.MoviesListCard} onClick={navigateToHotelInfo}>
+            <div className={css.Container}>
+                <div>id: {id}</div>
+                <h4>name: {name}</h4>
+                <div>countryId: {countryId}</div>
+            </div>
         </div>
     );
 };

@@ -1,6 +1,6 @@
-import {HotelsList} from "../../components/HotelsListContainer";
-import {CountryList} from "../../components/CountryListContainer";
 import {useSearchParams} from "react-router-dom";
+
+import {CountriesList, HotelsList} from "../../components";
 
 const HotelsPage = () => {
     const [query] = useSearchParams();
@@ -9,7 +9,7 @@ const HotelsPage = () => {
 
     return (
         <div>
-            <CountryList/>
+            <CountriesList/>
             <HotelsList countryId={countryId}/>
         </div>
     );
