@@ -1,7 +1,7 @@
 package dev.cyan.travel.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.cyan.travel.DTO.ErrorDTO;
+import dev.cyan.travel.payload.response.MessageResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -30,9 +30,6 @@ public class AuthEntryPointJwt implements AuthenticationEntryPoint {
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
-        objectMapper.writeValue(response.getOutputStream(), ErrorDTO.builder()
-                .details(authException.getMessage())
-                .timestamp(System.currentTimeMillis())
-                .build());
+        objectMapper.writeValue(response.getOutputStream(), new MessageResponse(authException.getMessage()));
     }
 }

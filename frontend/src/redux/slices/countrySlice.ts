@@ -1,7 +1,7 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {AxiosError} from "axios";
 
-import {ICountry} from "../../interfaces";
+import {ICountry, IMessage} from "../../interfaces";
 import {countryService} from "../../services";
 
 interface IState {
@@ -14,7 +14,7 @@ const initialState: IState = {
     countries: []
 }
 
-const getAll = createAsyncThunk<ICountry[], void>(
+const getAll = createAsyncThunk<ICountry[], void, { rejectValue: IMessage }>(
     'countrySlice/getAll',
     async (_, {rejectWithValue}) => {
         try {
@@ -22,12 +22,12 @@ const getAll = createAsyncThunk<ICountry[], void>(
             return data
         } catch (e) {
             const err = e as AxiosError
-            return rejectWithValue(err.response.data);
+            return rejectWithValue(err.response.data as IMessage);
         }
     }
 )
 
-const getById = createAsyncThunk<ICountry, { countryId: string }>(
+const getById = createAsyncThunk<ICountry, { countryId: string }, { rejectValue: IMessage }>(
     'countrySlice/getById',
     async ({countryId}, {rejectWithValue}) => {
         try {
@@ -35,7 +35,7 @@ const getById = createAsyncThunk<ICountry, { countryId: string }>(
             return data
         } catch (e) {
             const err = e as AxiosError
-            return rejectWithValue(err.response.data);
+            return rejectWithValue(err.response.data as IMessage);
         }
     }
 )

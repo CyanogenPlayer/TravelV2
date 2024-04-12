@@ -6,9 +6,9 @@ const HotelPage = () => {
     const {hotelId} = useParams<{ hotelId: string }>();
 
     return (
-        <div>
+        <>
             <HotelInfo hotelId={hotelId}/>
-        </div>
+        </>
     );
 };
 

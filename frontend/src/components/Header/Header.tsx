@@ -6,14 +6,18 @@ const Header = () => {
 
     const navigate = useNavigate();
 
-    const navigateHome = () => {
+    const navigateToHome = () => {
         navigate('')
+    }
+
+    const navigateToAuthorization = () => {
+        navigate('/auth')
     }
 
     return (
         <Navbar expand="lg" className="bg-secondary bg-gradient justify-content-center">
             <Container className="justify-content-between">
-                <Navbar.Brand onClick={navigateHome} style={{cursor: 'pointer'}}>
+                <Navbar.Brand onClick={navigateToHome} style={{cursor: 'pointer'}}>
                     <img
                         alt="JourneyJolt"
                         src={image}
@@ -26,8 +30,8 @@ const Header = () => {
                 <Navbar.Toggle aria-controls="basic-navbar-nav"/>
                 <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
                     <Nav>
-                        <Nav.Link onClick={navigateHome}>Home</Nav.Link>
-                        <Nav.Link href="">SignIn/SignUp</Nav.Link>
+                        <Nav.Link onClick={navigateToHome}>Home</Nav.Link>
+                        <Nav.Link onClick={navigateToAuthorization}>SignIn/SignUp</Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
             </Container>

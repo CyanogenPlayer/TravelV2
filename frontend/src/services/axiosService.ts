@@ -1,11 +1,12 @@
 import axios from "axios";
 
 import {baseURL} from "../constants";
+import {authService} from "./authService";
 
 const axiosService = axios.create({baseURL})
 
 axiosService.interceptors.request.use(request => {
-    const token = "dlkjsalkd"
+    const token = authService.getToken()
     if (token) {
         request.headers.Authorization = `Bearer ${token}`
     }

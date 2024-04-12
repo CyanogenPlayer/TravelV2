@@ -1,7 +1,7 @@
 import {createAsyncThunk, createSlice, isFulfilled} from "@reduxjs/toolkit";
 import {AxiosError} from "axios";
 
-import {IRoom} from "../../interfaces";
+import {IMessage, IRoom} from "../../interfaces";
 import {roomService} from "../../services";
 
 interface IState {
@@ -12,7 +12,7 @@ const initialState: IState = {
     rooms: []
 }
 
-const getAll = createAsyncThunk<IRoom[], void>(
+const getAll = createAsyncThunk<IRoom[], void, { rejectValue: IMessage }>(
     'roomSlice/getAll',
     async (_, {rejectWithValue}) => {
         try {
@@ -20,12 +20,13 @@ const getAll = createAsyncThunk<IRoom[], void>(
             return data
         } catch (e) {
             const err = e as AxiosError
-            return rejectWithValue(err.response.data);
+            return rejectWithValue(err.response.data as IMessage);
         }
     }
 )
 
-const getByHotelId = createAsyncThunk<IRoom[], { hotelId: string }>(
+const getByHotelId = createAsyncThunk<IRoom[], { hotelId: string },
+    { rejectValue: IMessage }>(
     'roomSlice/getByHotelId',
     async ({hotelId}, {rejectWithValue}) => {
         try {
@@ -33,7 +34,7 @@ const getByHotelId = createAsyncThunk<IRoom[], { hotelId: string }>(
             return data
         } catch (e) {
             const err = e as AxiosError
-            return rejectWithValue(err.response.data);
+            return rejectWithValue(err.response.data as IMessage);
         }
     }
 )

@@ -1,4 +1,6 @@
+export * from './AuthContainer'
 export * from './CountriesListContainer'
+export * from './ErrorTextBox'
 export * from './Header'
 export * from './HotelInfo'
 export * from './HotelsListContainer'
