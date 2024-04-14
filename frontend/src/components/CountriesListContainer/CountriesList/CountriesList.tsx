@@ -15,7 +15,8 @@ const CountriesList = () => {
     return (
         <div>
             <CountryBadge name={'All'}/>
-            {countries.map(country => <CountryBadge key={country.id} id={country.id} name={country.name}/>)}
+            {countries && countries.map(country => <CountryBadge key={country.id} id={country.id}
+                                                                 name={country.name}/>)}
         </div>
     );
 };

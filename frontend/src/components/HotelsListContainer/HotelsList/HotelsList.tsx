@@ -22,7 +22,7 @@ const HotelsList: FC<IProp> = ({countryId}) => {
 
     return (
         <div>
-            {hotels.map(hotel => <HotelCard key={hotel.id} hotel={hotel}/>)}
+            {hotels && hotels.map(hotel => <HotelCard key={hotel.id} hotel={hotel}/>)}
         </div>
     );
 };

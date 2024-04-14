@@ -1,3 +1,4 @@
+export * from './bookingInterface'
 export * from './countryInterface'
 export * from './hotelInterface'
 export * from './messageInterface'

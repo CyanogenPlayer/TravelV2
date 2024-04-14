@@ -1,6 +1,7 @@
 const baseURL = '/api/v2'
 
 const auth = '/auth'
+const bookings = '/bookings'
 const countries = '/countries'
 const hotels = '/hotels'
 const rooms = '/rooms'
@@ -8,7 +9,12 @@ const rooms = '/rooms'
 const urls = {
     auth: {
         signIn: `${auth}/signIn`,
-        signUp: `${auth}/signUp`
+        signUp: `${auth}/signUp`,
+        me: `${auth}/me`
+    },
+    bookings: {
+        create: `${bookings}`,
+        bookingsByUserId: (userId: string) => `${bookings}/list/${userId}`
     },
     countries: {
         allCountries: `${countries}`,

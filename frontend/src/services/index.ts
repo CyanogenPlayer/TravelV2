@@ -1,5 +1,6 @@
 export * from './authService'
 export * from './axiosService'
+export * from './bookingService'
 export * from './countryService'
 export * from './hotelService'
 export * from './roomService'

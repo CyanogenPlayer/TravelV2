@@ -4,30 +4,32 @@ import {useForm} from "react-hook-form";
 import {joiResolver} from "@hookform/resolvers/joi";
 
 import {ErrorTextBox} from "../../ErrorTextBox";
-import {IUser} from "../../../interfaces";
+import {SignUpRequest} from "../../../interfaces";
 import {signUpValidator} from "../../../validators";
 import {authActions} from "../../../redux";
 import {useAppDispatch} from "../../../hooks";
 
 interface IProp {
-    authError: string,
     handleToggle: () => void,
 }
 
-const SignUpForm: FC<IProp> = ({authError, handleToggle}) => {
-    const {reset, register, handleSubmit, formState: {errors, isValid}} = useForm<IUser>({
+const SignUpForm: FC<IProp> = ({handleToggle}) => {
+    const {reset, register, handleSubmit, formState: {errors, isValid}} = useForm<SignUpRequest>({
         mode: 'onBlur',
         resolver: joiResolver(signUpValidator)
     });
     const dispatch = useAppDispatch();
 
-    const signUp = async (user: IUser) => {
+    const signUp = async (user: SignUpRequest) => {
         await dispatch(authActions.signUp({user}))
-        reset();
-
-        if (authError) {
-            handleToggle()
-        }
+            .unwrap()
+            .then(() => {
+                reset();
+                handleToggle();
+            })
+            .catch(() => {
+                reset();
+            })
     }
 
     return (
@@ -69,7 +71,6 @@ const SignUpForm: FC<IProp> = ({authError, handleToggle}) => {
                 />
             </Form.Group>
             {errors.re_password && <ErrorTextBox error={errors.re_password.message}/>}
-            {authError && <ErrorTextBox error={authError}/>}
             <div className="mt-3 text-center">
                 <p>
                     Already have an account? {" "}

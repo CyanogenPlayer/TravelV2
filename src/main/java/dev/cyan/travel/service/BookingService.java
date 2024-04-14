@@ -41,7 +41,7 @@ public class BookingService {
         roomRepository.findById(bookingDTO.getRoomId()).orElseThrow();
         userRepository.findById(bookingDTO.getUserId()).orElseThrow();
         Booking booking = bookingMapper.fromDTO(bookingDTO);
-        if (checkIfBooleanIsAvailable(booking.getRoom(), booking.getBookedSince(), booking.getBookedTo())) {
+        if (checkIfBookingIsAvailable(booking.getRoom(), booking.getBookedSince(), booking.getBookedTo())) {
             Booking createdBooking = bookingRepository.save(booking);
             return Optional.of(bookingMapper.toDTO(createdBooking));
         }
@@ -49,7 +49,7 @@ public class BookingService {
         return Optional.empty();
     }
 
-    private Boolean checkIfBooleanIsAvailable(Room room, LocalDate bookedSince, LocalDate bookedTo) {
+    private Boolean checkIfBookingIsAvailable(Room room, LocalDate bookedSince, LocalDate bookedTo) {
         if (bookedSince == null || bookedTo == null || bookedSince.isAfter(bookedTo)) {
             return false;
         }
@@ -59,13 +59,18 @@ public class BookingService {
         return bookings.isEmpty();
     }
 
-    public BookingDTO update(String id, BookingDTO bookingDTO) {
+    public Optional<BookingDTO> update(String id, BookingDTO bookingDTO) {
         roomRepository.findById(bookingDTO.getRoomId()).orElseThrow();
         userRepository.findById(bookingDTO.getUserId()).orElseThrow();
         Booking booking = bookingRepository.findById(id).orElseThrow();
-        bookingMapper.updateBooking(booking, bookingDTO);
-        Booking modifiedBooking = bookingRepository.save(booking);
-        return bookingMapper.toDTO(modifiedBooking);
+        Booking fromDTO = bookingMapper.fromDTO(bookingDTO);
+        if (checkIfBookingIsAvailable(fromDTO.getRoom(), fromDTO.getBookedSince(), fromDTO.getBookedTo())) {
+            bookingMapper.updateBooking(booking, bookingDTO);
+            Booking modifiedBooking = bookingRepository.save(booking);
+            return Optional.of(bookingMapper.toDTO(modifiedBooking));
+        }
+
+        return Optional.empty();
     }
 
     public void delete(String id) {

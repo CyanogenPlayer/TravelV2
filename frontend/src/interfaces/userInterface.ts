@@ -4,7 +4,22 @@ export interface IUser {
     id: string,
     username: string,
     email: string,
+    roles: ERole[]
+}
+
+export interface JwtResponse extends IUser {
+    token: string,
+    type: string
+}
+
+export interface SignInRequest {
+    username: string,
+    password: string
+}
+
+export interface SignUpRequest {
+    username: string,
+    email: string,
     password: string,
-    roles: ERole[],
-    re_password?: string
+    re_password: string
 }

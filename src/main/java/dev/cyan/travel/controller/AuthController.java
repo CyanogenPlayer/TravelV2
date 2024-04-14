@@ -1,8 +1,10 @@
 package dev.cyan.travel.controller;
 
+import dev.cyan.travel.DTO.UserDTO;
 import dev.cyan.travel.entity.Role;
 import dev.cyan.travel.entity.User;
 import dev.cyan.travel.enums.ERole;
+import dev.cyan.travel.mapper.UserMapper;
 import dev.cyan.travel.payload.request.LoginRequest;
 import dev.cyan.travel.payload.request.SignUpRequest;
 import dev.cyan.travel.payload.response.JwtResponse;
@@ -14,6 +16,7 @@ import dev.cyan.travel.security.services.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -36,6 +39,7 @@ public class AuthController {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
+    private final UserMapper userMapper;
 
     @PostMapping("/signIn")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -97,5 +101,15 @@ public class AuthController {
         userRepository.save(user);
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+    }
+
+    @GetMapping("/me")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<UserDTO> getMe(@RequestHeader("Authorization") String jwt) {
+        String username = jwtUtils.getUserNameFromJwtToken(jwt.substring(7));
+
+        UserDTO userDTO = userMapper.toDTO(userRepository.findByUsername(username).orElseThrow());
+
+        return ResponseEntity.ok(userDTO);
     }
 }

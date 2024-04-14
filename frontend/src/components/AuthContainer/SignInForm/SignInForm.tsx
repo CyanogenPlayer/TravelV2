@@ -2,32 +2,36 @@ import {Button, Form} from "react-bootstrap";
 import {FC} from "react";
 import {useForm} from "react-hook-form";
 import {joiResolver} from "@hookform/resolvers/joi";
+import {useNavigate} from "react-router-dom";
 
 import {ErrorTextBox} from "../../ErrorTextBox";
-import {IUser} from "../../../interfaces";
+import {SignInRequest} from "../../../interfaces";
 import {signInValidator} from "../../../validators";
 import {useAppDispatch} from "../../../hooks";
 import {authActions} from "../../../redux";
-import {useNavigate} from "react-router-dom";
 
 interface IProp {
-    authError: string,
     handleToggle: () => void
 }
 
-const SignInForm: FC<IProp> = ({authError, handleToggle}) => {
-    const {reset, register, handleSubmit, formState: {errors, isValid}} = useForm<IUser>({
+const SignInForm: FC<IProp> = ({handleToggle}) => {
+    const {reset, register, handleSubmit, formState: {errors, isValid}} = useForm<SignInRequest>({
         mode: 'onBlur',
         resolver: joiResolver(signInValidator)
     });
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
-    const signIn = async (user: IUser) => {
+    const signIn = async (user: SignInRequest) => {
         await dispatch(authActions.signIn({user}))
-        reset();
-
-        navigate('/hotels')
+            .unwrap()
+            .then(() => {
+                reset();
+                navigate('/')
+            })
+            .catch(() => {
+                reset();
+            })
     }
 
     return (
@@ -51,7 +55,6 @@ const SignInForm: FC<IProp> = ({authError, handleToggle}) => {
                 />
             </Form.Group>
             {errors.password && <ErrorTextBox error={errors.password.message}/>}
-            {authError && <ErrorTextBox error={authError}/>}
             <div className="mt-3 text-center">
                 <p>
                     Don't have an account? {" "}

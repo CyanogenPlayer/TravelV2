@@ -1,6 +1,7 @@
 package dev.cyan.travel.controller;
 
 import dev.cyan.travel.DTO.BookingDTO;
+import dev.cyan.travel.payload.response.MessageResponse;
 import dev.cyan.travel.service.BookingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,13 +34,21 @@ public class BookingController {
     @PostMapping
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<BookingDTO> create(@Valid @RequestBody BookingDTO bookingDTO) {
-        return ResponseEntity.of(bookingService.create(bookingDTO));
+        Optional<BookingDTO> optionalBookingDTO = bookingService.create(bookingDTO);
+        if (optionalBookingDTO.isEmpty()) {
+            ResponseEntity.badRequest().body(new MessageResponse("Booking isn't available for those dates"));
+        }
+        return ResponseEntity.of(optionalBookingDTO);
     }
 
     @PatchMapping("/{id}")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<BookingDTO> update(@PathVariable String id, @Valid @RequestBody BookingDTO bookingDTO) {
-        return ResponseEntity.ok(bookingService.update(id, bookingDTO));
+        Optional<BookingDTO> optionalBookingDTO = bookingService.update(id, bookingDTO);
+        if (optionalBookingDTO.isEmpty()) {
+            ResponseEntity.badRequest().body(new MessageResponse("Booking isn't available for those dates"));
+        }
+        return ResponseEntity.of(optionalBookingDTO);
     }
 
     @DeleteMapping("/{id}")

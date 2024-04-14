@@ -1,3 +1,4 @@
+export * from './Alert'
 export * from './AuthContainer'
 export * from './CountriesListContainer'
 export * from './ErrorTextBox'

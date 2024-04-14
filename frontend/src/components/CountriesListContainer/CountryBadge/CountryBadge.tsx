@@ -10,20 +10,12 @@ interface IProp {
 const CountryBadge: FC<IProp> = ({id, name}) => {
     const navigate = useNavigate();
 
-    const toAllHotels = () => {
-        navigate(`/hotels`)
-    }
-
-    const toHotelsByCountry = (id: string) => {
-        navigate(`/hotels?country=${id}`)
-    }
-
     const navigateToHotels = () => {
         if (id) {
-            toHotelsByCountry(id)
+            navigate(`/hotels?country=${id}`)
         }
         else {
-            toAllHotels()
+            navigate(`/hotels`)
         }
     }
 

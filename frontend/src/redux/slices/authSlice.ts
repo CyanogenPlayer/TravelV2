@@ -1,54 +1,59 @@
-import {createAsyncThunk, createSlice, isFulfilled, isRejected} from "@reduxjs/toolkit";
+import {createAsyncThunk, createSlice, isFulfilled} from "@reduxjs/toolkit";
 import {AxiosError} from "axios";
 
-import {IMessage, IUser} from "../../interfaces";
+import {IMessage, IUser, JwtResponse, SignInRequest, SignUpRequest} from "../../interfaces";
 import {authService} from "../../services";
-import {ERole} from "../../enums";
+import {alertActions} from "./alertSlice";
 
 interface IState {
     isAuth: boolean,
-    isLogin: boolean,
-    user: IUser,
-    authError: string,
-    message: string
+    user: IUser
 }
 
 const initialState: IState = {
     isAuth: false,
-    isLogin: true,
-    user: null,
-    authError: null,
-    message: null
+    user: null
 }
 
-interface JwtResponse {
-    token: string,
-    type: string,
-    id: string,
-    username: string,
-    email: string,
-    roles: ERole[]
-}
-
-const signIn = createAsyncThunk<JwtResponse, { user: IUser }, { rejectValue: IMessage }>(
+const signIn = createAsyncThunk<JwtResponse, { user: SignInRequest },
+    { rejectValue: IMessage }>(
     'authSlice/signIn',
-    async ({user}, {rejectWithValue}) => {
+    async ({user}, {rejectWithValue, dispatch}) => {
         try {
             const {data} = await authService.signIn(user)
+            dispatch(alertActions.setMessage('Successfully logged in!'))
             return data
         } catch (e) {
             const err = e as AxiosError
-            return rejectWithValue(err.response.data as IMessage)
+            const data = err.response.data as IMessage
+            dispatch(alertActions.setError(data.message))
+            return rejectWithValue(data)
         }
     }
 )
 
-const signUp = createAsyncThunk<IMessage, { user: IUser }, { rejectValue: IMessage }>(
+const signUp = createAsyncThunk<void, { user: SignUpRequest },
+    { rejectValue: IMessage }>(
     'authSlice/signUp',
-    async ({user}, {rejectWithValue}) => {
+    async ({user}, {rejectWithValue, dispatch}) => {
         try {
-            const {data} = await authService.signUp(user)
-            return data
+            await authService.signUp(user)
+            dispatch(alertActions.setMessage('Successfully registered!'))
+        } catch (e) {
+            const err = e as AxiosError
+            const data = err.response.data as IMessage
+            dispatch(alertActions.setError(data.message))
+            return rejectWithValue(data)
+        }
+    }
+)
+
+const checkTokenAndFetchUser = createAsyncThunk<IUser, void, { rejectValue: IMessage }>(
+    'authSlice/checkTokenAndFetchUser',
+    async (_, {rejectWithValue}) => {
+        try {
+            const {data} = await authService.getMe();
+            return data;
         } catch (e) {
             const err = e as AxiosError
             return rejectWithValue(err.response.data as IMessage)
@@ -60,33 +65,24 @@ const authSlice = createSlice({
     name: 'authSlice',
     initialState,
     reducers: {
-        setIsAuth: (state, action) => {
-            state.isAuth = action.payload
-        },
-        setIsLogin: (state, action) => {
-            state.isLogin = action.payload
-        },
-        setAuthError: (state, action) => {
-            state.authError = action.payload
+        logOut: (state) => {
+            authService.deleteToken()
+            Object.assign(state, initialState);
         }
     },
     extraReducers: builder => {
         builder
-            .addCase(signIn.fulfilled, (state, action) => {
+            .addCase(signIn.fulfilled, (_, action) => {
                 authService.setToken(action.payload.token)
+            })
+
+            .addCase(checkTokenAndFetchUser.rejected, () => {
+                authService.deleteToken()
+            })
+
+            .addMatcher(isFulfilled(signIn, checkTokenAndFetchUser), (state, action) => {
                 state.isAuth = true
-            })
-
-            .addCase(signUp.fulfilled, (state, action) => {
-                state.message = action.payload.message
-            })
-
-            .addMatcher(isFulfilled(signIn, signUp), (state) => {
-                state.authError = null
-            })
-
-            .addMatcher(isRejected(signIn, signUp), (state, action) => {
-                state.authError = action.payload.message
+                state.user = action.payload
             })
     }
 })
@@ -96,7 +92,8 @@ const {reducer: authReducer, actions} = authSlice
 const authActions = {
     ...actions,
     signIn,
-    signUp
+    signUp,
+    checkTokenAndFetchUser
 }
 
 export {

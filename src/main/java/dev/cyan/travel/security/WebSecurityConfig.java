@@ -55,7 +55,8 @@ public class WebSecurityConfig {
                                 "/countries/**",
                                 "/hotels/**",
                                 "/rooms/**",
-                                "/bookings/**")
+                                "/bookings/**",
+                                "/users/**")
                         .permitAll().anyRequest().authenticated());
 
         http.authenticationProvider(authenticationProvider());
