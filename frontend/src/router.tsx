@@ -1,7 +1,7 @@
 import {createBrowserRouter, Navigate} from "react-router-dom";
 
 import {MainLayout} from "./layouts";
-import {AuthPage, BookingPage, HotelPage, HotelsPage} from "./pages";
+import {AuthPage, BookingsPage, HotelPage, HotelsPage} from "./pages";
 
 const router = createBrowserRouter([
     {
@@ -10,7 +10,7 @@ const router = createBrowserRouter([
             {path: 'hotels', element: <HotelsPage/>},
             {path: 'hotels/:hotelId', element: <HotelPage/>},
             {path: 'auth', element: <AuthPage/>},
-            {path: 'bookings', element: <BookingPage/>}
+            {path: 'bookings', element: <BookingsPage/>}
         ]
     }
 ])

@@ -6,7 +6,6 @@ import dev.cyan.travel.entity.User;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +17,4 @@ public interface BookingRepository extends MongoRepository<Booking, ObjectId> {
     List<Booking> findBookingsByRoom(Room room);
 
     void deleteById(String id);
-
-    List<Booking> findBookingsByRoomAndBookedSinceAndBookedTo(Room room, LocalDate bookedSince, LocalDate bookedTo);
 }

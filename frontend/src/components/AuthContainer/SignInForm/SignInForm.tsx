@@ -22,8 +22,8 @@ const SignInForm: FC<IProp> = ({handleToggle}) => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
-    const signIn = async (user: SignInRequest) => {
-        await dispatch(authActions.signIn({user}))
+    const signIn = (user: SignInRequest) => {
+        dispatch(authActions.signIn({user}))
             .unwrap()
             .then(() => {
                 reset();
@@ -44,8 +44,8 @@ const SignInForm: FC<IProp> = ({handleToggle}) => {
                     placeholder="enter username"
                     {...register('username')}
                 />
+                {errors.username && <ErrorTextBox error={errors.username.message}/>}
             </Form.Group>
-            {errors.username && <ErrorTextBox error={errors.username.message}/>}
             <Form.Group className="my-2">
                 <Form.Label>Password</Form.Label>
                 <Form.Control
@@ -53,8 +53,8 @@ const SignInForm: FC<IProp> = ({handleToggle}) => {
                     placeholder="enter password"
                     {...register('password')}
                 />
+                {errors.password && <ErrorTextBox error={errors.password.message}/>}
             </Form.Group>
-            {errors.password && <ErrorTextBox error={errors.password.message}/>}
             <div className="mt-3 text-center">
                 <p>
                     Don't have an account? {" "}

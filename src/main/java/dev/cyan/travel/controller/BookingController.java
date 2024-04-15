@@ -33,22 +33,22 @@ public class BookingController {
 
     @PostMapping
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<BookingDTO> create(@Valid @RequestBody BookingDTO bookingDTO) {
+    public ResponseEntity<?> create(@Valid @RequestBody BookingDTO bookingDTO) {
         Optional<BookingDTO> optionalBookingDTO = bookingService.create(bookingDTO);
         if (optionalBookingDTO.isEmpty()) {
-            ResponseEntity.badRequest().body(new MessageResponse("Booking isn't available for those dates"));
+            return ResponseEntity.badRequest().body(new MessageResponse("Booking isn't available for those dates"));
         }
-        return ResponseEntity.of(optionalBookingDTO);
+        return ResponseEntity.ok(optionalBookingDTO);
     }
 
     @PatchMapping("/{id}")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<BookingDTO> update(@PathVariable String id, @Valid @RequestBody BookingDTO bookingDTO) {
+    public ResponseEntity<?> update(@PathVariable String id, @Valid @RequestBody BookingDTO bookingDTO) {
         Optional<BookingDTO> optionalBookingDTO = bookingService.update(id, bookingDTO);
         if (optionalBookingDTO.isEmpty()) {
-            ResponseEntity.badRequest().body(new MessageResponse("Booking isn't available for those dates"));
+            return ResponseEntity.badRequest().body(new MessageResponse("Booking isn't available for those dates"));
         }
-        return ResponseEntity.of(optionalBookingDTO);
+        return ResponseEntity.ok(optionalBookingDTO);
     }
 
     @DeleteMapping("/{id}")

@@ -1,6 +1,8 @@
 import Joi from "joi";
 
-const signInValidator = Joi.object({
+import {SignInRequest} from "../interfaces";
+
+const signInValidator = Joi.object<SignInRequest>({
     username: Joi.string().required().messages({
         'string.empty': `username cannot be an empty`,
         'any.required': `username is a required field`

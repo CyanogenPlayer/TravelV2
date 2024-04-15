@@ -1,6 +1,8 @@
 import Joi from "joi";
 
-const signUpValidator = Joi.object({
+import {SignUpRequest} from "../interfaces";
+
+const signUpValidator = Joi.object<SignUpRequest>({
     username: Joi.string().min(3).max(20).required().messages({
         'string.empty': `username cannot be an empty`,
         'string.min': `username should have a minimum length of {#limit}`,

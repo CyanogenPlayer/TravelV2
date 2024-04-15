@@ -20,8 +20,8 @@ const SignUpForm: FC<IProp> = ({handleToggle}) => {
     });
     const dispatch = useAppDispatch();
 
-    const signUp = async (user: SignUpRequest) => {
-        await dispatch(authActions.signUp({user}))
+    const signUp = (user: SignUpRequest) => {
+        dispatch(authActions.signUp({user}))
             .unwrap()
             .then(() => {
                 reset();
@@ -42,8 +42,8 @@ const SignUpForm: FC<IProp> = ({handleToggle}) => {
                     placeholder="enter username"
                     {...register('username')}
                 />
+                {errors.username && <ErrorTextBox error={errors.username.message}/>}
             </Form.Group>
-            {errors.username && <ErrorTextBox error={errors.username.message}/>}
             <Form.Group className="my-2">
                 <Form.Label>Email Address</Form.Label>
                 <Form.Control
@@ -51,8 +51,8 @@ const SignUpForm: FC<IProp> = ({handleToggle}) => {
                     placeholder="enter email"
                     {...register('email')}
                 />
+                {errors.email && <ErrorTextBox error={errors.email.message}/>}
             </Form.Group>
-            {errors.email && <ErrorTextBox error={errors.email.message}/>}
             <Form.Group className="my-2">
                 <Form.Label>Password</Form.Label>
                 <Form.Control
@@ -60,8 +60,8 @@ const SignUpForm: FC<IProp> = ({handleToggle}) => {
                     placeholder="enter password"
                     {...register('password')}
                 />
+                {errors.password && <ErrorTextBox error={errors.password.message}/>}
             </Form.Group>
-            {errors.password && <ErrorTextBox error={errors.password.message}/>}
             <Form.Group className="my-2">
                 <Form.Label>Confirm Password</Form.Label>
                 <Form.Control
@@ -69,8 +69,8 @@ const SignUpForm: FC<IProp> = ({handleToggle}) => {
                     placeholder="enter password again"
                     {...register('re_password')}
                 />
+                {errors.re_password && <ErrorTextBox error={errors.re_password.message}/>}
             </Form.Group>
-            {errors.re_password && <ErrorTextBox error={errors.re_password.message}/>}
             <div className="mt-3 text-center">
                 <p>
                     Already have an account? {" "}

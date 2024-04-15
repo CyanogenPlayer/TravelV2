@@ -1,4 +1,4 @@
-import {Container, Nav, Navbar} from "react-bootstrap";
+import {Container, Nav, Navbar, NavDropdown} from "react-bootstrap";
 import {useNavigate} from "react-router-dom";
 
 import {useAppDispatch, useAppSelector} from "../../hooks";
@@ -12,11 +12,15 @@ const Header = () => {
     const dispatch = useAppDispatch();
 
     const navigateToHome = () => {
-        navigate('')
+        navigate('/')
     }
 
     const navigateToAuthorization = () => {
         navigate('/auth')
+    }
+
+    const navigateToBookings = () => {
+        navigate('/bookings')
     }
 
     const logOut = () => {
@@ -43,8 +47,10 @@ const Header = () => {
                         {
                             isAuth ?
                                 <div className="navbar-nav">
-                                    <div className="nav-link">User: {user.username}</div>
-                                    <Nav.Link onClick={logOut}>LogOut</Nav.Link>
+                                    <NavDropdown title={"User: " + user.username} id="dropdown">
+                                        <NavDropdown.Item onClick={navigateToBookings}>Bookings</NavDropdown.Item>
+                                        <NavDropdown.Item onClick={logOut}>LogOut</NavDropdown.Item>
+                                    </NavDropdown>
                                 </div>
                                 :
                                 <Nav.Link onClick={navigateToAuthorization}>SignIn/SignUp</Nav.Link>

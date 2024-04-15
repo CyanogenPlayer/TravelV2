@@ -9,6 +9,9 @@ import dev.cyan.travel.repository.BookingRepository;
 import dev.cyan.travel.repository.RoomRepository;
 import dev.cyan.travel.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -22,6 +25,7 @@ public class BookingService {
     private final RoomRepository roomRepository;
     private final UserRepository userRepository;
     private final BookingMapper bookingMapper;
+    private final MongoTemplate mongoTemplate;
 
     public List<BookingDTO> getAll() {
         return bookingRepository
@@ -50,12 +54,19 @@ public class BookingService {
     }
 
     private Boolean checkIfBookingIsAvailable(Room room, LocalDate bookedSince, LocalDate bookedTo) {
-        if (bookedSince == null || bookedTo == null || bookedSince.isAfter(bookedTo)) {
+        if (bookedSince == null || bookedTo == null || bookedSince.isAfter(bookedTo) ||
+                bookedSince.isEqual(bookedTo)) {
             return false;
         }
 
-        List<Booking> bookings = bookingRepository
-                .findBookingsByRoomAndBookedSinceAndBookedTo(room, bookedSince, bookedTo);
+        Query query = new Query().addCriteria(Criteria
+                .where("room").is(room).andOperator(new Criteria().orOperator(
+                        Criteria.where("bookedSince").gte(bookedSince).lte(bookedTo),
+                        Criteria.where("bookedTo").gte(bookedSince).lte(bookedTo),
+                        Criteria.where("bookedSince").lte(bookedSince).and("bookedTo").gte(bookedTo)
+                )));
+        List<Booking> bookings = mongoTemplate.find(query, Booking.class);
+
         return bookings.isEmpty();
     }
 
