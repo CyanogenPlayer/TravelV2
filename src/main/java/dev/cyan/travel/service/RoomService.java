@@ -9,6 +9,8 @@ import dev.cyan.travel.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +20,7 @@ public class RoomService {
     private final RoomRepository roomRepository;
     private final HotelRepository hotelRepository;
     private final RoomMapper roomMapper;
+    private final BookingService bookingService;
 
     public List<RoomDTO> getAll() {
         return roomRepository
@@ -59,6 +62,22 @@ public class RoomService {
         List<Room> roomsByHotel = roomRepository
                 .findRoomsByHotel(hotel);
         return roomsByHotel
+                .stream()
+                .map(roomMapper::toDTO)
+                .toList();
+    }
+
+    public List<RoomDTO> getAllAvailableRoomsForPeriod(String hotelId, LocalDate bookedSince, LocalDate bookedTo) {
+        Hotel hotel = hotelRepository.findById(hotelId).orElseThrow();
+        List<Room> roomsByHotel = roomRepository.findRoomsByHotel(hotel);
+        List<Room> availableRooms = new ArrayList<>();
+        for (Room room: roomsByHotel) {
+            if (bookingService.checkIfBookingIsAvailable(room, bookedSince, bookedTo)) {
+                availableRooms.add(room);
+            }
+        }
+
+        return availableRooms
                 .stream()
                 .map(roomMapper::toDTO)
                 .toList();

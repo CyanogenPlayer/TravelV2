@@ -39,13 +39,33 @@ const getByHotelId = createAsyncThunk<IRoom[], { hotelId: string },
     }
 )
 
+const getAllAvailableForPeriod = createAsyncThunk<IRoom[], {
+    hotelId: string,
+    bookedSince: Date,
+    bookedTo: Date
+}, { rejectValue: IMessage }>(
+    'roomSlice/getAllAvailableForPeriod',
+    async ({hotelId, bookedSince, bookedTo}, {rejectWithValue}) => {
+        try {
+            const {data} = await roomService.getAllAvailableForPeriod(
+                hotelId,
+                bookedSince.toISOString(),
+                bookedTo.toISOString())
+            return data
+        } catch (e) {
+            const err = e as AxiosError
+            return rejectWithValue(err.response.data as IMessage)
+        }
+    }
+)
+
 const roomSlice = createSlice({
     name: 'roomSlice',
     initialState,
     reducers: {},
     extraReducers: builder => {
         builder
-            .addMatcher(isFulfilled(getAll, getByHotelId), (state, action) => {
+            .addMatcher(isFulfilled(getAll, getByHotelId, getAllAvailableForPeriod), (state, action) => {
                 state.rooms = action.payload;
             })
     }
@@ -56,7 +76,8 @@ const {reducer: roomReducer, actions} = roomSlice;
 const roomActions = {
     ...actions,
     getAll,
-    getByHotelId
+    getByHotelId,
+    getAllAvailableForPeriod
 }
 
 export {

@@ -5,3 +5,4 @@
 ### `npm run build` - build ReactTS app
 ### `npm run watch` - watch and auto build React app
 ### `docker compose up --build` - setup docker
+### http://localhost/api/v2/swagger-ui/index.html - api docs url

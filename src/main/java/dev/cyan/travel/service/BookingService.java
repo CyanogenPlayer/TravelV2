@@ -53,7 +53,7 @@ public class BookingService {
         return Optional.empty();
     }
 
-    private Boolean checkIfBookingIsAvailable(Room room, LocalDate bookedSince, LocalDate bookedTo) {
+    public Boolean checkIfBookingIsAvailable(Room room, LocalDate bookedSince, LocalDate bookedTo) {
         if (bookedSince == null || bookedTo == null || bookedSince.isAfter(bookedTo) ||
                 bookedSince.isEqual(bookedTo)) {
             return false;

@@ -12,5 +12,7 @@ public class HotelDTO {
     private String id;
     @NotBlank
     private String name;
+    @NotBlank
     private String countryId;
+    private String countryName;
 }

@@ -2,6 +2,7 @@ package dev.cyan.travel.controller;
 
 import dev.cyan.travel.DTO.UserDTO;
 import dev.cyan.travel.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ public class UserController {
     }
 
     @PostMapping("/{id}")
-    public ResponseEntity<UserDTO> updateRoles(@PathVariable String id, @RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> updateRoles(@PathVariable String id, @Valid @RequestBody UserDTO userDTO) {
         return ResponseEntity.ok(userService.updateRoles(id, userDTO));
     }
 

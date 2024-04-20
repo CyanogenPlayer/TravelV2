@@ -17,8 +17,7 @@ const urls = {
         bookingsByUserId: (userId: string) => `${bookings}/list/${userId}`
     },
     countries: {
-        allCountries: `${countries}`,
-        byId: (countryId: string): string => `${countries}/${countryId}`
+        allCountries: `${countries}`
     },
     hotels: {
         allHotels: `${hotels}`,
@@ -27,7 +26,9 @@ const urls = {
     },
     rooms: {
         allRooms: `${rooms}`,
-        roomsByHotelId: (hotelId: string): string => `${hotels}/${hotelId}${rooms}`
+        roomsByHotelId: (hotelId: string): string => `${hotels}/${hotelId}${rooms}`,
+        allAvailableForPeriod: (hotelId: string, bookedSince: string, bookedTo: string): string =>
+            `${hotels}/${hotelId}${rooms}?bookedSince=${bookedSince}&bookedTo=${bookedTo}`
     }
 }
 

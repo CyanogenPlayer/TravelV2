@@ -1,6 +1,6 @@
 export * from './Alert'
 export * from './AuthContainer'
-export * from './BookingsListContainer'
+export * from './BookingsTableContainer'
 export * from './CountriesListContainer'
 export * from './ErrorTextBox'
 export * from './Header'

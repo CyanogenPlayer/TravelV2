@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -50,7 +52,18 @@ public class HotelController {
     }
 
     @GetMapping("/{id}/rooms")
-    public ResponseEntity<List<RoomDTO>> getRoomsInHotel(@PathVariable String id) {
+    public ResponseEntity<List<RoomDTO>> getRoomsInHotel(@PathVariable String id,
+                                                         @RequestParam(value = "bookedSince", required = false) String bookedSince,
+                                                         @RequestParam(value = "bookedTo", required = false) String bookedTo) {
+        if (bookedSince != null && bookedTo != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+
+            return ResponseEntity.ok(
+                    roomService.getAllAvailableRoomsForPeriod(id,
+                            LocalDate.parse(bookedSince, formatter),
+                            LocalDate.parse(bookedTo, formatter)));
+        }
+
         return ResponseEntity.ok(roomService.getRoomsByHotelId(id));
     }
 }

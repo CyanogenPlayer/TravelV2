@@ -10,14 +10,9 @@ interface IProp {
 }
 
 const HotelCard: FC<IProp> = ({hotel}) => {
-    const {id, name} = hotel;
+    const {id, name, countryName} = hotel;
 
-    // const [country, setCountry] = useState<ICountry>(null)
     const navigate = useNavigate();
-
-    // useEffect(() => {
-    //     countryService.getById(countryId).then(({data}) => setCountry(data))
-    // }, [countryId]);
 
     const navigateToHotelInfo = () => {
         navigate(`${id}`)
@@ -25,24 +20,13 @@ const HotelCard: FC<IProp> = ({hotel}) => {
 
     return (
         <>
-            {/*{country &&*/}
-            {/*    <Card border="primary" className={css.HotelCard} onClick={navigateToHotelInfo}>*/}
-            {/*        <Card.Header>*/}
-            {/*            <Card.Title>{name}</Card.Title>*/}
-            {/*            <Card.Text style={{fontSize: 'smaller'}}>{id}</Card.Text>*/}
-            {/*        </Card.Header>*/}
-            {/*        <Card.Body>*/}
-            {/*            <Card.Subtitle>{country.name}</Card.Subtitle>*/}
-            {/*        </Card.Body>*/}
-            {/*    </Card>*/}
-            {/*}*/}
-
             <Card border="primary" className={css.HotelCard} onClick={navigateToHotelInfo}>
                 <Card.Header>
                     <Card.Title>{name}</Card.Title>
+                    <Card.Text style={{fontSize: 'smaller'}}>id: {id}</Card.Text>
                 </Card.Header>
                 <Card.Body>
-                    <Card.Text style={{fontSize: 'smaller'}}>{id}</Card.Text>
+                    <Card.Subtitle>{countryName}</Card.Subtitle>
                 </Card.Body>
             </Card>
         </>

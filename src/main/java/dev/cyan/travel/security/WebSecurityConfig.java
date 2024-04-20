@@ -56,7 +56,9 @@ public class WebSecurityConfig {
                                 "/hotels/**",
                                 "/rooms/**",
                                 "/bookings/**",
-                                "/users/**")
+                                "/users/**",
+                                "/api-docs/**",
+                                "/swagger-ui/**")
                         .permitAll().anyRequest().authenticated());
 
         http.authenticationProvider(authenticationProvider());

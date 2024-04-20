@@ -14,3 +14,9 @@ cyan:
   app:
     jwtSecret: "cyan-super-long-secret-password-123"
     jwtExpirationMs: 86400000
+
+springdoc:
+  api-docs:
+    path: "/api-docs"
+  swagger-ui:
+    url: "/api/v2/api-docs"

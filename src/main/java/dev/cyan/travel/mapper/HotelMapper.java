@@ -7,7 +7,10 @@ import org.mapstruct.*;
 
 @Mapper(componentModel = "spring", uses = {CountryRepository.class})
 public interface HotelMapper {
-    @Mapping(source = "country.id", target = "countryId")
+    @Mappings({
+            @Mapping(source = "country.id", target = "countryId"),
+            @Mapping(source = "country.name", target = "countryName")
+    })
     HotelDTO toDTO(Hotel hotel);
 
     @Mappings({

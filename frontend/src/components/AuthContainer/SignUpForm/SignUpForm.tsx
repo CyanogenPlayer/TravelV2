@@ -15,7 +15,7 @@ interface IProp {
 
 const SignUpForm: FC<IProp> = ({handleToggle}) => {
     const {reset, register, handleSubmit, formState: {errors, isValid}} = useForm<SignUpRequest>({
-        mode: 'onBlur',
+        mode: 'onTouched',
         resolver: joiResolver(signUpValidator)
     });
     const dispatch = useAppDispatch();
@@ -72,7 +72,10 @@ const SignUpForm: FC<IProp> = ({handleToggle}) => {
                 {errors.re_password && <ErrorTextBox error={errors.re_password.message}/>}
             </Form.Group>
             <div className="mt-3 text-center">
-                <p>
+                <Button className="btn btn-block" onClick={handleSubmit(signUp)} disabled={!isValid}>
+                    SignUp
+                </Button>
+                <p className="mt-3">
                     Already have an account? {" "}
                     <Button
                         size="sm"
@@ -82,9 +85,6 @@ const SignUpForm: FC<IProp> = ({handleToggle}) => {
                         SignIn
                     </Button>
                 </p>
-                <Button className="btn btn-block" onClick={handleSubmit(signUp)} disabled={!isValid}>
-                    SignUp
-                </Button>
             </div>
         </form>
     );

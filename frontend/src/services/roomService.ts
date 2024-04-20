@@ -5,7 +5,9 @@ import {urls} from "../constants";
 
 const roomService = {
     getAll: (): IRes<IRoom[]> => axiosService.get(urls.rooms.allRooms),
-    getByHotelId: (hotelId: string): IRes<IRoom[]> => axiosService.get(urls.rooms.roomsByHotelId(hotelId))
+    getByHotelId: (hotelId: string): IRes<IRoom[]> => axiosService.get(urls.rooms.roomsByHotelId(hotelId)),
+    getAllAvailableForPeriod: (hotelId: string, bookedSince: string, bookedTo: string): IRes<IRoom[]> =>
+        axiosService.get(urls.rooms.allAvailableForPeriod(hotelId, bookedSince, bookedTo))
 }
 
 export {
