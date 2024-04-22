@@ -13,7 +13,7 @@ const initialState: IState = {
 }
 
 const getAll = createAsyncThunk<IRoom[], void, { rejectValue: IMessage }>(
-    'roomSlice/getAll',
+    'roomSlice/getAll:load',
     async (_, {rejectWithValue}) => {
         try {
             const {data} = await roomService.getAll()
@@ -27,7 +27,7 @@ const getAll = createAsyncThunk<IRoom[], void, { rejectValue: IMessage }>(
 
 const getByHotelId = createAsyncThunk<IRoom[], { hotelId: string },
     { rejectValue: IMessage }>(
-    'roomSlice/getByHotelId',
+    'roomSlice/getByHotelId:load',
     async ({hotelId}, {rejectWithValue}) => {
         try {
             const {data} = await roomService.getByHotelId(hotelId)
@@ -44,7 +44,7 @@ const getAllAvailableForPeriod = createAsyncThunk<IRoom[], {
     bookedSince: Date,
     bookedTo: Date
 }, { rejectValue: IMessage }>(
-    'roomSlice/getAllAvailableForPeriod',
+    'roomSlice/getAllAvailableForPeriod:load',
     async ({hotelId, bookedSince, bookedTo}, {rejectWithValue}) => {
         try {
             const {data} = await roomService.getAllAvailableForPeriod(

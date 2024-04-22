@@ -11,7 +11,9 @@ const BookingsTable = () => {
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        dispatch(bookingActions.getByUserId({userId: user.id}))
+        if (user) {
+            dispatch(bookingActions.getByUserId({userId: user.id}))
+        }
     }, [dispatch, user]);
 
     return (

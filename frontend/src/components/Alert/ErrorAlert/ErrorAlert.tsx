@@ -1,5 +1,5 @@
 import {Alert} from "react-bootstrap";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 
 import {useAppDispatch, useAppSelector} from "../../../hooks";
 import {alertActions} from "../../../redux";
@@ -7,27 +7,28 @@ import {alertActions} from "../../../redux";
 const ErrorAlert = () => {
     const {error} = useAppSelector(state => state.alerts);
     const dispatch = useAppDispatch();
+    const [show, setShow] = useState(false);
 
     useEffect(() => {
         if (error) {
+            setShow(true)
             setTimeout(() => {
-                dispatch(alertActions.setError(null))
+                setShow(false)
+                setTimeout(() => {
+                    dispatch(alertActions.setError(null))
+                }, 500)
             }, 5000)
         }
     }, [dispatch, error]);
 
     return (
-        <>
-            {
-                error &&
-                <Alert className="position-absolute bottom-0 end-0 m-3" variant="danger" dismissible>
-                    <Alert.Heading>Error!</Alert.Heading>
-                    <p>
-                        {error}
-                    </p>
-                </Alert>
-            }
-        </>
+        <Alert className="position-absolute bottom-0 end-0 m-3" variant="danger" show={show}
+               onClose={() => setShow(false)}  dismissible>
+            <Alert.Heading>Error!</Alert.Heading>
+            <p>
+                {error}
+            </p>
+        </Alert>
     );
 };
 

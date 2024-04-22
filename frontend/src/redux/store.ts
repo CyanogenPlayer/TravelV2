@@ -1,6 +1,14 @@
 import {configureStore} from "@reduxjs/toolkit";
 
-import {alertReducer, authReducer, bookingReducer, countryReducer, hotelReducer, roomReducer} from "./slices";
+import {
+    alertReducer,
+    authReducer,
+    bookingReducer,
+    countryReducer,
+    hotelReducer,
+    loadingReducer,
+    roomReducer
+} from "./slices";
 
 const store = configureStore({
     reducer: {
@@ -9,6 +17,7 @@ const store = configureStore({
         bookings: bookingReducer,
         countries: countryReducer,
         hotels: hotelReducer,
+        loading: loadingReducer,
         rooms: roomReducer,
     }
 })

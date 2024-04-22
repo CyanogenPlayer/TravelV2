@@ -49,7 +49,7 @@ const signUp = createAsyncThunk<void, { user: SignUpRequest },
 )
 
 const checkTokenAndFetchUser = createAsyncThunk<IUser, void, { rejectValue: IMessage }>(
-    'authSlice/checkTokenAndFetchUser',
+    'authSlice/checkTokenAndFetchUser:load',
     async (_, {rejectWithValue}) => {
         try {
             const {data} = await authService.getMe();

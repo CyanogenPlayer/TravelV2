@@ -30,7 +30,7 @@ const create = createAsyncThunk<void, { booking: IBooking }, { rejectValue: IMes
 
 const getByUserId = createAsyncThunk<IBooking[], { userId: string },
     { rejectValue: IMessage }>(
-    'bookingSlice/getByUserId',
+    'bookingSlice/getByUserId:load',
     async ({userId}, {rejectWithValue}) => {
         try {
             const {data} = await bookingService.getByUserId(userId)

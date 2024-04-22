@@ -13,7 +13,7 @@ const initialState: IState = {
 }
 
 const getAll = createAsyncThunk<ICountry[], void, { rejectValue: IMessage }>(
-    'countrySlice/getAll',
+    'countrySlice/getAll:load',
     async (_, {rejectWithValue}) => {
         try {
             const {data} = await countryService.getAll();
