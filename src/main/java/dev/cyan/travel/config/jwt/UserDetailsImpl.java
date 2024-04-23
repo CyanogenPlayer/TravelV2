@@ -1,4 +1,4 @@
-package dev.cyan.travel.security.services;
+package dev.cyan.travel.config.jwt;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.cyan.travel.entity.User;

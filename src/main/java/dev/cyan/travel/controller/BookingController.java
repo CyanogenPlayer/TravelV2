@@ -1,7 +1,7 @@
 package dev.cyan.travel.controller;
 
 import dev.cyan.travel.DTO.BookingDTO;
-import dev.cyan.travel.payload.response.MessageResponse;
+import dev.cyan.travel.response.MessageResponse;
 import dev.cyan.travel.service.BookingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

@@ -3,6 +3,7 @@ import {useNavigate} from "react-router-dom";
 
 import {useAppDispatch, useAppSelector} from "../../hooks";
 import {authActions} from "../../redux";
+import {ERole} from "../../enums";
 
 const Header = () => {
     const image = require('../../assets/logo.png');
@@ -23,8 +24,13 @@ const Header = () => {
         navigate('/bookings')
     }
 
+    const navigateToManagement = () => {
+        navigate('/management')
+    }
+
     const logOut = () => {
         dispatch(authActions.logOut())
+        navigate('/')
     }
 
     return (
@@ -49,6 +55,8 @@ const Header = () => {
                                 <div className="navbar-nav">
                                     <NavDropdown title={"User: " + user.username} id="dropdown">
                                         <NavDropdown.Item onClick={navigateToBookings}>Bookings</NavDropdown.Item>
+                                        {user.roles.includes(ERole.ROLE_MANAGER) && <NavDropdown.Item
+                                            onClick={navigateToManagement}>Management</NavDropdown.Item>}
                                         <NavDropdown.Item onClick={logOut}>LogOut</NavDropdown.Item>
                                     </NavDropdown>
                                 </div>

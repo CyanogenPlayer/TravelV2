@@ -1,4 +1,4 @@
-package dev.cyan.travel.payload.response;
+package dev.cyan.travel.response;
 
 import com.mongodb.MongoWriteException;
 import org.springframework.http.HttpStatus;

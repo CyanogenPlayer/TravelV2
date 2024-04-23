@@ -1,4 +1,4 @@
-package dev.cyan.travel.payload.response;
+package dev.cyan.travel.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

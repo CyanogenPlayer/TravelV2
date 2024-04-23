@@ -1,5 +1,6 @@
-package dev.cyan.travel.security.services;
+package dev.cyan.travel.service;
 
+import dev.cyan.travel.config.jwt.UserDetailsImpl;
 import dev.cyan.travel.entity.User;
 import dev.cyan.travel.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

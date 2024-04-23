@@ -1,11 +1,11 @@
 import {createSlice, UnknownAction} from "@reduxjs/toolkit";
 
 interface IState {
-    loading: boolean
+    isLoading: boolean
 }
 
 const initialState: IState = {
-    loading: null
+    isLoading: false
 }
 
 const loadingSlice = createSlice({
@@ -18,7 +18,7 @@ const loadingSlice = createSlice({
                 (action: UnknownAction) =>
                     action.type.includes("/pending") && action.type.includes(":load"),
                 (state) => {
-                    state.loading = true;
+                    state.isLoading = true;
                 },
             )
 
@@ -26,14 +26,14 @@ const loadingSlice = createSlice({
                 (action: UnknownAction) =>
                     action.type.includes("/fulfilled") && action.type.includes(":load"),
                 (state) => {
-                    state.loading = false;
+                    state.isLoading = false;
                 },
             )
             .addMatcher(
                 (action: UnknownAction) =>
                     action.type.includes("/rejected") && action.type.includes(":load"),
                 (state) => {
-                    state.loading = false;
+                    state.isLoading = false;
                 },
             )
     }

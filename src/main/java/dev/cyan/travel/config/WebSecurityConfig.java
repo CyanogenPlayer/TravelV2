@@ -1,8 +1,9 @@
-package dev.cyan.travel.security;
+package dev.cyan.travel.config;
 
-import dev.cyan.travel.security.jwt.AuthEntryPointJwt;
-import dev.cyan.travel.security.jwt.AuthTokenFilter;
-import dev.cyan.travel.security.services.UserDetailsServiceImpl;
+import dev.cyan.travel.config.jwt.AccessDeniedHandlerJwt;
+import dev.cyan.travel.config.jwt.AuthEntryPointJwt;
+import dev.cyan.travel.config.jwt.AuthTokenFilter;
+import dev.cyan.travel.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +25,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfig {
     private final UserDetailsServiceImpl userDetailsService;
     private final AuthEntryPointJwt unauthorizedHandler;
+    private final AccessDeniedHandlerJwt accessDeniedHandler;
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
@@ -48,7 +50,10 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, AuthTokenFilter authenticationJwtTokenFilter) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
-                .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
+                .exceptionHandling(exception -> {
+                    exception.authenticationEntryPoint(unauthorizedHandler);
+                    exception.accessDeniedHandler(accessDeniedHandler);
+                })
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/**").permitAll()
                         .requestMatchers(

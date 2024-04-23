@@ -10,7 +10,7 @@ import {authActions} from "../../redux";
 
 const MainLayout = () => {
     const dispatch = useAppDispatch();
-    const {loading} = useAppSelector(state => state.loading);
+    const {isLoading} = useAppSelector(state => state.loading);
 
     useEffect(() => {
         if (authService.getToken()) {
@@ -20,7 +20,7 @@ const MainLayout = () => {
 
     return (
         <LoadingOverlayWrapper
-            active={loading}
+            active={isLoading}
             spinner={<Spinner animation="grow"/>}
             styles={{
                 overlay: base => ({

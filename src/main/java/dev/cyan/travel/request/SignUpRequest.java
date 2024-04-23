@@ -1,4 +1,4 @@
-package dev.cyan.travel.payload.request;
+package dev.cyan.travel.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
