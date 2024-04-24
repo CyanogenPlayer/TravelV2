@@ -1,11 +1,12 @@
 import {FC} from "react";
+
 import {IBooking} from "../../../interfaces";
 
 interface IProp {
-    booking: IBooking
+    booking: IBooking,
 }
 
-const BookingRow: FC<IProp> = ({booking}) => {
+const Booking: FC<IProp> = ({booking}) => {
     return (
         <tr>
             <th>{booking.id}</th>
@@ -17,5 +18,5 @@ const BookingRow: FC<IProp> = ({booking}) => {
 };
 
 export {
-    BookingRow
+    Booking
 }

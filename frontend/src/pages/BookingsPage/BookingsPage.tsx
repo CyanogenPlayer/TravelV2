@@ -1,9 +1,9 @@
-import {BookingsTable} from "../../components";
+import {BookingsList} from "../../components";
 
 const BookingsPage = () => {
     return (
         <div>
-            <BookingsTable/>
+            <BookingsList/>
         </div>
     );
 };

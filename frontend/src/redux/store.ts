@@ -7,7 +7,7 @@ import {
     countryReducer,
     hotelReducer,
     loadingReducer,
-    roomReducer
+    roomReducer, userReducer
 } from "./slices";
 
 const store = configureStore({
@@ -19,6 +19,7 @@ const store = configureStore({
         hotels: hotelReducer,
         loading: loadingReducer,
         rooms: roomReducer,
+        users: userReducer
     }
 })
 

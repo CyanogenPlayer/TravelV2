@@ -1,8 +1,8 @@
+import {ManagementComponent} from "../../components";
+
 const ManagementPage = () => {
     return (
-        <div>
-            ManagementPage
-        </div>
+        <ManagementComponent/>
     );
 };
 

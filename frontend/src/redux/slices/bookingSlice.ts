@@ -1,4 +1,4 @@
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+import {createAsyncThunk, createSlice, isFulfilled} from "@reduxjs/toolkit";
 
 import {IBooking, IMessage} from "../../interfaces";
 import {bookingService} from "../../services";
@@ -12,6 +12,19 @@ interface IState {
 const initialState: IState = {
     bookings: []
 }
+
+const getAll = createAsyncThunk<IBooking[], void, { rejectValue: IMessage }>(
+    'bookingSlice/getAll',
+    async (_, {rejectWithValue}) => {
+        try {
+            const {data} = await bookingService.getAll();
+            return data
+        } catch (e) {
+            const err = e as AxiosError
+            return rejectWithValue(err.response.data as IMessage)
+        }
+    }
+)
 
 const create = createAsyncThunk<void, { booking: IBooking }, { rejectValue: IMessage }>(
     'bookingSlice/create',
@@ -48,7 +61,7 @@ const bookingSlice = createSlice({
     reducers: {},
     extraReducers: builder => {
         builder
-            .addCase(getByUserId.fulfilled, (state, action) => {
+            .addMatcher(isFulfilled(getAll, getByUserId), (state, action) => {
                 state.bookings = action.payload
             })
     }
@@ -58,6 +71,7 @@ const {reducer: bookingReducer, actions} = bookingSlice
 
 const bookingActions = {
     ...actions,
+    getAll,
     create,
     getByUserId
 }

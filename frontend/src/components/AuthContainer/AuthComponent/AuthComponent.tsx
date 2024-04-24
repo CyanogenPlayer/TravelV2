@@ -1,8 +1,8 @@
 import {Card, Col} from "react-bootstrap";
+import {useState} from "react";
 
 import {SignInForm} from "../SignInForm";
 import {SignUpForm} from "../SignUpForm";
-import {useState} from "react";
 
 const AuthComponent = () => {
     const [isLogin, setIsLogin] = useState(true)

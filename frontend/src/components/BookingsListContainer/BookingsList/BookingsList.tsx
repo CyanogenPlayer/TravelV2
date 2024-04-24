@@ -3,9 +3,9 @@ import {useEffect} from "react";
 
 import {useAppDispatch, useAppSelector} from "../../../hooks";
 import {bookingActions} from "../../../redux";
-import {BookingRow} from "../BookingRow";
+import {Booking} from "../Booking";
 
-const BookingsTable = () => {
+const BookingsList = () => {
     const {user} = useAppSelector(state => state.auth);
     const {bookings} = useAppSelector(state => state.bookings);
     const dispatch = useAppDispatch();
@@ -28,7 +28,7 @@ const BookingsTable = () => {
                 </tr>
                 </thead>
                 <tbody>
-                {bookings && bookings.map(booking => <BookingRow key={booking.id} booking={booking}/>)}
+                {bookings && bookings.map(booking => <Booking key={booking.id} booking={booking}/>)}
                 </tbody>
             </Table>
         </div>
@@ -36,5 +36,5 @@ const BookingsTable = () => {
 };
 
 export {
-    BookingsTable
+    BookingsList
 }

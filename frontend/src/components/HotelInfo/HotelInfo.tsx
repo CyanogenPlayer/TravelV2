@@ -63,7 +63,8 @@ const HotelInfo: FC<IProp> = ({hotelId}) => {
                             />
                             {errors.bookedTo && <ErrorTextBox error={errors.bookedTo.message}/>}
                         </Form.Group>
-                        <Button size="sm" variant="primary" onClick={handleSubmit(viewRoomInPeriod)} disabled={!isValid}>
+                        <Button size="sm" variant="primary" onClick={handleSubmit(viewRoomInPeriod)}
+                                disabled={!isValid}>
                             Search
                         </Button>
                         <Button size="sm" variant="outline-primary" onClick={resetRooms}>
