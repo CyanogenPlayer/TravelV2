@@ -6,12 +6,14 @@ import {hotelService} from "../../services";
 
 interface IState {
     hotel: IHotel,
-    hotels: IHotel[]
+    hotels: IHotel[],
+    hotelsForManagement: IHotel[]
 }
 
 const initialState: IState = {
     hotel: null,
-    hotels: []
+    hotels: [],
+    hotelsForManagement: []
 }
 
 const getAll = createAsyncThunk<IHotel[], void, { rejectValue: IMessage }>(
@@ -60,6 +62,10 @@ const hotelSlice = createSlice({
     reducers: {},
     extraReducers: builder => {
         builder
+            .addCase(getAll.fulfilled, (state, action) => {
+                state.hotelsForManagement = action.payload
+            })
+
             .addMatcher(isFulfilled(getAll, getByCountryId), (state, action) => {
                 state.hotels = action.payload;
             })

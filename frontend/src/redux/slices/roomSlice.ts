@@ -5,11 +5,13 @@ import {IMessage, IRoom} from "../../interfaces";
 import {roomService} from "../../services";
 
 interface IState {
-    rooms: IRoom[]
+    rooms: IRoom[],
+    roomsForManagement: IRoom[]
 }
 
 const initialState: IState = {
-    rooms: []
+    rooms: [],
+    roomsForManagement: []
 }
 
 const getAll = createAsyncThunk<IRoom[], void, { rejectValue: IMessage }>(
@@ -65,6 +67,10 @@ const roomSlice = createSlice({
     reducers: {},
     extraReducers: builder => {
         builder
+            .addCase(getAll.fulfilled, (state, action) => {
+                state.roomsForManagement = action.payload
+            })
+
             .addMatcher(isFulfilled(getAll, getByHotelId, getAllAvailableForPeriod), (state, action) => {
                 state.rooms = action.payload;
             })

@@ -1,7 +1,8 @@
-import {IMessage, IUser} from "../../interfaces";
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {userService} from "../../services";
 import {AxiosError} from "axios";
+
+import {IMessage, IUser} from "../../interfaces";
+import {userService} from "../../services";
 
 interface IState {
     users: IUser[]

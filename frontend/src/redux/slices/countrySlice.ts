@@ -5,11 +5,13 @@ import {ICountry, IMessage} from "../../interfaces";
 import {countryService} from "../../services";
 
 interface IState {
-    countries: ICountry[]
+    countries: ICountry[],
+    countriesForManagement: ICountry[]
 }
 
 const initialState: IState = {
-    countries: []
+    countries: [],
+    countriesForManagement: []
 }
 
 const getAll = createAsyncThunk<ICountry[], void, { rejectValue: IMessage }>(
@@ -33,6 +35,7 @@ const countrySlice = createSlice({
         builder
             .addCase(getAll.fulfilled, (state, action) => {
                 state.countries = action.payload;
+                state.countriesForManagement = action.payload
             })
     }
 });

@@ -5,8 +5,8 @@ import {joiResolver} from "@hookform/resolvers/joi";
 
 import {useAppDispatch, useAppSelector} from "../../hooks";
 import {hotelActions, roomActions} from "../../redux";
-import {CountryBadge} from "../CountriesListContainer";
-import {RoomsList} from "../RoomsListContainer";
+import {CountryBadge} from "../CountriesBadgesListContainer";
+import {RoomsCardsList} from "../RoomsCardsListContainer";
 import {IBooking} from "../../interfaces";
 import {bookingValidator} from "../../validators";
 import {ErrorTextBox} from "../ErrorTextBox";
@@ -71,7 +71,7 @@ const HotelInfo: FC<IProp> = ({hotelId}) => {
                             Reset
                         </Button>
                     </form>
-                    {rooms.length !== 0 && <RoomsList rooms={rooms}/>}
+                    {rooms.length !== 0 && <RoomsCardsList rooms={rooms}/>}
                 </div>
             }
         </>

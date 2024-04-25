@@ -1,16 +1,18 @@
-import {createAsyncThunk, createSlice, isFulfilled} from "@reduxjs/toolkit";
+import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+import {AxiosError} from "axios";
 
 import {IBooking, IMessage} from "../../interfaces";
 import {bookingService} from "../../services";
 import {alertActions} from "./alertSlice";
-import {AxiosError} from "axios";
 
 interface IState {
-    bookings: IBooking[]
+    bookings: IBooking[],
+    bookingsForManagement: IBooking[]
 }
 
 const initialState: IState = {
-    bookings: []
+    bookings: [],
+    bookingsForManagement: []
 }
 
 const getAll = createAsyncThunk<IBooking[], void, { rejectValue: IMessage }>(
@@ -61,7 +63,11 @@ const bookingSlice = createSlice({
     reducers: {},
     extraReducers: builder => {
         builder
-            .addMatcher(isFulfilled(getAll, getByUserId), (state, action) => {
+            .addCase(getAll.fulfilled, (state, action) => {
+                state.bookingsForManagement = action.payload
+            })
+
+            .addCase(getByUserId.fulfilled, (state, action) => {
                 state.bookings = action.payload
             })
     }

@@ -36,7 +36,7 @@ public class BookingController {
     public ResponseEntity<?> create(@Valid @RequestBody BookingDTO bookingDTO) {
         Optional<BookingDTO> optionalBookingDTO = bookingService.create(bookingDTO);
         if (optionalBookingDTO.isEmpty()) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Booking isn't available for those dates"));
+            return ResponseEntity.badRequest().body(new MessageResponse("BookingRow isn't available for those dates"));
         }
         return ResponseEntity.ok(optionalBookingDTO);
     }
@@ -46,13 +46,13 @@ public class BookingController {
     public ResponseEntity<?> update(@PathVariable String id, @Valid @RequestBody BookingDTO bookingDTO) {
         Optional<BookingDTO> optionalBookingDTO = bookingService.update(id, bookingDTO);
         if (optionalBookingDTO.isEmpty()) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Booking isn't available for those dates"));
+            return ResponseEntity.badRequest().body(new MessageResponse("BookingRow isn't available for those dates"));
         }
         return ResponseEntity.ok(optionalBookingDTO);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Void> delete(@PathVariable String id) {
         bookingService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);

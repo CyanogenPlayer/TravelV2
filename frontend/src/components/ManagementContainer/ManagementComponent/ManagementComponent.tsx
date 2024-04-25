@@ -2,11 +2,11 @@ import {useEffect, useState} from "react";
 
 import {useAppSelector} from "../../../hooks";
 import {ERole} from "../../../enums";
-import {CountriesTable} from "../CountriesTableContainer";
-import {HotelsTable} from "../HotelsTableContainer";
-import {RoomsTable} from "../RoomsTableContainer";
-import {BookingsTable} from "../BookingsTableContainer";
-import {UsersTable} from "../UsersTableContainer";
+import {CountriesList} from "../CountriesList";
+import {HotelsList} from "../HotelsList";
+import {RoomsList} from "../RoomsList";
+import {UsersList} from "../UsersList";
+import {BookingsList} from "../BookingsList";
 
 const ManagementComponent = () => {
     const {user} = useAppSelector(state => state.auth);
@@ -22,11 +22,11 @@ const ManagementComponent = () => {
         <>
             {roles.includes(ERole.ROLE_MANAGER) &&
                 <div>
-                    <CountriesTable/>
-                    <HotelsTable/>
-                    <RoomsTable/>
-                    <UsersTable/>
-                    <BookingsTable/>
+                    <CountriesList/>
+                    <HotelsList/>
+                    <RoomsList/>
+                    <UsersList/>
+                    <BookingsList/>
                 </div>
             }
         </>

@@ -1,9 +1,23 @@
-import {BookingsList} from "../../components";
+import {useEffect} from "react";
+
+import {BookingsTable} from "../../components";
+import {useAppDispatch, useAppSelector} from "../../hooks";
+import {bookingActions} from "../../redux";
 
 const BookingsPage = () => {
+    const {user} = useAppSelector(state => state.auth);
+    const {bookings} = useAppSelector(state => state.bookings);
+    const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        if (user) {
+            dispatch(bookingActions.getByUserId({userId: user.id}))
+        }
+    }, [dispatch, user]);
+
     return (
         <div>
-            <BookingsList/>
+            <BookingsTable bookings={bookings}/>
         </div>
     );
 };
