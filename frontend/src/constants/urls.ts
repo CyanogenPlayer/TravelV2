@@ -19,7 +19,9 @@ const urls = {
         bookingsByUserId: (userId: string) => `${bookings}/list/${userId}`
     },
     countries: {
-        allCountries: `${countries}`
+        allCountries: `${countries}`,
+        create: `${countries}`,
+        update: (countryId: string) => `${countries}/${countryId}`
     },
     hotels: {
         allHotels: `${hotels}`,

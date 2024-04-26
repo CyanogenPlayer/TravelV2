@@ -1,22 +1,33 @@
-import {useEffect} from "react";
+import {Button} from "react-bootstrap";
+import {useEffect, useState} from "react";
 
 import {useAppDispatch, useAppSelector} from "../../../hooks";
 import {countryActions} from "../../../redux";
 import {CountriesTable} from "../../CountriesTableContainer";
+import {ICountry} from "../../../interfaces";
+import {CountryForm} from "../../CountryForm";
 
 const CountriesList = () => {
-    const {countriesForManagement} = useAppSelector(state => state.countries);
+    const {countriesForManagement, trigger} = useAppSelector(state => state.countries);
+    const [showCreateForm, setShowCreateForm] = useState(false)
     const dispatch = useAppDispatch();
+
+    const handleShowCreateForm = () => setShowCreateForm(true)
+
+    const create = (country: ICountry) => {
+        dispatch(countryActions.create({country}))
+    }
 
     useEffect(() => {
         dispatch(countryActions.getAll())
-    }, [dispatch]);
+    }, [dispatch, trigger]);
 
     return (
         <div>
             <h2>Countries:</h2>
             <CountriesTable countries={countriesForManagement}/>
-            <h6>add country</h6>
+            <Button variant="primary" onClick={handleShowCreateForm}>Create country</Button>
+            <CountryForm show={showCreateForm} setShow={setShowCreateForm} submit={create}/>
         </div>
     );
 };

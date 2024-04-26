@@ -1,17 +1,21 @@
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+import {createAsyncThunk, createSlice, isFulfilled} from "@reduxjs/toolkit";
 import {AxiosError} from "axios";
 
 import {ICountry, IMessage} from "../../interfaces";
 import {countryService} from "../../services";
+import {alertActions} from "./alertSlice";
+import {string} from "joi";
 
 interface IState {
     countries: ICountry[],
-    countriesForManagement: ICountry[]
+    countriesForManagement: ICountry[],
+    trigger: boolean
 }
 
 const initialState: IState = {
     countries: [],
-    countriesForManagement: []
+    countriesForManagement: [],
+    trigger: null
 }
 
 const getAll = createAsyncThunk<ICountry[], void, { rejectValue: IMessage }>(
@@ -27,6 +31,37 @@ const getAll = createAsyncThunk<ICountry[], void, { rejectValue: IMessage }>(
     }
 )
 
+const create = createAsyncThunk<void, { country: ICountry }, { rejectValue: IMessage }>(
+    'countrySlice/create',
+    async ({country}, {rejectWithValue, dispatch}) => {
+        try {
+            await countryService.create(country)
+            dispatch(alertActions.setMessage('Country successfully created!'))
+        } catch (e) {
+            const err = e as AxiosError;
+            const data = err.response.data as IMessage;
+            dispatch(alertActions.setError(data.message))
+            return rejectWithValue(data)
+        }
+    }
+);
+
+const update = createAsyncThunk<void, { countryId: string, country: ICountry },
+    { rejectValue: IMessage }>(
+    'countrySlice/update',
+    async ({countryId, country}, {rejectWithValue, dispatch}) => {
+        try{
+            await countryService.update(countryId, country)
+            dispatch(alertActions.setMessage('Country successfully updated!'))
+        } catch (e) {
+            const err = e as AxiosError;
+            const data = err.response.data as IMessage;
+            dispatch(alertActions.setError(data.message))
+            return rejectWithValue(data)
+        }
+    }
+);
+
 const countrySlice = createSlice({
     name: 'countrySlice',
     initialState,
@@ -37,6 +72,10 @@ const countrySlice = createSlice({
                 state.countries = action.payload;
                 state.countriesForManagement = action.payload
             })
+
+            .addMatcher(isFulfilled(create, update), (state) => {
+                state.trigger = !state.trigger
+            })
     }
 });
 
@@ -44,7 +83,9 @@ const {reducer: countryReducer, actions} = countrySlice;
 
 const countryActions = {
     ...actions,
-    getAll
+    getAll,
+    create,
+    update
 }
 
 export {

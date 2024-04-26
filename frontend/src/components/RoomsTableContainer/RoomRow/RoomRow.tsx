@@ -13,7 +13,7 @@ const RoomRow: FC<IProp> = ({room}) => {
             <th>{room.roomNumber}</th>
             <th>{room.capacity}</th>
             <th>{room.hotelId}</th>
-            <th>ViewBookings/Update/Delete</th>
+            <th>Update/ViewBookings/Delete</th>
         </tr>
     );
 };

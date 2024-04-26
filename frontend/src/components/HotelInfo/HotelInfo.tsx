@@ -1,10 +1,10 @@
-import {FC, useEffect} from "react";
+import {FC, useEffect, useState} from "react";
 import {useForm} from "react-hook-form";
 import {Button, Form} from "react-bootstrap";
 import {joiResolver} from "@hookform/resolvers/joi";
 
 import {useAppDispatch, useAppSelector} from "../../hooks";
-import {hotelActions, roomActions} from "../../redux";
+import {countryActions, hotelActions, roomActions} from "../../redux";
 import {CountryBadge} from "../CountriesBadgesListContainer";
 import {RoomsCardsList} from "../RoomsCardsListContainer";
 import {IBooking} from "../../interfaces";
@@ -18,6 +18,8 @@ interface IProp {
 const HotelInfo: FC<IProp> = ({hotelId}) => {
     const {hotel} = useAppSelector(state => state.hotels);
     const {rooms} = useAppSelector(state => state.rooms);
+    const {countries} = useAppSelector(state => state.countries);
+    const [countryName, setCountryName] = useState<string>(null)
     const {reset, register, handleSubmit, formState: {errors, isValid}} = useForm<IBooking>({
         mode: 'onTouched',
         resolver: joiResolver(bookingValidator)
@@ -28,6 +30,19 @@ const HotelInfo: FC<IProp> = ({hotelId}) => {
         dispatch(hotelActions.getById({hotelId}));
         dispatch(roomActions.getByHotelId({hotelId}));
     }, [dispatch, hotelId]);
+
+    useEffect(() => {
+        dispatch(countryActions.getAll())
+    }, [dispatch]);
+
+    useEffect(() => {
+        if (hotel && countries.length > 0) {
+            const country = countries.find(country => country.id === hotel.countryId);
+            if (country) {
+                setCountryName(country.name)
+            }
+        }
+    }, [hotel, countries]);
 
     const viewRoomInPeriod = (booking: IBooking) => {
         const {bookedSince, bookedTo} = booking;
@@ -45,7 +60,7 @@ const HotelInfo: FC<IProp> = ({hotelId}) => {
                 <div>
                     <h4>{hotel.name}</h4>
                     <h6>{hotel.id}</h6>
-                    <CountryBadge id={hotel.countryId} name={hotel.countryName}/>
+                    {countryName && <CountryBadge id={hotel.countryId} name={countryName}/>}
                     <form>
                         <Form.Group className="my-2">
                             <Form.Label>Since</Form.Label>

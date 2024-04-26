@@ -1,6 +1,5 @@
 export interface IHotel {
     id: string,
     name: string,
-    countryId: string,
-    countryName: string
+    countryId: string
 }

@@ -38,7 +38,7 @@ const create = createAsyncThunk<void, { booking: IBooking }, { rejectValue: IMes
             const err = e as AxiosError
             const data = err.response.data as IMessage
             dispatch(alertActions.setError(data.message))
-            return (rejectWithValue(data))
+            return rejectWithValue(data)
         }
     }
 )

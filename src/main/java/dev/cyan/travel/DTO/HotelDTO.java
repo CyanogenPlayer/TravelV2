@@ -14,5 +14,4 @@ public class HotelDTO {
     private String name;
     @NotBlank
     private String countryId;
-    private String countryName;
 }
