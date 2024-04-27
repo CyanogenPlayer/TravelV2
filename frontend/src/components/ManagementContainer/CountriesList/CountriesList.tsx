@@ -26,7 +26,7 @@ const CountriesList = () => {
         <div>
             <h2>Countries:</h2>
             <CountriesTable countries={countriesForManagement}/>
-            <Button variant="primary" onClick={handleShowCreateForm}>Create country</Button>
+            <Button variant="primary" onClick={handleShowCreateForm}>Add country</Button>
             <CountryForm show={showCreateForm} setShow={setShowCreateForm} submit={create}/>
         </div>
     );

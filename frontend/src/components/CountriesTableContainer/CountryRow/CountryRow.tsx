@@ -26,7 +26,8 @@ const CountryRow: FC<IProp> = ({country}) => {
             <th>{country.name}</th>
             <th>
                 <Button variant="primary" onClick={handleShowUpdateForm}>Update</Button>
-                /ViewHotels/Delete
+                <Button variant="primary" className="ms-1" disabled={true}>ViewHotels</Button>
+                <Button variant="primary" className="ms-1" disabled={true}>Delete</Button>
             </th>
             <CountryForm show={showUpdateForm} setShow={setShowUpdateForm} submit={update} country={country}/>
         </tr>

@@ -4,7 +4,6 @@ import {AxiosError} from "axios";
 import {ICountry, IMessage} from "../../interfaces";
 import {countryService} from "../../services";
 import {alertActions} from "./alertSlice";
-import {string} from "joi";
 
 interface IState {
     countries: ICountry[],

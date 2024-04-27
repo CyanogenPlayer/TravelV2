@@ -7,7 +7,7 @@ const bookingValidator = Joi.object<IBooking>({
     bookedSince: JoiDate.date().format('YYYY-MM-DD').greater(Date.now() - 24 * 60 * 60 * 1000).utc().required()
         .messages({
             'date.format': 'booked since date must be in YYYY-MM-DD format',
-            'date.greater': 'booked since date must be greater or equal than today date',
+            'date.greater': 'booked since date must be equal to or greater than today date',
             'any.required': 'booked since date is a required field'
         }),
     bookedTo: JoiDate.date().format('YYYY-MM-DD').greater(Joi.ref('bookedSince')).utc().required()

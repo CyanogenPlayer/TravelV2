@@ -1,7 +1,10 @@
+import {Button} from "react-bootstrap";
 import {FC, useEffect, useState} from "react";
 
 import {IHotel} from "../../../interfaces";
-import {useAppSelector} from "../../../hooks";
+import {useAppDispatch, useAppSelector} from "../../../hooks";
+import {hotelActions} from "../../../redux";
+import {HotelForm} from "../../HotelForm";
 
 interface IProp {
     hotel: IHotel
@@ -10,6 +13,14 @@ interface IProp {
 const HotelRow: FC<IProp> = ({hotel}) => {
     const {countriesForManagement} = useAppSelector(state => state.countries);
     const [countryName, setCountryName] = useState<string>(null)
+    const [showUpdateForm, setShowUpdateForm] = useState(false)
+    const dispatch = useAppDispatch();
+
+    const handleShowUpdateForm = () => setShowUpdateForm(true)
+
+    const update = (updatedHotel: IHotel) => {
+        dispatch(hotelActions.update({hotelId: hotel.id, hotel: updatedHotel}))
+    }
 
     useEffect(() => {
         if (countriesForManagement.length > 0) {
@@ -18,14 +29,19 @@ const HotelRow: FC<IProp> = ({hotel}) => {
                 setCountryName(country.name)
             }
         }
-    }, [countriesForManagement]);
+    }, [countriesForManagement, hotel.countryId]);
 
     return (
         <tr>
             <th>{hotel.id}</th>
             <th>{hotel.name}</th>
-            <th>{countryName ? countryName: 'Country not found'}</th>
-            <th>Update/ViewRooms/Delete</th>
+            <th>{countryName ? countryName : 'Country not found'}</th>
+            <th>
+                <Button variant="primary" onClick={handleShowUpdateForm}>Update</Button>
+                <Button variant="primary" className="ms-1" disabled={true}>ViewRooms</Button>
+                <Button variant="primary" className="ms-1" disabled={true}>Delete</Button>
+            </th>
+            <HotelForm show={showUpdateForm} setShow={setShowUpdateForm} submit={update} hotel={hotel}/>
         </tr>
     );
 };

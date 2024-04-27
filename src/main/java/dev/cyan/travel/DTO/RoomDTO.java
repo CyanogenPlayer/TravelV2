@@ -12,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class RoomDTO {
     private String id;
-    @NotBlank
+    @Min(value = 1, message = "must be greater than 0")
     private Integer roomNumber;
     @Min(value = 1, message = "must be greater than 0")
     @Max(value = 10, message = "must be less than or equal to 10")

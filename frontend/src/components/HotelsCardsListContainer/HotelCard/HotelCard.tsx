@@ -1,4 +1,4 @@
-import {FC} from "react";
+import {FC, useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {Card} from "react-bootstrap";
 
@@ -12,27 +12,34 @@ interface IProp {
 
 const HotelCard: FC<IProp> = ({hotel}) => {
     const {countries} = useAppSelector(state => state.countries);
+    const [countryName, setCountryName] = useState<string>(null)
     const navigate = useNavigate();
 
     const {id, name, countryId} = hotel;
-    const countryName = countries.find(country => country.id === hotel.countryId).name
 
     const navigateToHotelInfo = () => {
         navigate(`${id}`)
     }
 
+    useEffect(() => {
+        if (countries.length > 0) {
+            const country = countries.find(country => country.id === countryId)
+            if (country) {
+                setCountryName(country.name)
+            }
+        }
+    }, [countries, countryId]);
+
     return (
-        <>
-            <Card border="primary" className={css.HotelCard} onClick={navigateToHotelInfo}>
-                <Card.Header>
-                    <Card.Title>{name}</Card.Title>
-                    <Card.Text style={{fontSize: 'smaller'}}>id: {id}</Card.Text>
-                </Card.Header>
-                <Card.Body>
-                    <Card.Subtitle>{countryName ? countryName: 'Country not found'}</Card.Subtitle>
-                </Card.Body>
-            </Card>
-        </>
+        <Card border="primary" className={css.HotelCard} onClick={navigateToHotelInfo}>
+            <Card.Header>
+                <Card.Title>{name}</Card.Title>
+                <Card.Text style={{fontSize: 'smaller'}}>id: {id}</Card.Text>
+            </Card.Header>
+            <Card.Body>
+                <Card.Subtitle>{countryName ? countryName : 'Country not found'}</Card.Subtitle>
+            </Card.Body>
+        </Card>
     );
 };
 

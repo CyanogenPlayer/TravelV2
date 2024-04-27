@@ -10,13 +10,13 @@ interface IProp {
 
 const RoomsTable: FC<IProp> = ({rooms}) => {
     return (
-        <Table striped bordered hover>
+        <Table striped bordered hover responsive>
             <thead>
             <tr>
                 <th>id</th>
                 <th>roomNumber</th>
                 <th>capacity</th>
-                <th>hotelId</th>
+                <th>hotel</th>
                 <th>actions</th>
             </tr>
             </thead>

@@ -22,7 +22,7 @@ const SuccessAlert = () => {
     }, [dispatch, message]);
 
     return (
-        <Alert className="position-absolute bottom-0 end-0 m-3" variant="success" show={show}
+        <Alert className="position-fixed bottom-0 end-0 m-3" variant="success" show={show}
                onClose={() => setShow(false)} dismissible>
             <Alert.Heading>Success!</Alert.Heading>
             <p>

@@ -30,7 +30,7 @@ const RoomCard: FC<IProp> = ({room}) => {
             <Card border="primary" className={css.RoomCard}>
                 <Card.Header>
                     <Card.Title>{roomNumber}</Card.Title>
-                    <Card.Text style={{fontSize: 'smaller'}}>{id}</Card.Text>
+                    <Card.Text style={{fontSize: 'smaller'}}>id: {id}</Card.Text>
                 </Card.Header>
                 <Card.Body>
                     <Card.Subtitle>capacity: {capacity}</Card.Subtitle>

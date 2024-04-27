@@ -22,7 +22,7 @@ const ErrorAlert = () => {
     }, [dispatch, error]);
 
     return (
-        <Alert className="position-absolute bottom-0 end-0 m-3" variant="danger" show={show}
+        <Alert className="position-fixed bottom-0 end-0 m-3" variant="danger" show={show}
                onClose={() => setShow(false)}  dismissible>
             <Alert.Heading>Error!</Alert.Heading>
             <p>

@@ -10,7 +10,7 @@ interface IProp {
 
 const HotelsTable: FC<IProp> = ({hotels}) => {
     return (
-        <Table striped bordered hover>
+        <Table striped bordered hover responsive>
             <thead>
             <tr>
                 <th>id</th>

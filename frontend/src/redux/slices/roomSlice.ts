@@ -3,15 +3,18 @@ import {AxiosError} from "axios";
 
 import {IMessage, IRoom} from "../../interfaces";
 import {roomService} from "../../services";
+import {alertActions} from "./alertSlice";
 
 interface IState {
     rooms: IRoom[],
-    roomsForManagement: IRoom[]
+    roomsForManagement: IRoom[],
+    trigger: boolean
 }
 
 const initialState: IState = {
     rooms: [],
-    roomsForManagement: []
+    roomsForManagement: [],
+    trigger: null
 }
 
 const getAll = createAsyncThunk<IRoom[], void, { rejectValue: IMessage }>(
@@ -61,6 +64,37 @@ const getAllAvailableForPeriod = createAsyncThunk<IRoom[], {
     }
 )
 
+const create = createAsyncThunk<void, { room: IRoom }, { rejectValue: IMessage }>(
+    'roomSlice/create',
+    async ({room}, {rejectWithValue, dispatch}) => {
+        try {
+            await roomService.create(room)
+            dispatch(alertActions.setMessage('Room successfully created!'))
+        } catch (e) {
+            const err = e as AxiosError;
+            const data = err.response.data as IMessage;
+            dispatch(alertActions.setError(data.message))
+            return rejectWithValue(data)
+        }
+    }
+);
+
+const update = createAsyncThunk<void, { roomId: string, room: IRoom },
+    { rejectValue: IMessage }>(
+    'roomSlice/update',
+    async ({roomId, room}, {rejectWithValue, dispatch}) => {
+        try {
+            await roomService.update(roomId, room)
+            dispatch(alertActions.setMessage('Room successfully updated!'))
+        } catch (e) {
+            const err = e as AxiosError;
+            const data = err.response.data as IMessage;
+            dispatch(alertActions.setError(data.message))
+            return rejectWithValue(data)
+        }
+    }
+);
+
 const roomSlice = createSlice({
     name: 'roomSlice',
     initialState,
@@ -74,6 +108,10 @@ const roomSlice = createSlice({
             .addMatcher(isFulfilled(getAll, getByHotelId, getAllAvailableForPeriod), (state, action) => {
                 state.rooms = action.payload;
             })
+
+            .addMatcher(isFulfilled(create, update), (state) => {
+                state.trigger = !state.trigger
+            })
     }
 })
 
@@ -83,7 +121,9 @@ const roomActions = {
     ...actions,
     getAll,
     getByHotelId,
-    getAllAvailableForPeriod
+    getAllAvailableForPeriod,
+    create,
+    update
 }
 
 export {

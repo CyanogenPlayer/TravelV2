@@ -1,5 +1,5 @@
 import {Button, Form, Modal} from "react-bootstrap";
-import {Dispatch, FC, SetStateAction} from "react";
+import {Dispatch, FC, SetStateAction, useEffect} from "react";
 import {useForm} from "react-hook-form";
 import {joiResolver} from "@hookform/resolvers/joi";
 
@@ -7,16 +7,16 @@ import {ICountry} from "../../interfaces";
 import {countryValidator} from "../../validators";
 import {ErrorTextBox} from "../ErrorTextBox";
 
-interface IProp{
+interface IProp {
     show: boolean,
-    setShow: Dispatch<SetStateAction<boolean>>
-    country?: ICountry
+    setShow: Dispatch<SetStateAction<boolean>>,
+    country?: ICountry,
 
     submit: (country: ICountry) => void
 }
 
 const CountryForm: FC<IProp> = ({show, setShow, submit, country}) => {
-    const {reset, register, handleSubmit, formState: {errors, isValid}} = useForm<ICountry>({
+    const {reset, register, handleSubmit, setValue, formState: {errors, isValid}} = useForm<ICountry>({
         mode: 'onTouched',
         resolver: joiResolver(countryValidator)
     });
@@ -31,18 +31,24 @@ const CountryForm: FC<IProp> = ({show, setShow, submit, country}) => {
         handleClose()
     }
 
+    useEffect(() => {
+        if (country) {
+            setValue('name', country.name)
+        }
+    }, [setValue, country]);
+
     return (
         <Modal show={show} onHide={handleClose}>
             <form>
                 <Modal.Header closeButton>
-                    <Modal.Title>{country ? 'Update ' + country.name: 'Create country'}</Modal.Title>
+                    <Modal.Title>{country ? 'Update ' + country.name : 'Add country'}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form.Group className="my-2">
                         <Form.Label>Country name</Form.Label>
                         <Form.Control
                             type="text"
-                            defaultValue={country ? country.name: null}
+                            defaultValue={country ? country.name : ''}
                             {...register('name')}
                         />
                         {errors.name && <ErrorTextBox error={errors.name.message}/>}
@@ -50,7 +56,7 @@ const CountryForm: FC<IProp> = ({show, setShow, submit, country}) => {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="primary" onClick={handleSubmit(handleForm)} disabled={!isValid}>
-                        {country ? 'Update ': 'Create'}
+                        {country ? 'Update ' : 'Add'}
                     </Button>
                 </Modal.Footer>
             </form>

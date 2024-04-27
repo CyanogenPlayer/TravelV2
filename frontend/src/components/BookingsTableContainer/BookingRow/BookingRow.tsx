@@ -1,6 +1,7 @@
 import {FC} from "react";
 
 import {IBooking} from "../../../interfaces";
+import {Button} from "react-bootstrap";
 
 interface IProp {
     booking: IBooking
@@ -14,7 +15,10 @@ const BookingRow: FC<IProp> = ({booking}) => {
             <th>{booking.bookedTo.toString()}</th>
             <th>{booking.roomId}</th>
             <th>{booking.userId}</th>
-            <th>Update/Delete</th>
+            <th>
+                <Button variant="primary" disabled={true}>Update</Button>
+                <Button variant="primary" className="ms-1" disabled={true}>Delete</Button>
+            </th>
         </tr>
     );
 };

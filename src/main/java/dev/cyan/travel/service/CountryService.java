@@ -18,7 +18,7 @@ public class CountryService {
 
     public List<CountryDTO> getAll() {
         return countryRepository
-                .findAll()
+                .findAllByOrderByName()
                 .stream()
                 .map(countryMapper::toDTO)
                 .toList();
