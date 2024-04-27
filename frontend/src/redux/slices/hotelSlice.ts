@@ -1,4 +1,4 @@
-import {createAsyncThunk, createSlice, isFulfilled} from "@reduxjs/toolkit";
+import {createAsyncThunk, createSlice, isFulfilled, isPending, isRejected} from "@reduxjs/toolkit";
 import {AxiosError} from "axios";
 
 import {IHotel, IMessage} from "../../interfaces";
@@ -9,18 +9,20 @@ interface IState {
     hotel: IHotel,
     hotels: IHotel[],
     hotelsForManagement: IHotel[],
-    trigger: boolean
+    trigger: boolean,
+    isLoading: boolean
 }
 
 const initialState: IState = {
     hotel: null,
     hotels: [],
     hotelsForManagement: [],
-    trigger: null
+    trigger: null,
+    isLoading: false
 }
 
 const getAll = createAsyncThunk<IHotel[], void, { rejectValue: IMessage }>(
-    'hotelSlice/getAll:load',
+    'hotelSlice/getAll',
     async (_, {rejectWithValue}) => {
         try {
             const {data} = await hotelService.getAll()
@@ -34,7 +36,7 @@ const getAll = createAsyncThunk<IHotel[], void, { rejectValue: IMessage }>(
 
 const getByCountryId = createAsyncThunk<IHotel[], { countryId: string },
     { rejectValue: IMessage }>(
-    'hotelSlice/getByCountryId:load',
+    'hotelSlice/getByCountryId',
     async ({countryId}, {rejectWithValue}) => {
         try {
             const {data} = await hotelService.getByCountryId(countryId)
@@ -100,16 +102,28 @@ const hotelSlice = createSlice({
                 state.hotelsForManagement = action.payload
             })
 
+            .addCase(getById.fulfilled, (state, action) => {
+                state.hotel = action.payload
+            })
+
             .addMatcher(isFulfilled(getAll, getByCountryId), (state, action) => {
                 state.hotels = action.payload;
             })
 
-            .addMatcher(isFulfilled(getById), (state, action) => {
-                state.hotel = action.payload
+            .addMatcher(isFulfilled(getAll, getByCountryId, getById), state => {
+                state.isLoading = false
             })
 
-            .addMatcher(isFulfilled(create, update), (state) => {
+            .addMatcher(isFulfilled(create, update), state => {
                 state.trigger = !state.trigger
+            })
+
+            .addMatcher(isRejected(getAll, getByCountryId, getById), state => {
+                state.isLoading = false
+            })
+
+            .addMatcher(isPending(getAll, getByCountryId, getById), state => {
+                state.isLoading = true
             })
     }
 })

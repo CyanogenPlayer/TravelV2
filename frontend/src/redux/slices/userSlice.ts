@@ -5,11 +5,13 @@ import {IMessage, IUser} from "../../interfaces";
 import {userService} from "../../services";
 
 interface IState {
-    users: IUser[]
+    users: IUser[],
+    isLoading: boolean
 }
 
 const initialState: IState = {
-    users: []
+    users: [],
+    isLoading: null
 }
 
 const getAll = createAsyncThunk<IUser[], void, { rejectValue: IMessage }>(
@@ -33,6 +35,15 @@ const userSlice = createSlice({
         builder
             .addCase(getAll.fulfilled, (state, action) => {
                 state.users = action.payload
+                state.isLoading = false
+            })
+
+            .addCase(getAll.rejected, state => {
+                state.isLoading = false
+            })
+
+            .addCase(getAll.pending, state => {
+                state.isLoading = true
             })
     }
 });

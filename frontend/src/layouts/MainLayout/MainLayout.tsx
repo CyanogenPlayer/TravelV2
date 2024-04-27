@@ -10,7 +10,17 @@ import {authActions} from "../../redux";
 
 const MainLayout = () => {
     const dispatch = useAppDispatch();
-    const {isLoading} = useAppSelector(state => state.loading);
+    const {
+        auth: {isLoading: authLoading},
+        bookings: {isLoading: bookingsLoading},
+        countries: {isLoading: countriesLoading},
+        hotels: {isLoading: hotelsLoading},
+        rooms: {isLoading: roomsLoading},
+        users: {isLoading: usersLoading}
+    } = useAppSelector(state => state);
+
+    const isLoading = authLoading || bookingsLoading || countriesLoading || hotelsLoading || roomsLoading ||
+        usersLoading;
 
     useEffect(() => {
         if (authService.getToken()) {
@@ -25,7 +35,8 @@ const MainLayout = () => {
             styles={{
                 overlay: base => ({
                     ...base,
-                    background: 'rgba(66,66,66,0.5)'
+                    background: 'rgba(66,66,66,0.5)',
+                    position: 'fixed'
                 }),
                 wrapper: {
                     height: '100%'

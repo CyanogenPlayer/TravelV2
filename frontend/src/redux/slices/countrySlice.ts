@@ -8,17 +8,19 @@ import {alertActions} from "./alertSlice";
 interface IState {
     countries: ICountry[],
     countriesForManagement: ICountry[],
-    trigger: boolean
+    trigger: boolean,
+    isLoading: boolean
 }
 
 const initialState: IState = {
     countries: [],
     countriesForManagement: [],
-    trigger: null
+    trigger: null,
+    isLoading: false
 }
 
 const getAll = createAsyncThunk<ICountry[], void, { rejectValue: IMessage }>(
-    'countrySlice/getAll:load',
+    'countrySlice/getAll',
     async (_, {rejectWithValue}) => {
         try {
             const {data} = await countryService.getAll();
@@ -49,7 +51,7 @@ const update = createAsyncThunk<void, { countryId: string, country: ICountry },
     { rejectValue: IMessage }>(
     'countrySlice/update',
     async ({countryId, country}, {rejectWithValue, dispatch}) => {
-        try{
+        try {
             await countryService.update(countryId, country)
             dispatch(alertActions.setMessage('Country successfully updated!'))
         } catch (e) {
@@ -70,9 +72,18 @@ const countrySlice = createSlice({
             .addCase(getAll.fulfilled, (state, action) => {
                 state.countries = action.payload;
                 state.countriesForManagement = action.payload
+                state.isLoading = false
             })
 
-            .addMatcher(isFulfilled(create, update), (state) => {
+            .addCase(getAll.rejected, state => {
+                state.isLoading = false
+            })
+
+            .addCase(getAll.pending, state => {
+                state.isLoading = true
+            })
+
+            .addMatcher(isFulfilled(create, update), state => {
                 state.trigger = !state.trigger
             })
     }

@@ -5,8 +5,8 @@ import {useAppDispatch, useAppSelector} from "../../hooks";
 import {bookingActions} from "../../redux";
 
 const BookingsPage = () => {
-    const {user} = useAppSelector(state => state.auth);
-    const {bookings} = useAppSelector(state => state.bookings);
+    const {auth: {user}, bookings: {bookings}} =
+        useAppSelector(state => state);
     const dispatch = useAppDispatch();
 
     useEffect(() => {

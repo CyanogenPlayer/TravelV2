@@ -13,8 +13,7 @@ const CountryBadge: FC<IProp> = ({id, name}) => {
     const navigateToHotels = () => {
         if (id) {
             navigate(`/hotels?country=${id}`)
-        }
-        else {
+        } else {
             navigate(`/hotels`)
         }
     }

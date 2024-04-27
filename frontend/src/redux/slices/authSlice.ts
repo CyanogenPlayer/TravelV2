@@ -7,12 +7,14 @@ import {alertActions} from "./alertSlice";
 
 interface IState {
     isAuth: boolean,
-    user: IUser
+    user: IUser,
+    isLoading: boolean
 }
 
 const initialState: IState = {
-    isAuth: false,
-    user: null
+    isAuth: null,
+    user: null,
+    isLoading: null
 }
 
 const signIn = createAsyncThunk<JwtResponse, { user: SignInRequest },
@@ -49,7 +51,7 @@ const signUp = createAsyncThunk<void, { user: SignUpRequest },
 )
 
 const checkTokenAndFetchUser = createAsyncThunk<IUser, void, { rejectValue: IMessage }>(
-    'authSlice/checkTokenAndFetchUser:load',
+    'authSlice/checkTokenAndFetchUser',
     async (_, {rejectWithValue}) => {
         try {
             const {data} = await authService.getMe();
@@ -76,8 +78,17 @@ const authSlice = createSlice({
                 authService.setToken(action.payload.token)
             })
 
-            .addCase(checkTokenAndFetchUser.rejected, () => {
+            .addCase(checkTokenAndFetchUser.fulfilled, state => {
+                state.isLoading = false
+            })
+
+            .addCase(checkTokenAndFetchUser.rejected, state => {
+                state.isLoading = false
                 authService.deleteToken()
+            })
+
+            .addCase(checkTokenAndFetchUser.pending, state => {
+                state.isLoading = true
             })
 
             .addMatcher(isFulfilled(signIn, checkTokenAndFetchUser), (state, action) => {

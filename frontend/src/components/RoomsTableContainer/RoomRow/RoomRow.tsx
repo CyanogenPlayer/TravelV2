@@ -36,7 +36,7 @@ const RoomRow: FC<IProp> = ({room}) => {
             <th>{room.id}</th>
             <th>{room.roomNumber}</th>
             <th>{room.capacity}</th>
-            <th>{hotelName ? hotelName: 'Hotel not found'}</th>
+            <th>{hotelName ? hotelName : 'Hotel not found'}</th>
             <th>
                 <Button variant="primary" onClick={handleShowUpdateForm}>Update</Button>
                 <Button variant="primary" className="ms-1" disabled={true}>ViewBookings</Button>

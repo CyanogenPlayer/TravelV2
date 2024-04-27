@@ -1,4 +1,4 @@
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+import {createAsyncThunk, createSlice, isFulfilled, isPending, isRejected} from "@reduxjs/toolkit";
 import {AxiosError} from "axios";
 
 import {IBooking, IMessage} from "../../interfaces";
@@ -7,12 +7,14 @@ import {alertActions} from "./alertSlice";
 
 interface IState {
     bookings: IBooking[],
-    bookingsForManagement: IBooking[]
+    bookingsForManagement: IBooking[],
+    isLoading: boolean
 }
 
 const initialState: IState = {
     bookings: [],
-    bookingsForManagement: []
+    bookingsForManagement: [],
+    isLoading: null
 }
 
 const getAll = createAsyncThunk<IBooking[], void, { rejectValue: IMessage }>(
@@ -45,7 +47,7 @@ const create = createAsyncThunk<void, { booking: IBooking }, { rejectValue: IMes
 
 const getByUserId = createAsyncThunk<IBooking[], { userId: string },
     { rejectValue: IMessage }>(
-    'bookingSlice/getByUserId:load',
+    'bookingSlice/getByUserId',
     async ({userId}, {rejectWithValue}) => {
         try {
             const {data} = await bookingService.getByUserId(userId)
@@ -69,6 +71,18 @@ const bookingSlice = createSlice({
 
             .addCase(getByUserId.fulfilled, (state, action) => {
                 state.bookings = action.payload
+            })
+
+            .addMatcher(isFulfilled(getAll, getByUserId), state => {
+                state.isLoading = false
+            })
+
+            .addMatcher(isRejected(getAll, getByUserId), state => {
+                state.isLoading = false
+            })
+
+            .addMatcher(isPending(getAll, getByUserId), state => {
+                state.isLoading = true
             })
     }
 })

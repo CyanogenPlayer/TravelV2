@@ -6,7 +6,6 @@ import {
     bookingReducer,
     countryReducer,
     hotelReducer,
-    loadingReducer,
     roomReducer, userReducer
 } from "./slices";
 
@@ -17,7 +16,6 @@ const store = configureStore({
         bookings: bookingReducer,
         countries: countryReducer,
         hotels: hotelReducer,
-        loading: loadingReducer,
         rooms: roomReducer,
         users: userReducer
     }

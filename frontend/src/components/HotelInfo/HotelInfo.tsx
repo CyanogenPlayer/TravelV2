@@ -12,9 +12,8 @@ interface IProp {
 }
 
 const HotelInfo: FC<IProp> = ({hotelId}) => {
-    const {hotel} = useAppSelector(state => state.hotels);
-    const {rooms} = useAppSelector(state => state.rooms);
-    const {countries} = useAppSelector(state => state.countries);
+    const {hotels: {hotel}, rooms: {rooms}, countries: {countries}} =
+        useAppSelector(state => state);
     const [countryName, setCountryName] = useState<string>(null)
     const dispatch = useAppDispatch();
 

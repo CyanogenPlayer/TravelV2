@@ -9,7 +9,7 @@ const signUpValidator = Joi.object<SignUpRequest>({
         'string.max': 'username should have maximum length of {#limit}',
         'any.required': 'username is required field'
     }),
-    email: Joi.string().min(1).max(50).required().email({ tlds: { allow: false } }).messages({
+    email: Joi.string().min(1).max(50).required().email({tlds: {allow: false}}).messages({
         'string.empty': 'email cannot be empty',
         'string.min': 'email should have minimum length of {#limit}',
         'string.max': 'email should have maximum length of {#limit}',

@@ -1,4 +1,4 @@
-import {createAsyncThunk, createSlice, isFulfilled} from "@reduxjs/toolkit";
+import {createAsyncThunk, createSlice, isFulfilled, isPending, isRejected} from "@reduxjs/toolkit";
 import {AxiosError} from "axios";
 
 import {IMessage, IRoom} from "../../interfaces";
@@ -8,17 +8,19 @@ import {alertActions} from "./alertSlice";
 interface IState {
     rooms: IRoom[],
     roomsForManagement: IRoom[],
-    trigger: boolean
+    trigger: boolean,
+    isLoading: boolean
 }
 
 const initialState: IState = {
     rooms: [],
     roomsForManagement: [],
-    trigger: null
+    trigger: null,
+    isLoading: false
 }
 
 const getAll = createAsyncThunk<IRoom[], void, { rejectValue: IMessage }>(
-    'roomSlice/getAll:load',
+    'roomSlice/getAll',
     async (_, {rejectWithValue}) => {
         try {
             const {data} = await roomService.getAll()
@@ -32,7 +34,7 @@ const getAll = createAsyncThunk<IRoom[], void, { rejectValue: IMessage }>(
 
 const getByHotelId = createAsyncThunk<IRoom[], { hotelId: string },
     { rejectValue: IMessage }>(
-    'roomSlice/getByHotelId:load',
+    'roomSlice/getByHotelId',
     async ({hotelId}, {rejectWithValue}) => {
         try {
             const {data} = await roomService.getByHotelId(hotelId)
@@ -49,7 +51,7 @@ const getAllAvailableForPeriod = createAsyncThunk<IRoom[], {
     bookedSince: Date,
     bookedTo: Date
 }, { rejectValue: IMessage }>(
-    'roomSlice/getAllAvailableForPeriod:load',
+    'roomSlice/getAllAvailableForPeriod',
     async ({hotelId, bookedSince, bookedTo}, {rejectWithValue}) => {
         try {
             const {data} = await roomService.getAllAvailableForPeriod(
@@ -107,10 +109,19 @@ const roomSlice = createSlice({
 
             .addMatcher(isFulfilled(getAll, getByHotelId, getAllAvailableForPeriod), (state, action) => {
                 state.rooms = action.payload;
+                state.isLoading = false
             })
 
-            .addMatcher(isFulfilled(create, update), (state) => {
+            .addMatcher(isFulfilled(create, update), state => {
                 state.trigger = !state.trigger
+            })
+
+            .addMatcher(isRejected(getAll, getByHotelId, getAllAvailableForPeriod), state => {
+                state.isLoading = false
+            })
+
+            .addMatcher(isPending(getAll, getByHotelId, getAllAvailableForPeriod), state => {
+                state.isLoading = true
             })
     }
 })

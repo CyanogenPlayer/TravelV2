@@ -14,7 +14,7 @@ const CountriesBadgesList = () => {
 
     return (
         <div>
-            <CountryBadge name={'All'}/>
+            {countries.length > 0 && <CountryBadge name={'All'}/>}
             {countries && countries.map(country => <CountryBadge key={country.id} id={country.id}
                                                                  name={country.name}/>)}
         </div>
