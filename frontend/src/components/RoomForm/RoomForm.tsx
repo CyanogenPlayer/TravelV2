@@ -47,7 +47,7 @@ const RoomForm: FC<IProp> = ({show, setShow, submit, room}) => {
         <Modal show={show} onHide={handleClose}>
             <form>
                 <Modal.Header closeButton>
-                    <Modal.Title>{room ? 'Update ' + room.roomNumber : 'Add room'}</Modal.Title>
+                    <Modal.Title>{room ? `Update ${room.roomNumber}` : 'Add room'}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form.Group className="my-2">

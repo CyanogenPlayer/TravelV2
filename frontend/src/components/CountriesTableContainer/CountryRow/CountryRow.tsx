@@ -11,7 +11,7 @@ interface IProp {
 }
 
 const CountryRow: FC<IProp> = ({country}) => {
-    const [showUpdateForm, setShowUpdateForm] = useState(false)
+    const [showUpdateForm, setShowUpdateForm] = useState<boolean>(null)
     const dispatch = useAppDispatch();
 
     const handleShowUpdateForm = () => setShowUpdateForm(true)
@@ -25,9 +25,9 @@ const CountryRow: FC<IProp> = ({country}) => {
             <th>{country.id}</th>
             <th>{country.name}</th>
             <th>
-                <Button variant="primary" onClick={handleShowUpdateForm}>Update</Button>
-                <Button variant="primary" className="ms-1" disabled={true}>ViewHotels</Button>
-                <Button variant="primary" className="ms-1" disabled={true}>Delete</Button>
+                <Button variant="primary" className="me-1" onClick={handleShowUpdateForm}>Update</Button>
+                <Button variant="primary" className="me-1" disabled={true}>ViewHotels</Button>
+                <Button variant="primary" className="me-1" disabled={true}>Delete</Button>
             </th>
             <CountryForm show={showUpdateForm} setShow={setShowUpdateForm} submit={update} country={country}/>
         </tr>

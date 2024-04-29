@@ -15,8 +15,9 @@ const urls = {
     },
     bookings: {
         allBookings: `${bookings}`,
+        bookingsByUserId: (userId: string) => `${bookings}/list/${userId}`,
         create: `${bookings}`,
-        bookingsByUserId: (userId: string) => `${bookings}/list/${userId}`
+        update: (bookingId: string) => `${bookings}/${bookingId}`
     },
     countries: {
         allCountries: `${countries}`,
@@ -39,7 +40,8 @@ const urls = {
         update: (roomId: string) => `${rooms}/${roomId}`
     },
     users: {
-        allUsers: `${users}`
+        allUsers: `${users}`,
+        updateRoles: (userId: string) => `${users}/${userId}`
     }
 }
 

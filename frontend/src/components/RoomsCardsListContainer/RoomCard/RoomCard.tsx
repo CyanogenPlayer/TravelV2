@@ -14,10 +14,10 @@ interface IProp {
 const RoomCard: FC<IProp> = ({room}) => {
     const {id, roomNumber, capacity} = room;
     const {isAuth, user} = useAppSelector(state => state.auth);
-    const [show, setShow] = useState(false)
+    const [showBookingForm, setShowBookingForm] = useState<boolean>(null)
     const dispatch = useAppDispatch();
 
-    const handleShow = () => setShow(true)
+    const handleShowBookingForm = () => setShowBookingForm(true)
 
     const book = (booking: IBooking) => {
         booking.roomId = id
@@ -34,10 +34,10 @@ const RoomCard: FC<IProp> = ({room}) => {
                 </Card.Header>
                 <Card.Body>
                     <Card.Subtitle>capacity: {capacity}</Card.Subtitle>
-                    <Button variant="primary" disabled={!isAuth} onClick={handleShow}>Book</Button>
+                    <Button variant="primary" disabled={!isAuth} onClick={handleShowBookingForm}>Book</Button>
                 </Card.Body>
             </Card>
-            <BookingForm show={show} setShow={setShow} roomNumber={roomNumber} book={book}/>
+            <BookingForm show={showBookingForm} setShow={setShowBookingForm} roomNumber={roomNumber} submit={book}/>
         </>
     );
 };

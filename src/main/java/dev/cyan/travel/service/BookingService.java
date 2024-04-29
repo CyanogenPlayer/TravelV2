@@ -45,7 +45,7 @@ public class BookingService {
         roomRepository.findById(bookingDTO.getRoomId()).orElseThrow();
         userRepository.findById(bookingDTO.getUserId()).orElseThrow();
         Booking booking = bookingMapper.fromDTO(bookingDTO);
-        if (checkIfBookingIsAvailable(booking.getRoom(), booking.getBookedSince(), booking.getBookedTo())) {
+        if (checkIfBookingIsAvailable(booking.getRoom(), booking.getBookedSince(), booking.getBookedTo(), null)) {
             Booking createdBooking = bookingRepository.save(booking);
             return Optional.of(bookingMapper.toDTO(createdBooking));
         }
@@ -53,7 +53,7 @@ public class BookingService {
         return Optional.empty();
     }
 
-    public Boolean checkIfBookingIsAvailable(Room room, LocalDate bookedSince, LocalDate bookedTo) {
+    public Boolean checkIfBookingIsAvailable(Room room, LocalDate bookedSince, LocalDate bookedTo, String id) {
         if (bookedSince == null || bookedTo == null || bookedSince.isAfter(bookedTo) ||
                 bookedSince.isEqual(bookedTo)) {
             return false;
@@ -67,6 +67,10 @@ public class BookingService {
                 )));
         List<Booking> bookings = mongoTemplate.find(query, Booking.class);
 
+        if (id != null) {
+            bookings.removeIf(booking -> id.equals(booking.getId()));
+        }
+
         return bookings.isEmpty();
     }
 
@@ -75,7 +79,7 @@ public class BookingService {
         userRepository.findById(bookingDTO.getUserId()).orElseThrow();
         Booking booking = bookingRepository.findById(id).orElseThrow();
         Booking fromDTO = bookingMapper.fromDTO(bookingDTO);
-        if (checkIfBookingIsAvailable(fromDTO.getRoom(), fromDTO.getBookedSince(), fromDTO.getBookedTo())) {
+        if (checkIfBookingIsAvailable(fromDTO.getRoom(), fromDTO.getBookedSince(), fromDTO.getBookedTo(), id)) {
             bookingMapper.updateBooking(booking, bookingDTO);
             Booking modifiedBooking = bookingRepository.save(booking);
             return Optional.of(bookingMapper.toDTO(modifiedBooking));

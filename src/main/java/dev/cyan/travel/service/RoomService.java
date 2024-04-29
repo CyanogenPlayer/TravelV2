@@ -72,7 +72,7 @@ public class RoomService {
         List<Room> roomsByHotel = roomRepository.findRoomsByHotel(hotel);
         List<Room> availableRooms = new ArrayList<>();
         for (Room room: roomsByHotel) {
-            if (bookingService.checkIfBookingIsAvailable(room, bookedSince, bookedTo)) {
+            if (bookingService.checkIfBookingIsAvailable(room, bookedSince, bookedTo, null)) {
                 availableRooms.add(room);
             }
         }

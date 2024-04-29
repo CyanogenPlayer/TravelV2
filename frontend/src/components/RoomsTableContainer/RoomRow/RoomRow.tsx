@@ -13,7 +13,7 @@ interface IProp {
 const RoomRow: FC<IProp> = ({room}) => {
     const {hotelsForManagement} = useAppSelector(state => state.hotels);
     const [hotelName, setHotelName] = useState<string>(null)
-    const [showUpdateForm, setShowUpdateForm] = useState(false)
+    const [showUpdateForm, setShowUpdateForm] = useState<boolean>(null)
     const dispatch = useAppDispatch();
 
     const handleShowUpdateForm = () => setShowUpdateForm(true)
@@ -38,9 +38,9 @@ const RoomRow: FC<IProp> = ({room}) => {
             <th>{room.capacity}</th>
             <th>{hotelName ? hotelName : 'Hotel not found'}</th>
             <th>
-                <Button variant="primary" onClick={handleShowUpdateForm}>Update</Button>
-                <Button variant="primary" className="ms-1" disabled={true}>ViewBookings</Button>
-                <Button variant="primary" className="ms-1" disabled={true}>Delete</Button>
+                <Button variant="primary" className="me-1" onClick={handleShowUpdateForm}>Update</Button>
+                <Button variant="primary" className="me-1" disabled={true}>ViewBookings</Button>
+                <Button variant="primary" className="me-1" disabled={true}>Delete</Button>
             </th>
             <RoomForm show={showUpdateForm} setShow={setShowUpdateForm} submit={update} room={room}/>
         </tr>

@@ -9,7 +9,7 @@ import {HotelForm} from "../../HotelForm";
 
 const HotelsList = () => {
     const {hotelsForManagement, trigger} = useAppSelector(state => state.hotels);
-    const [showCreateForm, setShowCreateForm] = useState(false)
+    const [showCreateForm, setShowCreateForm] = useState<boolean>(null)
     const dispatch = useAppDispatch();
 
     const handleShowCreateForm = () => setShowCreateForm(true)

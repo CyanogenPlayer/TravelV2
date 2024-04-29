@@ -5,7 +5,7 @@ import {useAppDispatch, useAppSelector} from "../../hooks";
 import {bookingActions} from "../../redux";
 
 const BookingsPage = () => {
-    const {auth: {user}, bookings: {bookings}} =
+    const {auth: {user}, bookings: {bookings, trigger}} =
         useAppSelector(state => state);
     const dispatch = useAppDispatch();
 
@@ -13,7 +13,7 @@ const BookingsPage = () => {
         if (user) {
             dispatch(bookingActions.getByUserId({userId: user.id}))
         }
-    }, [dispatch, user]);
+    }, [dispatch, user, trigger]);
 
     return (
         <div>

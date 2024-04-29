@@ -16,7 +16,7 @@ const initialState: IState = {
     countries: [],
     countriesForManagement: [],
     trigger: null,
-    isLoading: false
+    isLoading: null
 }
 
 const getAll = createAsyncThunk<ICountry[], void, { rejectValue: IMessage }>(

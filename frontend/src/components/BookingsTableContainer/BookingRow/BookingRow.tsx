@@ -1,13 +1,27 @@
-import {FC} from "react";
+import {Button} from "react-bootstrap";
+import {FC, useState} from "react";
 
 import {IBooking} from "../../../interfaces";
-import {Button} from "react-bootstrap";
+import {useAppDispatch} from "../../../hooks";
+import {bookingActions} from "../../../redux";
+import {BookingForm} from "../../BookingForm";
 
 interface IProp {
     booking: IBooking
 }
 
 const BookingRow: FC<IProp> = ({booking}) => {
+    const [showUpdateForm, setShowUpdateForm] = useState<boolean>(null)
+    const dispatch = useAppDispatch();
+
+    const handleShowUpdateForm = () => setShowUpdateForm(true)
+
+    const update = (updatedBooking: IBooking) => {
+        updatedBooking.roomId = booking.roomId
+        updatedBooking.userId = booking.userId
+        dispatch(bookingActions.update({bookingId: booking.id, booking: updatedBooking}))
+    }
+
     return (
         <tr>
             <th>{booking.id}</th>
@@ -16,9 +30,10 @@ const BookingRow: FC<IProp> = ({booking}) => {
             <th>{booking.roomId}</th>
             <th>{booking.userId}</th>
             <th>
-                <Button variant="primary" disabled={true}>Update</Button>
-                <Button variant="primary" className="ms-1" disabled={true}>Delete</Button>
+                <Button variant="primary" className="me-1" onClick={handleShowUpdateForm}>Update</Button>
+                <Button variant="primary" className="me-1" disabled={true}>Delete</Button>
             </th>
+            <BookingForm show={showUpdateForm} setShow={setShowUpdateForm} submit={update} booking={booking}/>
         </tr>
     );
 };

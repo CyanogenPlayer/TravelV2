@@ -23,7 +23,7 @@ public class UserController {
         return ResponseEntity.ok(userService.getAll());
     }
 
-    @PostMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<UserDTO> updateRoles(@PathVariable String id, @Valid @RequestBody UserDTO userDTO) {
         return ResponseEntity.ok(userService.updateRoles(id, userDTO));
     }

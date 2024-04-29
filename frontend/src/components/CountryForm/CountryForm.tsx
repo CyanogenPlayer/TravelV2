@@ -41,14 +41,14 @@ const CountryForm: FC<IProp> = ({show, setShow, submit, country}) => {
         <Modal show={show} onHide={handleClose}>
             <form>
                 <Modal.Header closeButton>
-                    <Modal.Title>{country ? 'Update ' + country.name : 'Add country'}</Modal.Title>
+                    <Modal.Title>{country ? `Update ${country.name}` : 'Add country'}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form.Group className="my-2">
                         <Form.Label>Country name</Form.Label>
                         <Form.Control
                             type="text"
-                            defaultValue={country ? country.name : ''}
+                            defaultValue={country ? country.name : null}
                             {...register('name')}
                         />
                         {errors.name && <ErrorTextBox error={errors.name.message}/>}
@@ -56,7 +56,7 @@ const CountryForm: FC<IProp> = ({show, setShow, submit, country}) => {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="primary" onClick={handleSubmit(handleForm)} disabled={!isValid}>
-                        {country ? 'Update ' : 'Add'}
+                        {country ? 'Update' : 'Add'}
                     </Button>
                 </Modal.Footer>
             </form>

@@ -5,12 +5,12 @@ import {userActions} from "../../../redux";
 import {UsersTable} from "../../UsersTableContainer";
 
 const UsersList = () => {
-    const {users} = useAppSelector(state => state.users);
+    const {users, trigger} = useAppSelector(state => state.users);
     const dispatch = useAppDispatch();
 
     useEffect(() => {
         dispatch(userActions.getAll())
-    }, [dispatch]);
+    }, [dispatch, trigger]);
 
     return (
         <div>

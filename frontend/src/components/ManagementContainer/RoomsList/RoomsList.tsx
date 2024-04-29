@@ -9,7 +9,7 @@ import {RoomForm} from "../../RoomForm";
 
 const RoomsList = () => {
     const {roomsForManagement, trigger} = useAppSelector(state => state.rooms);
-    const [showCreateForm, setShowCreateForm] = useState(false)
+    const [showCreateForm, setShowCreateForm] = useState<boolean>(null)
     const dispatch = useAppDispatch();
 
     const handleShowCreateForm = () => setShowCreateForm(true)

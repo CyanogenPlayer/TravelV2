@@ -7,7 +7,7 @@ import {alertActions} from "../../../redux";
 const SuccessAlert = () => {
     const {message} = useAppSelector(state => state.alerts);
     const dispatch = useAppDispatch();
-    const [show, setShow] = useState(false);
+    const [show, setShow] = useState<boolean>(null);
 
     useEffect(() => {
         if (message) {

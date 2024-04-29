@@ -3,14 +3,17 @@ import {AxiosError} from "axios";
 
 import {IMessage, IUser} from "../../interfaces";
 import {userService} from "../../services";
+import {alertActions} from "./alertSlice";
 
 interface IState {
     users: IUser[],
+    trigger: boolean,
     isLoading: boolean
 }
 
 const initialState: IState = {
     users: [],
+    trigger: null,
     isLoading: null
 }
 
@@ -27,6 +30,22 @@ const getAll = createAsyncThunk<IUser[], void, { rejectValue: IMessage }>(
     }
 );
 
+const updateRoles = createAsyncThunk<void, { userId: string, user: IUser },
+    { rejectValue: IMessage }>(
+    'userSlice/updateRoles',
+    async ({userId, user}, {rejectWithValue, dispatch}) => {
+        try {
+            await userService.updateRoles(userId, user);
+            dispatch(alertActions.setMessage('Roles successfully updated!'))
+        } catch (e) {
+            const err = e as AxiosError;
+            const data = err.response.data as IMessage;
+            dispatch(alertActions.setError(data.message))
+            return rejectWithValue(data)
+        }
+    }
+);
+
 const userSlice = createSlice({
     name: 'userSlice',
     initialState,
@@ -36,6 +55,10 @@ const userSlice = createSlice({
             .addCase(getAll.fulfilled, (state, action) => {
                 state.users = action.payload
                 state.isLoading = false
+            })
+
+            .addCase(updateRoles.fulfilled, state => {
+                state.trigger = !state.trigger
             })
 
             .addCase(getAll.rejected, state => {
@@ -52,7 +75,8 @@ const {reducer: userReducer, actions} = userSlice;
 
 const userActions = {
     ...actions,
-    getAll
+    getAll,
+    updateRoles
 }
 
 export {

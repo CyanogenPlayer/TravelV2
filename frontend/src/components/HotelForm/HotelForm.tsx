@@ -46,14 +46,14 @@ const HotelForm: FC<IProp> = ({show, setShow, submit, hotel}) => {
         <Modal show={show} onHide={handleClose}>
             <form>
                 <Modal.Header closeButton>
-                    <Modal.Title>{hotel ? 'Update ' + hotel.name : 'Add hotel'}</Modal.Title>
+                    <Modal.Title>{hotel ? `Update ${hotel.name}`  : 'Add hotel'}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form.Group className="my-2">
                         <Form.Label>Hotel name</Form.Label>
                         <Form.Control
                             type="text"
-                            defaultValue={hotel ? hotel.name : ''}
+                            defaultValue={hotel ? hotel.name : null}
                             {...register('name')}
                         />
                         {errors.name && <ErrorTextBox error={errors.name.message}/>}

@@ -16,7 +16,7 @@ const initialState: IState = {
     rooms: [],
     roomsForManagement: [],
     trigger: null,
-    isLoading: false
+    isLoading: null
 }
 
 const getAll = createAsyncThunk<IRoom[], void, { rejectValue: IMessage }>(

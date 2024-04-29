@@ -18,7 +18,7 @@ const initialState: IState = {
     hotels: [],
     hotelsForManagement: [],
     trigger: null,
-    isLoading: false
+    isLoading: null
 }
 
 const getAll = createAsyncThunk<IHotel[], void, { rejectValue: IMessage }>(

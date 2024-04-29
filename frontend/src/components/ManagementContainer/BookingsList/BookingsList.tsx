@@ -5,12 +5,12 @@ import {useAppDispatch, useAppSelector} from "../../../hooks";
 import {bookingActions} from "../../../redux";
 
 const BookingsList = () => {
-    const {bookingsForManagement} = useAppSelector(state => state.bookings);
+    const {bookingsForManagement, trigger} = useAppSelector(state => state.bookings);
     const dispatch = useAppDispatch();
 
     useEffect(() => {
         dispatch(bookingActions.getAll())
-    }, [dispatch]);
+    }, [dispatch, trigger]);
 
     return (
         <div>

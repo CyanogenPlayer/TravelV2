@@ -9,7 +9,7 @@ import {CountryForm} from "../../CountryForm";
 
 const CountriesList = () => {
     const {countriesForManagement, trigger} = useAppSelector(state => state.countries);
-    const [showCreateForm, setShowCreateForm] = useState(false)
+    const [showCreateForm, setShowCreateForm] = useState<boolean>(null)
     const dispatch = useAppDispatch();
 
     const handleShowCreateForm = () => setShowCreateForm(true)
