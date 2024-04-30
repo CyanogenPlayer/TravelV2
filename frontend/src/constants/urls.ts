@@ -17,19 +17,22 @@ const urls = {
         allBookings: `${bookings}`,
         bookingsByUserId: (userId: string) => `${bookings}/list/${userId}`,
         create: `${bookings}`,
-        update: (bookingId: string) => `${bookings}/${bookingId}`
+        update: (bookingId: string) => `${bookings}/${bookingId}`,
+        deleteBooking: (bookingId: string) => `${bookings}/${bookingId}`
     },
     countries: {
         allCountries: `${countries}`,
         create: `${countries}`,
-        update: (countryId: string) => `${countries}/${countryId}`
+        update: (countryId: string) => `${countries}/${countryId}`,
+        deleteCountry: (countryId: string) => `${countries}/${countryId}`
     },
     hotels: {
         allHotels: `${hotels}`,
         hotelsByCountryId: (countryId: string): string => `${countries}/${countryId}${hotels}`,
         byId: (hotelId: string): string => `${hotels}/${hotelId}`,
         create: `${hotels}`,
-        update: (hotelId: string) => `${hotels}/${hotelId}`
+        update: (hotelId: string) => `${hotels}/${hotelId}`,
+        deleteHotel: (hotelId: string) => `${hotels}/${hotelId}`
     },
     rooms: {
         allRooms: `${rooms}`,
@@ -37,7 +40,8 @@ const urls = {
         allAvailableForPeriod: (hotelId: string, bookedSince: string, bookedTo: string): string =>
             `${hotels}/${hotelId}${rooms}?bookedSince=${bookedSince}&bookedTo=${bookedTo}`,
         create: `${rooms}`,
-        update: (roomId: string) => `${rooms}/${roomId}`
+        update: (roomId: string) => `${rooms}/${roomId}`,
+        deleteRoom: (roomId: string) => `${rooms}/${roomId}`
     },
     users: {
         allUsers: `${users}`,

@@ -13,11 +13,11 @@ const UsersTable: FC<IProp> = ({users}) => {
         <Table striped bordered hover responsive>
             <thead>
             <tr>
-                <th>id</th>
-                <th>username</th>
-                <th>email</th>
-                <th>role</th>
-                <th>actions</th>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Roles</th>
+                <th>Actions</th>
             </tr>
             </thead>
             <tbody>

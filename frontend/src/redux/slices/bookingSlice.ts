@@ -77,6 +77,22 @@ const update = createAsyncThunk<void, { bookingId: string, booking: IBooking },
     }
 );
 
+const deleteBooking = createAsyncThunk<void, { bookingId: string },
+    { rejectValue: IMessage }>(
+    'bookingSlice/deleteBooking',
+    async ({bookingId}, {rejectWithValue, dispatch}) => {
+        try {
+            await bookingService.deleteBooking(bookingId)
+            dispatch(alertActions.setMessage('Booking successfully deleted!'))
+        } catch (e) {
+            const err = e as AxiosError;
+            const data = err.response.data as IMessage;
+            dispatch(alertActions.setError(data.message))
+            return rejectWithValue(data)
+        }
+    }
+);
+
 const bookingSlice = createSlice({
     name: 'bookingSlice',
     initialState,
@@ -95,7 +111,7 @@ const bookingSlice = createSlice({
                 state.isLoading = false
             })
 
-            .addMatcher(isFulfilled(create, update), state => {
+            .addMatcher(isFulfilled(create, update, deleteBooking), state => {
                 state.trigger = !state.trigger
             })
 
@@ -116,7 +132,8 @@ const bookingActions = {
     getAll,
     getByUserId,
     create,
-    update
+    update,
+    deleteBooking
 }
 
 export {

@@ -28,9 +28,9 @@ public class UserController {
         return ResponseEntity.ok(userService.updateRoles(id, userDTO));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable String id) {
-        userService.delete(id);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<Void> delete(@PathVariable String id) {
+//        userService.delete(id);
+//        return new ResponseEntity<>(HttpStatus.OK);
+//    }
 }

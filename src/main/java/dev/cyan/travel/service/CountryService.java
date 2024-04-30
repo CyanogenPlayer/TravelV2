@@ -2,8 +2,11 @@ package dev.cyan.travel.service;
 
 import dev.cyan.travel.DTO.CountryDTO;
 import dev.cyan.travel.entity.Country;
+import dev.cyan.travel.entity.Hotel;
+import dev.cyan.travel.exception.CannotDeleteException;
 import dev.cyan.travel.mapper.CountryMapper;
 import dev.cyan.travel.repository.CountryRepository;
+import dev.cyan.travel.repository.HotelRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +17,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CountryService {
     private final CountryRepository countryRepository;
+    private final HotelRepository hotelRepository;
     private final CountryMapper countryMapper;
 
     public List<CountryDTO> getAll() {
@@ -45,7 +49,15 @@ public class CountryService {
         return countryMapper.toDTO(modifiedCountry);
     }
 
-    public void delete(String id) {
-        countryRepository.deleteById(id);
+    public void delete(String id) throws CannotDeleteException {
+        Country country = countryRepository
+                .findById(id)
+                .orElseThrow();
+        List<Hotel> hotels = hotelRepository.findHotelsByCountry(country);
+        if (hotels.isEmpty()) {
+            countryRepository.deleteById(id);
+        } else {
+            throw new CannotDeleteException("Cannot delete this country because there are hotels in this country");
+        }
     }
 }

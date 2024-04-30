@@ -1,6 +1,7 @@
 package dev.cyan.travel.response;
 
 import com.mongodb.MongoWriteException;
+import dev.cyan.travel.exception.CannotDeleteException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -19,7 +20,7 @@ public class Advice {
 
     @ExceptionHandler(MongoWriteException.class)
     public ResponseEntity<MessageResponse> handleMongoWriteException(MongoWriteException exception) {
-        return exceptionHandler(exception, HttpStatus.NOT_ACCEPTABLE);
+        return exceptionHandler(exception, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(NoSuchElementException.class)
@@ -28,7 +29,13 @@ public class Advice {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<MessageResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
+    public ResponseEntity<MessageResponse> handleMethodArgumentNotValidException(
+            MethodArgumentNotValidException exception) {
         return exceptionHandler(exception, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(CannotDeleteException.class)
+    public ResponseEntity<MessageResponse> handleCannotDeleteException(CannotDeleteException exception) {
+        return exceptionHandler(exception, HttpStatus.FORBIDDEN);
     }
 }

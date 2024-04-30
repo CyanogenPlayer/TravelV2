@@ -13,11 +13,11 @@ const RoomsTable: FC<IProp> = ({rooms}) => {
         <Table striped bordered hover responsive>
             <thead>
             <tr>
-                <th>id</th>
-                <th>roomNumber</th>
-                <th>capacity</th>
-                <th>hotel</th>
-                <th>actions</th>
+                <th>ID</th>
+                <th>Room Number</th>
+                <th>Capacity</th>
+                <th>Hotel</th>
+                <th>Actions</th>
             </tr>
             </thead>
             <tbody>

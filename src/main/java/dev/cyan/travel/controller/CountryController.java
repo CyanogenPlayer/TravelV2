@@ -2,6 +2,7 @@ package dev.cyan.travel.controller;
 
 import dev.cyan.travel.DTO.CountryDTO;
 import dev.cyan.travel.DTO.HotelDTO;
+import dev.cyan.travel.exception.CannotDeleteException;
 import dev.cyan.travel.service.CountryService;
 import dev.cyan.travel.service.HotelService;
 import jakarta.validation.Valid;
@@ -44,7 +45,7 @@ public class CountryController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<Void> delete(@PathVariable String id) {
+    public ResponseEntity<Void> delete(@PathVariable String id) throws CannotDeleteException {
         countryService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }

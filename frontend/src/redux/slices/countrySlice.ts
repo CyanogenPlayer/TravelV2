@@ -63,6 +63,22 @@ const update = createAsyncThunk<void, { countryId: string, country: ICountry },
     }
 );
 
+const deleteCountry = createAsyncThunk<void, { countryId: string },
+    { rejectValue: IMessage }>(
+    'countrySlice/deleteCountry',
+    async ({countryId}, {rejectWithValue, dispatch}) => {
+        try {
+            await countryService.deleteCountry(countryId)
+            dispatch(alertActions.setMessage('Country successfully deleted!'))
+        } catch (e) {
+            const err = e as AxiosError;
+            const data = err.response.data as IMessage;
+            dispatch(alertActions.setError(data.message))
+            return rejectWithValue(data)
+        }
+    }
+);
+
 const countrySlice = createSlice({
     name: 'countrySlice',
     initialState,
@@ -83,7 +99,7 @@ const countrySlice = createSlice({
                 state.isLoading = true
             })
 
-            .addMatcher(isFulfilled(create, update), state => {
+            .addMatcher(isFulfilled(create, update, deleteCountry), state => {
                 state.trigger = !state.trigger
             })
     }
@@ -95,7 +111,8 @@ const countryActions = {
     ...actions,
     getAll,
     create,
-    update
+    update,
+    deleteCountry
 }
 
 export {

@@ -1,9 +1,12 @@
 package dev.cyan.travel.service;
 
 import dev.cyan.travel.DTO.RoomDTO;
+import dev.cyan.travel.entity.Booking;
 import dev.cyan.travel.entity.Hotel;
 import dev.cyan.travel.entity.Room;
+import dev.cyan.travel.exception.CannotDeleteException;
 import dev.cyan.travel.mapper.RoomMapper;
+import dev.cyan.travel.repository.BookingRepository;
 import dev.cyan.travel.repository.HotelRepository;
 import dev.cyan.travel.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +23,7 @@ public class RoomService {
     private final RoomRepository roomRepository;
     private final HotelRepository hotelRepository;
     private final RoomMapper roomMapper;
+    private final BookingRepository bookingRepository;
     private final BookingService bookingService;
 
     public List<RoomDTO> getAll() {
@@ -53,8 +57,16 @@ public class RoomService {
         return roomMapper.toDTO(modifiedRoom);
     }
 
-    public void delete(String id) {
-        roomRepository.deleteById(id);
+    public void delete(String id) throws CannotDeleteException {
+        Room room = roomRepository
+                .findById(id)
+                .orElseThrow();
+        List<Booking> bookings = bookingRepository.findBookingsByRoom(room);
+        if (bookings.isEmpty()) {
+            roomRepository.deleteById(id);
+        } else {
+            throw new CannotDeleteException("Cannot delete this room because there are bookings for this room");
+        }
     }
 
     public List<RoomDTO> getRoomsByHotelId(String id) {
@@ -71,7 +83,7 @@ public class RoomService {
         Hotel hotel = hotelRepository.findById(hotelId).orElseThrow();
         List<Room> roomsByHotel = roomRepository.findRoomsByHotel(hotel);
         List<Room> availableRooms = new ArrayList<>();
-        for (Room room: roomsByHotel) {
+        for (Room room : roomsByHotel) {
             if (bookingService.checkIfBookingIsAvailable(room, bookedSince, bookedTo, null)) {
                 availableRooms.add(room);
             }

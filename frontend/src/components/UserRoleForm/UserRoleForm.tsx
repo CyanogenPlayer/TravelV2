@@ -1,9 +1,9 @@
 import {Button, Form, Modal, ModalBody} from "react-bootstrap";
-import {Dispatch, FC, FormEvent, SetStateAction, useEffect, useState} from "react";
+import {Dispatch, FC, SetStateAction, useEffect} from "react";
+import {FieldValues, useForm} from "react-hook-form";
 
 import {IUser} from "../../interfaces";
 import {ERole} from "../../enums";
-import {FieldValues, useForm} from "react-hook-form";
 
 interface IProp {
     show: boolean,
@@ -36,7 +36,7 @@ const UserRoleForm: FC<IProp> = ({show, setShow, user, submit}) => {
         if (user) {
             setValue('roleSwitch', !!user.roles.find(role => role === ERole.ROLE_MANAGER))
         }
-    }, [user]);
+    }, [setValue, user]);
 
     return (
         <Modal show={show} onHide={handleClose}>

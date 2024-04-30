@@ -27,9 +27,9 @@ const UserRow: FC<IProp> = ({user}) => {
             <th>{user.email}</th>
             <th>{user.roles.toString()}</th>
             <th>
-                <Button variant="primary" className="me-1" onClick={handleShowUpdateForm}>UpdateRoles</Button>
-                <Button variant="primary" className="me-1" disabled={true}>ViewBookings</Button>
-                <Button variant="primary" className="me-1" disabled={true}>Delete</Button>
+                <Button variant="primary" className="me-1" onClick={handleShowUpdateForm}>Update roles</Button>
+                <Button variant="primary" className="me-1" disabled={true}>View bookings</Button>
+                {/*<Button variant="primary" className="me-1" disabled={true}>Delete</Button>*/}
             </th>
             <UserRoleForm show={showUpdateForm} setShow={setShowUpdateForm} user={user} submit={update}/>
         </tr>

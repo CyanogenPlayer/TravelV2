@@ -13,9 +13,9 @@ const CountriesTable: FC<IProp> = ({countries}) => {
         <Table striped bordered hover responsive>
             <thead>
             <tr>
-                <th>id</th>
-                <th>name</th>
-                <th>actions</th>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Actions</th>
             </tr>
             </thead>
             <tbody>
