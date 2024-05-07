@@ -34,7 +34,7 @@ const Header = () => {
     }
 
     return (
-        <Navbar expand="lg" className="bg-secondary bg-gradient justify-content-center">
+        <Navbar expand="lg" className="bg-secondary bg-gradient justify-content-center position-fixed w-100 z-1">
             <Container className="justify-content-between">
                 <Navbar.Brand onClick={navigateToHome} style={{cursor: 'pointer'}}>
                     <img

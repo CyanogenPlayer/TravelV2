@@ -1,6 +1,7 @@
 .HotelCard {
     width: 18rem;
     text-align: center;
+    margin-top: 1em;
 }
 
 .HotelCard:hover {

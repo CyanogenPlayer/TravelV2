@@ -21,7 +21,7 @@ const HotelsCardsList: FC<IProp> = ({countryId}) => {
     }, [dispatch, countryId]);
 
     return (
-        <div>
+        <div className="d-flex flex-wrap justify-content-around">
             {hotels && hotels.map(hotel => <HotelCard key={hotel.id} hotel={hotel}/>)}
         </div>
     );

@@ -19,9 +19,7 @@ const CountryBadge: FC<IProp> = ({id, name}) => {
     }
 
     return (
-        <>
-            <Button variant="secondary" onClick={navigateToHotels}>{name}</Button>
-        </>
+        <Button variant="secondary" onClick={navigateToHotels} className="mx-1">{name}</Button>
     );
 };
 

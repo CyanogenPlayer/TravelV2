@@ -1,6 +1,6 @@
 import {Outlet} from "react-router-dom";
 import {useEffect} from "react";
-import {Spinner} from "react-bootstrap";
+import {Container, Spinner} from "react-bootstrap";
 import LoadingOverlayWrapper from "react-loading-overlay-ts";
 
 import {ErrorAlert, Header, SuccessAlert} from "../../components";
@@ -44,7 +44,9 @@ const MainLayout = () => {
             }}
         >
             <Header/>
-            <Outlet/>
+            <Container className="justify-content-center bg-light min-vh-100" style={{paddingTop: '4em'}}>
+                <Outlet/>
+            </Container>
             <ErrorAlert/>
             <SuccessAlert/>
         </LoadingOverlayWrapper>

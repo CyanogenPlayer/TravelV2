@@ -10,8 +10,8 @@ interface IProp {
 const RoomsCardsList: FC<IProp> = ({rooms}) => {
     return (
         <>
-            <p>Rooms:</p>
-            <div>
+            <h6 className="my-1">Rooms:</h6>
+            <div className="d-flex flex-wrap justify-content-around">
                 {rooms && rooms.map(room => <RoomCard key={room.id} room={room}/>)}
             </div>
         </>

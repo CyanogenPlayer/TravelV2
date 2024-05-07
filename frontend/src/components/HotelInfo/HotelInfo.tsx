@@ -49,7 +49,7 @@ const HotelInfo: FC<IProp> = ({hotelId}) => {
             {hotel &&
                 <div>
                     <h4>{hotel.name}</h4>
-                    <h6>{hotel.id}</h6>
+                    <h6>id: {hotel.id}</h6>
                     {countryName && <CountryBadge id={hotel.countryId} name={countryName}/>}
                     <SearchRoomsInPeriodForm viewRoomsInPeriod={viewRoomsInPeriod} resetRooms={resetRooms}/>
                     {rooms.length !== 0 && <RoomsCardsList rooms={rooms}/>}
