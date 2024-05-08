@@ -21,8 +21,6 @@ const UserRoleForm: FC<IProp> = ({show, setShow, user, submit}) => {
     const handleForm = ({roleSwitch}: FieldValues) => {
         const updatedUser = {...user}
 
-        console.log(roleSwitch)
-
         if (roleSwitch) {
             updatedUser.roles = [ERole.ROLE_USER, ERole.ROLE_MANAGER]
         } else {
@@ -40,7 +38,7 @@ const UserRoleForm: FC<IProp> = ({show, setShow, user, submit}) => {
 
     return (
         <Modal show={show} onHide={handleClose}>
-            <form onSubmit={handleForm}>
+            <form onSubmit={handleSubmit(handleForm)}>
                 <Modal.Header closeButton>
                     <Modal.Title>{user && `Update ${user.username} roles`}</Modal.Title>
                 </Modal.Header>
@@ -55,7 +53,7 @@ const UserRoleForm: FC<IProp> = ({show, setShow, user, submit}) => {
                     </Form.Group>
                 </ModalBody>
                 <Modal.Footer>
-                    <Button variant="primary" onClick={handleSubmit(handleForm)}>
+                    <Button type="submit" variant="primary">
                         Update
                     </Button>
                 </Modal.Footer>

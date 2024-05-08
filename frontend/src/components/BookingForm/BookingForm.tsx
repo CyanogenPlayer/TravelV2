@@ -41,7 +41,7 @@ const BookingForm: FC<IProp> = ({show, setShow, roomNumber, submit, booking}) =>
 
     return (
         <Modal show={show} onHide={handleClose}>
-            <form>
+            <form onSubmit={handleSubmit(handleForm)}>
                 <Modal.Header closeButton>
                     <Modal.Title>{booking ? 'Update booking' : `Want to book room ${roomNumber}?`}</Modal.Title>
                 </Modal.Header>
@@ -66,7 +66,7 @@ const BookingForm: FC<IProp> = ({show, setShow, roomNumber, submit, booking}) =>
                     </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="primary" onClick={handleSubmit(handleForm)} disabled={!isValid}>
+                    <Button type="submit" variant="primary" disabled={!isValid}>
                         {booking ? 'Update' : 'Book'}
                     </Button>
                 </Modal.Footer>

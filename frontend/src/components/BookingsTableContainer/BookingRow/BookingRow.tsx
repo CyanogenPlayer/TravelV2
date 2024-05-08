@@ -30,20 +30,22 @@ const BookingRow: FC<IProp> = ({booking}) => {
     }
 
     return (
-        <tr>
-            <th>{booking.id}</th>
-            <th>{booking.bookedSince.toString()}</th>
-            <th>{booking.bookedTo.toString()}</th>
-            <th>{booking.roomId}</th>
-            <th>{booking.userId}</th>
-            <th>
-                <Button variant="primary" className="me-1" onClick={handleShowUpdateForm}>Update</Button>
-                <Button variant="primary" className="me-1" onClick={handleShowDeleteModal}>Delete</Button>
-            </th>
+        <>
+            <tr>
+                <th>{booking.id}</th>
+                <th>{booking.bookedSince.toString()}</th>
+                <th>{booking.bookedTo.toString()}</th>
+                <th>{booking.roomId}</th>
+                <th>{booking.userId}</th>
+                <th>
+                    <Button variant="primary" className="me-1" onClick={handleShowUpdateForm}>Update</Button>
+                    <Button variant="primary" className="me-1" onClick={handleShowDeleteModal}>Delete</Button>
+                </th>
+            </tr>
             <BookingForm show={showUpdateForm} setShow={setShowUpdateForm} submit={update} booking={booking}/>
             <DeleteModal show={showDeleteModal} setShow={setShowDeleteModal} objName="booking"
                          deleteAction={deleteBooking}/>
-        </tr>
+        </>
     );
 };
 

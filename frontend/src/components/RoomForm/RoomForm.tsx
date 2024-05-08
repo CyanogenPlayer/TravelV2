@@ -45,7 +45,7 @@ const RoomForm: FC<IProp> = ({show, setShow, submit, room}) => {
 
     return (
         <Modal show={show} onHide={handleClose}>
-            <form>
+            <form onSubmit={handleSubmit(handleForm)}>
                 <Modal.Header closeButton>
                     <Modal.Title>{room ? `Update ${room.roomNumber}` : 'Add room'}</Modal.Title>
                 </Modal.Header>
@@ -82,7 +82,7 @@ const RoomForm: FC<IProp> = ({show, setShow, submit, room}) => {
                     </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="primary" onClick={handleSubmit(handleForm)} disabled={!isValid}>
+                    <Button type="submit" variant="primary" disabled={!isValid}>
                         {room ? 'Update' : 'Add'}
                     </Button>
                 </Modal.Footer>

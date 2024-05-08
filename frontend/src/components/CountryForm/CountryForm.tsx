@@ -39,7 +39,7 @@ const CountryForm: FC<IProp> = ({show, setShow, submit, country}) => {
 
     return (
         <Modal show={show} onHide={handleClose}>
-            <form>
+            <form onSubmit={handleSubmit(handleForm)}>
                 <Modal.Header closeButton>
                     <Modal.Title>{country ? `Update ${country.name}` : 'Add country'}</Modal.Title>
                 </Modal.Header>
@@ -55,7 +55,7 @@ const CountryForm: FC<IProp> = ({show, setShow, submit, country}) => {
                     </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="primary" onClick={handleSubmit(handleForm)} disabled={!isValid}>
+                    <Button type="submit" variant="primary" disabled={!isValid}>
                         {country ? 'Update' : 'Add'}
                     </Button>
                 </Modal.Footer>

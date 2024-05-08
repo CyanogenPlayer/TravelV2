@@ -39,20 +39,22 @@ const RoomRow: FC<IProp> = ({room}) => {
     }, [hotelsForManagement, room.hotelId]);
 
     return (
-        <tr>
-            <th>{room.id}</th>
-            <th>{room.roomNumber}</th>
-            <th>{room.capacity}</th>
-            <th>{hotelName ? hotelName : 'Hotel not found'}</th>
-            <th>
-                <Button variant="primary" className="me-1" onClick={handleShowUpdateForm}>Update</Button>
-                <Button variant="primary" className="me-1" disabled={true}>View bookings</Button>
-                <Button variant="primary" className="me-1" onClick={handleShowDeleteModal}>Delete</Button>
-            </th>
+        <>
+            <tr>
+                <th>{room.id}</th>
+                <th>{room.roomNumber}</th>
+                <th>{room.capacity}</th>
+                <th>{hotelName ? hotelName : 'Hotel not found'}</th>
+                <th>
+                    <Button variant="primary" className="me-1" onClick={handleShowUpdateForm}>Update</Button>
+                    <Button variant="primary" className="me-1" disabled={true}>View bookings</Button>
+                    <Button variant="primary" className="me-1" onClick={handleShowDeleteModal}>Delete</Button>
+                </th>
+            </tr>
             <RoomForm show={showUpdateForm} setShow={setShowUpdateForm} submit={update} room={room}/>
             <DeleteModal show={showDeleteModal} setShow={setShowDeleteModal} objName={room.roomNumber.toString()}
                          deleteAction={deleteRoom}/>
-        </tr>
+        </>
     );
 };
 

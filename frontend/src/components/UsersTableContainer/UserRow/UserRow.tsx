@@ -21,18 +21,20 @@ const UserRow: FC<IProp> = ({user}) => {
     }
 
     return (
-        <tr>
-            <th>{user.id}</th>
-            <th>{user.username}</th>
-            <th>{user.email}</th>
-            <th>{user.roles.toString()}</th>
-            <th>
-                <Button variant="primary" className="me-1" onClick={handleShowUpdateForm}>Update roles</Button>
-                <Button variant="primary" className="me-1" disabled={true}>View bookings</Button>
-                {/*<Button variant="primary" className="me-1" disabled={true}>Delete</Button>*/}
-            </th>
+        <>
+            <tr>
+                <th>{user.id}</th>
+                <th>{user.username}</th>
+                <th>{user.email}</th>
+                <th>{user.roles.toString()}</th>
+                <th>
+                    <Button variant="primary" className="me-1" onClick={handleShowUpdateForm}>Update roles</Button>
+                    <Button variant="primary" className="me-1" disabled={true}>View bookings</Button>
+                    {/*<Button variant="primary" className="me-1" disabled={true}>Delete</Button>*/}
+                </th>
+            </tr>
             <UserRoleForm show={showUpdateForm} setShow={setShowUpdateForm} user={user} submit={update}/>
-        </tr>
+        </>
     );
 };
 

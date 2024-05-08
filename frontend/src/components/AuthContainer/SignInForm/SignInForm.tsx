@@ -35,7 +35,7 @@ const SignInForm: FC<IProp> = ({handleToggle}) => {
     }
 
     return (
-        <form>
+        <form onSubmit={handleSubmit(signIn)}>
             <h1 className="m-3 text-center">SignIn</h1>
             <Form.Group className="my-2">
                 <Form.Label>Username</Form.Label>
@@ -56,7 +56,7 @@ const SignInForm: FC<IProp> = ({handleToggle}) => {
                 {errors.password && <ErrorTextBox error={errors.password.message}/>}
             </Form.Group>
             <div className="mt-3 text-center">
-                <Button className="btn btn-block" onClick={handleSubmit(signIn)} disabled={!isValid}>
+                <Button type="submit" className="btn btn-block" disabled={!isValid}>
                     SignIn
                 </Button>
                 <p className="mt-3">

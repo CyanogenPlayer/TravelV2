@@ -33,7 +33,7 @@ const SignUpForm: FC<IProp> = ({handleToggle}) => {
     }
 
     return (
-        <form>
+        <form onSubmit={handleSubmit(signUp)}>
             <h1 className="m-3 text-center">SignUp</h1>
             <Form.Group className="my-2">
                 <Form.Label>Username</Form.Label>
@@ -72,7 +72,7 @@ const SignUpForm: FC<IProp> = ({handleToggle}) => {
                 {errors.re_password && <ErrorTextBox error={errors.re_password.message}/>}
             </Form.Group>
             <div className="mt-3 text-center">
-                <Button className="btn btn-block" onClick={handleSubmit(signUp)} disabled={!isValid}>
+                <Button type="submit" className="btn btn-block" disabled={!isValid}>
                     SignUp
                 </Button>
                 <p className="mt-3">

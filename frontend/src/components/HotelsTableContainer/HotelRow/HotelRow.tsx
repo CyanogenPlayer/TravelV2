@@ -39,19 +39,21 @@ const HotelRow: FC<IProp> = ({hotel}) => {
     }, [countriesForManagement, hotel.countryId]);
 
     return (
-        <tr>
-            <th>{hotel.id}</th>
-            <th>{hotel.name}</th>
-            <th>{countryName ? countryName : 'Country not found'}</th>
-            <th>
-                <Button variant="primary" className="me-1" onClick={handleShowUpdateForm}>Update</Button>
-                <Button variant="primary" className="me-1" disabled={true}>View rooms</Button>
-                <Button variant="primary" className="me-1" onClick={handleShowDeleteModal}>Delete</Button>
-            </th>
+        <>
+            <tr>
+                <th>{hotel.id}</th>
+                <th>{hotel.name}</th>
+                <th>{countryName ? countryName : 'Country not found'}</th>
+                <th>
+                    <Button variant="primary" className="me-1" onClick={handleShowUpdateForm}>Update</Button>
+                    <Button variant="primary" className="me-1" disabled={true}>View rooms</Button>
+                    <Button variant="primary" className="me-1" onClick={handleShowDeleteModal}>Delete</Button>
+                </th>
+            </tr>
             <HotelForm show={showUpdateForm} setShow={setShowUpdateForm} submit={update} hotel={hotel}/>
             <DeleteModal show={showDeleteModal} setShow={setShowDeleteModal} objName={hotel.name}
                          deleteAction={deleteHotel}/>
-        </tr>
+        </>
     );
 };
 

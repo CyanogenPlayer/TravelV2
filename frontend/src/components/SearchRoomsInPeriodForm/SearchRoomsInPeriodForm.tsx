@@ -24,7 +24,7 @@ const SearchRoomsInPeriodForm: FC<IProp> = ({viewRoomsInPeriod, resetRooms}) => 
     }
 
     return (
-        <form>
+        <form onSubmit={handleSubmit(viewRoomsInPeriod)}>
             <Form.Group className="my-2">
                 <Form.Label>Since</Form.Label>
                 <Form.Control
@@ -41,7 +41,7 @@ const SearchRoomsInPeriodForm: FC<IProp> = ({viewRoomsInPeriod, resetRooms}) => 
                 />
                 {errors.bookedTo && <ErrorTextBox error={errors.bookedTo.message}/>}
             </Form.Group>
-            <Button size="sm" variant="primary" onClick={handleSubmit(viewRoomsInPeriod)}
+            <Button type="submit" size="sm" variant="primary"
                     disabled={!isValid}>
                 Search
             </Button>

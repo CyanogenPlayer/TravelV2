@@ -44,7 +44,7 @@ const HotelForm: FC<IProp> = ({show, setShow, submit, hotel}) => {
 
     return (
         <Modal show={show} onHide={handleClose}>
-            <form>
+            <form onSubmit={handleSubmit(handleForm)}>
                 <Modal.Header closeButton>
                     <Modal.Title>{hotel ? `Update ${hotel.name}`  : 'Add hotel'}</Modal.Title>
                 </Modal.Header>
@@ -72,7 +72,7 @@ const HotelForm: FC<IProp> = ({show, setShow, submit, hotel}) => {
                     </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="primary" onClick={handleSubmit(handleForm)} disabled={!isValid}>
+                    <Button type="submit" variant="primary" disabled={!isValid}>
                         {hotel ? 'Update' : 'Add'}
                     </Button>
                 </Modal.Footer>
