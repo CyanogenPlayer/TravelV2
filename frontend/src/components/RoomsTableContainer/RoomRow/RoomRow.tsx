@@ -47,7 +47,6 @@ const RoomRow: FC<IProp> = ({room}) => {
                 <th>{hotelName ? hotelName : 'Hotel not found'}</th>
                 <th>
                     <Button variant="primary" className="me-1" onClick={handleShowUpdateForm}>Update</Button>
-                    <Button variant="primary" className="me-1" disabled={true}>View bookings</Button>
                     <Button variant="primary" className="me-1" onClick={handleShowDeleteModal}>Delete</Button>
                 </th>
             </tr>

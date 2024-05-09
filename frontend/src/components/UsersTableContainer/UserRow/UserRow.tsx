@@ -29,7 +29,6 @@ const UserRow: FC<IProp> = ({user}) => {
                 <th>{user.roles.toString()}</th>
                 <th>
                     <Button variant="primary" className="me-1" onClick={handleShowUpdateForm}>Update roles</Button>
-                    <Button variant="primary" className="me-1" disabled={true}>View bookings</Button>
                     {/*<Button variant="primary" className="me-1" disabled={true}>Delete</Button>*/}
                 </th>
             </tr>

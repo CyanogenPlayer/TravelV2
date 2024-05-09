@@ -32,6 +32,20 @@ const getAll = createAsyncThunk<IBooking[], void, { rejectValue: IMessage }>(
     }
 )
 
+const getByRoomId = createAsyncThunk<IBooking[], { roomId: string },
+    { rejectValue: IMessage }>(
+    'bookingSlice/getByUserId',
+    async ({roomId}, {rejectWithValue}) => {
+        try {
+            const {data} = await bookingService.getByRoomId(roomId)
+            return data
+        } catch (e) {
+            const err = e as AxiosError
+            return rejectWithValue(err.response.data as IMessage)
+        }
+    }
+)
+
 const getByUserId = createAsyncThunk<IBooking[], { userId: string },
     { rejectValue: IMessage }>(
     'bookingSlice/getByUserId',
@@ -99,15 +113,12 @@ const bookingSlice = createSlice({
     reducers: {},
     extraReducers: builder => {
         builder
-            .addCase(getAll.fulfilled, (state, action) => {
-                state.bookingsForManagement = action.payload
-            })
-
             .addCase(getByUserId.fulfilled, (state, action) => {
                 state.bookings = action.payload
             })
 
-            .addMatcher(isFulfilled(getAll, getByUserId), state => {
+            .addMatcher(isFulfilled(getAll, getByRoomId, getByUserId), (state, action) => {
+                state.bookingsForManagement = action.payload
                 state.isLoading = false
             })
 
@@ -130,6 +141,7 @@ const {reducer: bookingReducer, actions} = bookingSlice
 const bookingActions = {
     ...actions,
     getAll,
+    getByRoomId,
     getByUserId,
     create,
     update,

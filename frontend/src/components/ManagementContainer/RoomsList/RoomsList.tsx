@@ -1,4 +1,4 @@
-import {Button} from "react-bootstrap";
+import {Button, Form} from "react-bootstrap";
 import {useEffect, useState} from "react";
 
 import {useAppDispatch, useAppSelector} from "../../../hooks";
@@ -8,8 +8,12 @@ import {IRoom} from "../../../interfaces";
 import {RoomForm} from "../../RoomForm";
 
 const RoomsList = () => {
-    const {roomsForManagement, trigger} = useAppSelector(state => state.rooms);
+    const {
+        rooms: {roomsForManagement, trigger},
+        hotels: {hotelsForManagement}
+    } = useAppSelector(state => state);
     const [showCreateForm, setShowCreateForm] = useState<boolean>(null)
+    const [selectedHotelId, setSelectedHotelId] = useState<string>('')
     const dispatch = useAppDispatch();
 
     const handleShowCreateForm = () => setShowCreateForm(true)
@@ -18,13 +22,31 @@ const RoomsList = () => {
         dispatch(roomActions.create({room}))
     }
 
+    const resetSelect = () => setSelectedHotelId('')
+
     useEffect(() => {
-        dispatch(roomActions.getAll())
-    }, [dispatch, trigger]);
+        if (selectedHotelId !== '') {
+            dispatch(roomActions.getByHotelId({hotelId: selectedHotelId}))
+        } else {
+            dispatch(roomActions.getAll())
+        }
+    }, [dispatch, trigger, selectedHotelId]);
 
     return (
         <div>
             <h2>Rooms: </h2>
+            <Form.Group className="my-2">
+                <Form.Label>By hotel</Form.Label>
+                <Form.Select onChange={e => setSelectedHotelId(e.target.value)}>
+                    <option value="" selected>All</option>
+                    {hotelsForManagement && hotelsForManagement.map(hotel =>
+                        <option value={hotel.id}>{hotel.name}</option>
+                    )}
+                </Form.Select>
+            </Form.Group>
+            <Button className="my-2" size="sm" variant="outline-primary" onClick={resetSelect}>
+                Reset
+            </Button>
             <RoomsTable rooms={roomsForManagement}/>
             <Button variant="primary" onClick={handleShowCreateForm}>Add room</Button>
             <RoomForm show={showCreateForm} setShow={setShowCreateForm} submit={create}/>

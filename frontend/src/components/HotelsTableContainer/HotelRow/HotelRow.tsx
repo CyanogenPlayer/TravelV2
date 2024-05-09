@@ -46,7 +46,6 @@ const HotelRow: FC<IProp> = ({hotel}) => {
                 <th>{countryName ? countryName : 'Country not found'}</th>
                 <th>
                     <Button variant="primary" className="me-1" onClick={handleShowUpdateForm}>Update</Button>
-                    <Button variant="primary" className="me-1" disabled={true}>View rooms</Button>
                     <Button variant="primary" className="me-1" onClick={handleShowDeleteModal}>Delete</Button>
                 </th>
             </tr>

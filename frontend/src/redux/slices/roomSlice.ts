@@ -119,7 +119,7 @@ const roomSlice = createSlice({
     reducers: {},
     extraReducers: builder => {
         builder
-            .addCase(getAll.fulfilled, (state, action) => {
+            .addMatcher(isFulfilled(getAll, getByHotelId), (state, action) => {
                 state.roomsForManagement = action.payload
             })
 

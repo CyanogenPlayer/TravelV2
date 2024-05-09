@@ -15,6 +15,7 @@ const urls = {
     },
     bookings: {
         allBookings: `${bookings}`,
+        bookingsForRoom: (roomId: string) => `${rooms}/${roomId}${bookings}`,
         bookingsByUserId: (userId: string) => `${bookings}/list/${userId}`,
         create: `${bookings}`,
         update: (bookingId: string) => `${bookings}/${bookingId}`,
