@@ -126,11 +126,11 @@ const bookingSlice = createSlice({
                 state.trigger = !state.trigger
             })
 
-            .addMatcher(isRejected(getAll, getByUserId), state => {
+            .addMatcher(isRejected(getAll, getByRoomId, getByUserId), state => {
                 state.isLoading = false
             })
 
-            .addMatcher(isPending(getAll, getByUserId), state => {
+            .addMatcher(isPending(getAll, getByRoomId, getByUserId), state => {
                 state.isLoading = true
             })
     }
