@@ -6,7 +6,8 @@ import {
     bookingReducer,
     countryReducer,
     hotelReducer,
-    roomReducer, userReducer
+    roomReducer,
+    userReducer
 } from "./slices";
 
 const store = configureStore({

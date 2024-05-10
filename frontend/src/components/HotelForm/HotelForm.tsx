@@ -46,7 +46,7 @@ const HotelForm: FC<IProp> = ({show, setShow, submit, hotel}) => {
         <Modal show={show} onHide={handleClose}>
             <form onSubmit={handleSubmit(handleForm)}>
                 <Modal.Header closeButton>
-                    <Modal.Title>{hotel ? `Update ${hotel.name}`  : 'Add hotel'}</Modal.Title>
+                    <Modal.Title>{hotel ? `Update ${hotel.name}` : 'Add hotel'}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form.Group className="my-2">

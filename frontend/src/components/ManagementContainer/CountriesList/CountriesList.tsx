@@ -1,4 +1,4 @@
-import {Button} from "react-bootstrap";
+import {Button, Collapse} from "react-bootstrap";
 import {useEffect, useState} from "react";
 
 import {useAppDispatch, useAppSelector} from "../../../hooks";
@@ -9,6 +9,7 @@ import {CountryForm} from "../../CountryForm";
 
 const CountriesList = () => {
     const {countriesForManagement, trigger} = useAppSelector(state => state.countries);
+    const [open, setOpen] = useState<boolean>(null)
     const [showCreateForm, setShowCreateForm] = useState<boolean>(null)
     const dispatch = useAppDispatch();
 
@@ -23,11 +24,15 @@ const CountriesList = () => {
     }, [dispatch, trigger]);
 
     return (
-        <div>
-            <h2>Countries:</h2>
-            <CountriesTable countries={countriesForManagement}/>
-            <Button variant="primary" onClick={handleShowCreateForm}>Add country</Button>
-            <CountryForm show={showCreateForm} setShow={setShowCreateForm} submit={create}/>
+        <div className="d-grid gap-2 mb-2">
+            <Button variant="secondary" size="lg" onClick={() => setOpen(!open)}>Countries</Button>
+            <Collapse in={open}>
+                <div style={{overflowX: 'auto'}}>
+                    <CountriesTable countries={countriesForManagement}/>
+                    <Button variant="primary" onClick={handleShowCreateForm}>Add country</Button>
+                    <CountryForm show={showCreateForm} setShow={setShowCreateForm} submit={create}/>
+                </div>
+            </Collapse>
         </div>
     );
 };
