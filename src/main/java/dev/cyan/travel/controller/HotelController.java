@@ -3,7 +3,9 @@ package dev.cyan.travel.controller;
 import dev.cyan.travel.DTO.HotelDTO;
 import dev.cyan.travel.DTO.RoomDTO;
 import dev.cyan.travel.exception.CannotDeleteException;
+import dev.cyan.travel.response.MessageResponse;
 import dev.cyan.travel.service.HotelService;
+import dev.cyan.travel.service.PhotoService;
 import dev.cyan.travel.service.RoomService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -11,10 +13,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,6 +27,7 @@ import java.util.List;
 public class HotelController {
     private final HotelService hotelService;
     private final RoomService roomService;
+    private final PhotoService photoService;
 
     @GetMapping
     public ResponseEntity<List<HotelDTO>> getAll() {
@@ -66,5 +72,20 @@ public class HotelController {
         }
 
         return ResponseEntity.ok(roomService.getRoomsByHotelId(id));
+    }
+
+    @PostMapping("/{id}/photos")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ResponseEntity<MessageResponse> addPhotoOfHotel(@PathVariable String id,
+                                                           @RequestParam("image") MultipartFile file) throws IOException {
+        HotelDTO hotelDTO = hotelService.getById(id).orElseThrow();
+
+        Set<String> photosUrls = hotelDTO.getPhotosUrls();
+        photosUrls.add(photoService.add(file));
+
+        hotelDTO.setPhotosUrls(photosUrls);
+        hotelService.update(id, hotelDTO);
+
+        return ResponseEntity.ok(new MessageResponse("Photo uploaded successfully!"));
     }
 }

@@ -30,6 +30,4 @@ public interface UserMapper {
 
     @InheritConfiguration
     HashSet<Role> stringsToRoles(Set<String> value);
-
-
 }

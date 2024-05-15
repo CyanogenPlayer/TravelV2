@@ -59,6 +59,7 @@ public class WebSecurityConfig {
                         .requestMatchers(
                                 "/countries/**",
                                 "/hotels/**",
+                                "/photos/**",
                                 "/rooms/**",
                                 "/bookings/**",
                                 "/users/**",

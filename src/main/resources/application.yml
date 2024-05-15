@@ -5,10 +5,15 @@ spring:
 #      uri: "mongodb://user:user@localhost:27017"
       uri: "mongodb://user:user@db:27017"
       auto-index-creation: true
+  servlet:
+    multipart:
+      max-file-size: 256MB
+      max-request-size: 256MB
+      enabled: true
 
-#server:
-#  servlet:
-#    context-path: "/api/v2"
+server:
+  servlet:
+    context-path: "/api/v2"
 
 cyan:
   app:

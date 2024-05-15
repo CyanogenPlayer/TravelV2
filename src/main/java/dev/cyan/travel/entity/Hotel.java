@@ -7,6 +7,9 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,4 +20,6 @@ public class Hotel {
     private String name;
     @DBRef
     private Country country;
+    @DBRef
+    private Set<Photo> photos = new HashSet<>();
 }
