@@ -6,6 +6,7 @@ import {CountryBadge} from "../CountriesBadgesListContainer";
 import {RoomsCardsList} from "../RoomsCardsListContainer";
 import {IBooking} from "../../interfaces";
 import {SearchRoomsInPeriodForm} from "../SearchRoomsInPeriodForm";
+import {Carousel} from "react-bootstrap";
 
 interface IProp {
     hotelId: string
@@ -48,9 +49,24 @@ const HotelInfo: FC<IProp> = ({hotelId}) => {
         <>
             {hotel &&
                 <div>
-                    <h4>{hotel.name}</h4>
-                    <h6>id: {hotel.id}</h6>
-                    {countryName && <CountryBadge id={hotel.countryId} name={countryName}/>}
+                    <div className="d-flex justify-content-between flex-wrap-reverse">
+                        <div>
+                            <h4>{hotel.name}</h4>
+                            <h6>id: {hotel.id}</h6>
+                            {countryName && <CountryBadge id={hotel.countryId} name={countryName}/>}
+                        </div>
+                        {hotel.photosUrls &&
+                            <Carousel className="col-12 col-md-7 my-2 my-md-0 bg-dark" style={{height: '20rem'}}>
+                                {hotel.photosUrls.map(photoUrl =>
+                                    <Carousel.Item interval={10000}>
+                                        <div className="d-flex justify-content-center" style={{height: '20rem'}}>
+                                            <img src={photoUrl} alt={hotel.name} style={{height: '100%'}}/>
+                                        </div>
+                                    </Carousel.Item>
+                                )}
+                            </Carousel>
+                        }
+                    </div>
                     <SearchRoomsInPeriodForm viewRoomsInPeriod={viewRoomsInPeriod} resetRooms={resetRooms}/>
                     {rooms.length !== 0 && <RoomsCardsList rooms={rooms}/>}
                 </div>
