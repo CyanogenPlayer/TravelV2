@@ -55,7 +55,7 @@ const CountryForm: FC<IProp> = ({show, setShow, submit, country}) => {
                     </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button type="submit" variant="primary" disabled={!isValid}>
+                    <Button type="submit" variant="success" disabled={!isValid}>
                         {country ? 'Update' : 'Add'}
                     </Button>
                 </Modal.Footer>

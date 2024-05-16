@@ -46,8 +46,8 @@ const RoomRow: FC<IProp> = ({room}) => {
                 <th>{room.capacity}</th>
                 <th>{hotelName ? hotelName : 'Hotel not found'}</th>
                 <th>
-                    <Button variant="primary" className="me-1" onClick={handleShowUpdateForm}>Update</Button>
-                    <Button variant="primary" className="me-1" onClick={handleShowDeleteModal}>Delete</Button>
+                    <Button variant="success" className="me-1" onClick={handleShowUpdateForm}>Update</Button>
+                    <Button variant="danger" className="me-1" onClick={handleShowDeleteModal}>Delete</Button>
                 </th>
             </tr>
             <RoomForm show={showUpdateForm} setShow={setShowUpdateForm} submit={update} room={room}/>

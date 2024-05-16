@@ -55,12 +55,13 @@ const HotelInfo: FC<IProp> = ({hotelId}) => {
                             <h6>id: {hotel.id}</h6>
                             {countryName && <CountryBadge id={hotel.countryId} name={countryName}/>}
                         </div>
-                        {hotel.photosUrls &&
-                            <Carousel className="col-12 col-md-7 my-2 my-md-0 bg-dark" style={{height: '20rem'}}>
+                        {hotel.photosUrls.length > 0 &&
+                            <Carousel className="col-12 col-md-7 my-2 my-md-0 bg-dark z-0">
                                 {hotel.photosUrls.map(photoUrl =>
                                     <Carousel.Item interval={10000}>
                                         <div className="d-flex justify-content-center" style={{height: '20rem'}}>
-                                            <img src={photoUrl} alt={hotel.name} style={{height: '100%'}}/>
+                                            <img src={photoUrl} alt={hotel.name}
+                                                 style={{maxWidth: '100%', maxHeight: '100%', display: 'block'}}/>
                                         </div>
                                     </Carousel.Item>
                                 )}

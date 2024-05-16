@@ -1,5 +1,5 @@
 import {Button, Modal} from "react-bootstrap";
-import {Dispatch, FC, SetStateAction} from "react";
+import {Dispatch, FC, SetStateAction, useState} from "react";
 
 interface IProp {
     show: boolean,
@@ -25,7 +25,7 @@ const DeleteModal: FC<IProp> = ({show, setShow, objName, deleteAction}) => {
             <Modal.Body>Are you sure want to delete {objName}?</Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>Cancel</Button>
-                <Button variant="primary" onClick={handleDelete}>Delete</Button>
+                <Button variant="danger" onClick={handleDelete}>Delete</Button>
             </Modal.Footer>
         </Modal>
     );

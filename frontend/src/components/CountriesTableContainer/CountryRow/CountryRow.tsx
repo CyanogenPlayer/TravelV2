@@ -33,8 +33,8 @@ const CountryRow: FC<IProp> = ({country}) => {
                 <th>{country.id}</th>
                 <th>{country.name}</th>
                 <th>
-                    <Button variant="primary" className="me-1" onClick={handleShowUpdateForm}>Update</Button>
-                    <Button variant="primary" className="me-1" onClick={handleShowDeleteModal}>Delete</Button>
+                    <Button variant="success" className="me-1" onClick={handleShowUpdateForm}>Update</Button>
+                    <Button variant="danger" className="me-1" onClick={handleShowDeleteModal}>Delete</Button>
                 </th>
             </tr>
             <CountryForm show={showUpdateForm} setShow={setShowUpdateForm} submit={update} country={country}/>

@@ -72,7 +72,7 @@ const HotelForm: FC<IProp> = ({show, setShow, submit, hotel}) => {
                     </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button type="submit" variant="primary" disabled={!isValid}>
+                    <Button type="submit" variant="success" disabled={!isValid}>
                         {hotel ? 'Update' : 'Add'}
                     </Button>
                 </Modal.Footer>

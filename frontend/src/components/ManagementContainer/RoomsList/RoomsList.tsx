@@ -51,7 +51,7 @@ const RoomsList = () => {
                         Reset
                     </Button>
                     <RoomsTable rooms={roomsForManagement}/>
-                    <Button variant="primary" onClick={handleShowCreateForm}>Add room</Button>
+                    <Button variant="success" onClick={handleShowCreateForm}>Add room</Button>
                     <RoomForm show={showCreateForm} setShow={setShowCreateForm} submit={create}/>
                 </div>
             </Collapse>

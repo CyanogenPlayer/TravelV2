@@ -76,16 +76,34 @@ public class HotelController {
 
     @PostMapping("/{id}/photos")
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<MessageResponse> addPhotoOfHotel(@PathVariable String id,
-                                                           @RequestParam("image") MultipartFile file) throws IOException {
+    public ResponseEntity<MessageResponse> addPhotosOfHotel(@PathVariable String id,
+                                                           @RequestParam("photos") MultipartFile[] files) throws IOException {
         HotelDTO hotelDTO = hotelService.getById(id).orElseThrow();
 
         Set<String> photosUrls = hotelDTO.getPhotosUrls();
-        photosUrls.add(photoService.add(file));
+        for (MultipartFile file : files) {
+            photosUrls.add(photoService.add(file));
+        }
 
         hotelDTO.setPhotosUrls(photosUrls);
         hotelService.update(id, hotelDTO);
 
         return ResponseEntity.ok(new MessageResponse("Photo uploaded successfully!"));
+    }
+
+    @DeleteMapping("/{id}/photos")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ResponseEntity<Void> deletePhotoOfHotel(@PathVariable String id,
+                                       @RequestParam("photoUrl") String photoUrl) throws IOException {
+        HotelDTO hotelDTO = hotelService.getById(id).orElseThrow();
+
+        Set<String> photosUrls = hotelDTO.getPhotosUrls();
+        photosUrls.removeIf(url -> url.equals(photoUrl));
+
+        hotelDTO.setPhotosUrls(photosUrls);
+        hotelService.update(id, hotelDTO);
+
+        photoService.delete(photoUrl);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

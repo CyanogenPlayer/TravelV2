@@ -66,7 +66,7 @@ const BookingForm: FC<IProp> = ({show, setShow, roomNumber, submit, booking}) =>
                     </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button type="submit" variant="primary" disabled={!isValid}>
+                    <Button type="submit" variant="success" disabled={!isValid}>
                         {booking ? 'Update' : 'Book'}
                     </Button>
                 </Modal.Footer>

@@ -29,7 +29,7 @@ const CountriesList = () => {
             <Collapse in={open}>
                 <div style={{overflowX: 'auto'}}>
                     <CountriesTable countries={countriesForManagement}/>
-                    <Button variant="primary" onClick={handleShowCreateForm}>Add country</Button>
+                    <Button variant="success" onClick={handleShowCreateForm}>Add country</Button>
                     <CountryForm show={showCreateForm} setShow={setShowCreateForm} submit={create}/>
                 </div>
             </Collapse>

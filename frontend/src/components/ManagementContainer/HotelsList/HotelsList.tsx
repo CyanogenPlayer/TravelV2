@@ -51,7 +51,7 @@ const HotelsList = () => {
                         Reset
                     </Button>
                     <HotelsTable hotels={hotelsForManagement}/>
-                    <Button variant="primary" onClick={handleShowCreateForm}>Add hotel</Button>
+                    <Button variant="success" onClick={handleShowCreateForm}>Add hotel</Button>
                     <HotelForm show={showCreateForm} setShow={setShowCreateForm} submit={create}/>
                 </div>
             </Collapse>

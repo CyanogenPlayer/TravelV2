@@ -32,4 +32,9 @@ public class PhotoService {
                 .path(saved.getId())
                 .toUriString();
     }
+
+    public void delete(String photoUrl) {
+        String key = "/photos/";
+        photoRepository.deleteById(photoUrl.substring(photoUrl.indexOf(key) + key.length()));
+    }
 }

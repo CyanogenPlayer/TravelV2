@@ -108,6 +108,38 @@ const deleteHotel = createAsyncThunk<void, { hotelId: string },
     }
 );
 
+const addPhotos = createAsyncThunk<IMessage, { hotelId: string, photos: FormData },
+    { rejectValue: IMessage }>(
+    'hotelSlice/addPhotos',
+    async ({hotelId, photos}, {rejectWithValue, dispatch}) => {
+        try {
+            const {data} = await hotelService.addPhotos(hotelId, photos)
+            dispatch(alertActions.setMessage(data.message))
+        } catch (e) {
+            const err = e as AxiosError;
+            const data = err.response.data as IMessage;
+            dispatch(alertActions.setError(data.message))
+            return rejectWithValue(data)
+        }
+    }
+);
+
+const deletePhoto = createAsyncThunk<void, { hotelId: string, photoUrl: string },
+    { rejectValue: IMessage }>(
+    'hotelSlice/deletePhoto',
+    async ({hotelId, photoUrl}, {rejectWithValue, dispatch}) => {
+        try {
+            await hotelService.deletePhoto(hotelId, photoUrl)
+            dispatch(alertActions.setMessage('Photo successfully deleted!'))
+        } catch (e) {
+            const err = e as AxiosError;
+            const data = err.response.data as IMessage;
+            dispatch(alertActions.setError(data.message))
+            return rejectWithValue(data)
+        }
+    }
+);
+
 const hotelSlice = createSlice({
     name: 'hotelSlice',
     initialState,
@@ -127,7 +159,7 @@ const hotelSlice = createSlice({
                 state.isLoading = false
             })
 
-            .addMatcher(isFulfilled(create, update, deleteHotel), state => {
+            .addMatcher(isFulfilled(create, update, deleteHotel, addPhotos, deletePhoto), state => {
                 state.trigger = !state.trigger
             })
 
@@ -150,7 +182,9 @@ const hotelActions = {
     getById,
     create,
     update,
-    deleteHotel
+    deleteHotel,
+    addPhotos,
+    deletePhoto
 }
 
 export {

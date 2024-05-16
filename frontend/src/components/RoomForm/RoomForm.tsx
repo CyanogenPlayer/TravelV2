@@ -82,7 +82,7 @@ const RoomForm: FC<IProp> = ({show, setShow, submit, room}) => {
                     </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button type="submit" variant="primary" disabled={!isValid}>
+                    <Button type="submit" variant="success" disabled={!isValid}>
                         {room ? 'Update' : 'Add'}
                     </Button>
                 </Modal.Footer>

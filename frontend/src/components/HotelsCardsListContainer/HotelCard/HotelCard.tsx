@@ -32,9 +32,11 @@ const HotelCard: FC<IProp> = ({hotel}) => {
 
     return (
         <Card border="primary" className={css.HotelCard} onClick={navigateToHotelInfo}>
-            <Card.Img variant="top"
-                      src={photosUrls.length > 0 ? photosUrls[0] : 'https://placehold.co/550x250?text=Image+Not+Found'}
-                      style={{height: '50%'}}/>
+            <div className="d-flex justify-content-center align-items-center bg-dark rounded-top"
+                 style={{height: '50%'}}>
+                <img src={photosUrls.length > 0 ? photosUrls[0] : 'https://placehold.co/550x250?text=Image+Not+Found'}
+                     style={{maxHeight: '100%', maxWidth: '100%', display: 'block'}} alt={hotel.name}/>
+            </div>
             <Card.Header>
                 <Card.Title>{name}</Card.Title>
                 <Card.Text style={{fontSize: 'smaller'}}>id: {id}</Card.Text>

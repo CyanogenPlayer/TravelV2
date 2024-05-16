@@ -53,7 +53,7 @@ const UserRoleForm: FC<IProp> = ({show, setShow, user, submit}) => {
                     </Form.Group>
                 </ModalBody>
                 <Modal.Footer>
-                    <Button type="submit" variant="primary">
+                    <Button type="submit" variant="success">
                         Update
                     </Button>
                 </Modal.Footer>
