@@ -8,9 +8,9 @@ import {ERole} from "../../enums";
 const Header = () => {
     const image = require('../../assets/logo.png');
 
-    const navigate = useNavigate();
     const {isAuth, user} = useAppSelector(state => state.auth);
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
 
     const navigateToHome = () => {
         navigate('/')
@@ -33,6 +33,10 @@ const Header = () => {
         navigate('/')
     }
 
+    const navigateToApiDoc = () => {
+        window.location.href = `/api/v2/swagger-ui/index.html`
+    }
+
     return (
         <Navbar expand="lg" className="bg-secondary bg-gradient justify-content-center position-fixed w-100 z-1">
             <Container className="justify-content-between">
@@ -50,6 +54,7 @@ const Header = () => {
                 <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
                     <Nav>
                         <Nav.Link onClick={navigateToHome}>Home</Nav.Link>
+                        <Nav.Link onClick={navigateToApiDoc}>API</Nav.Link>
                         {
                             isAuth ?
                                 <div className="navbar-nav">

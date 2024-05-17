@@ -1,5 +1,5 @@
 import {Button, Form, Modal} from "react-bootstrap";
-import {Dispatch, FC, SetStateAction, useState} from "react";
+import {Dispatch, FC, SetStateAction} from "react";
 import {FieldValues, useForm} from "react-hook-form";
 
 interface IProp {
@@ -42,7 +42,7 @@ const HotelPhotoModal: FC<IProp> = ({show, setShow, objName, photosUrls, addActi
                             <div
                                 className="d-flex justify-content-center align-items-center bg-dark rounded position-relative me-1 mt-1"
                                 style={{width: '150px', height: '150px'}}>
-                                <img src="https://placehold.co/20x20/red/white?text=X" alt="Delete photo"
+                                <img src="https://placehold.co/20x20/red/white?text=X" alt="Delete"
                                      title="Delete photo" className="bg-danger rounded-circle"
                                      style={{position: 'absolute', top: '2px', right: '2px', cursor: 'pointer'}}
                                      onClick={() => deleteAction(photoUrl)}/>

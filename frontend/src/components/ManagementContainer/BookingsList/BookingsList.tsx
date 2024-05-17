@@ -8,34 +8,30 @@ import {bookingActions} from "../../../redux";
 const BookingsList = () => {
     const {
         bookings: {bookingsForManagement, trigger},
-        rooms: {roomsForManagement},
+        hotels: {hotelsForManagement},
         users: {users}
     } = useAppSelector(state => state);
     const [open, setOpen] = useState<boolean>(null)
-    const [selectedRoomId, setSelectedRoomId] = useState<string>('')
+    const [selectedHotelId, setSelectedHotelId] = useState<string>('')
     const [selectedUserId, setSelectedUserId] = useState<string>('')
-    const [roomSelectDisabled, setRoomSelectDisabled] = useState<boolean>(null)
-    const [userSelectDisabled, setUserSelectDisabled] = useState<boolean>(null)
     const dispatch = useAppDispatch();
 
     const resetSelects = () => {
-        setSelectedRoomId('')
+        setSelectedHotelId('')
         setSelectedUserId('')
     }
 
     useEffect(() => {
-        if (selectedRoomId !== '') {
-            setUserSelectDisabled(true)
-            dispatch(bookingActions.getByRoomId({roomId: selectedRoomId}))
+        if (selectedUserId !== '' && selectedHotelId !== '') {
+            dispatch(bookingActions.getByUserAndHotel({userId: selectedUserId, hotelId: selectedHotelId}))
         } else if (selectedUserId !== '') {
-            setRoomSelectDisabled(true)
-            dispatch(bookingActions.getByUserId({userId: selectedUserId}))
+            dispatch(bookingActions.getByUserAndHotel({userId: selectedUserId}))
+        } else if (selectedHotelId !== '') {
+            dispatch(bookingActions.getByUserAndHotel({hotelId: selectedHotelId}))
         } else {
-            setRoomSelectDisabled(false)
-            setUserSelectDisabled(false)
             dispatch(bookingActions.getAll())
         }
-    }, [dispatch, trigger, selectedRoomId, selectedUserId]);
+    }, [dispatch, trigger, selectedHotelId, selectedUserId]);
 
     return (
         <div className="d-grid gap-2 mb-2">
@@ -43,19 +39,17 @@ const BookingsList = () => {
             <Collapse in={open}>
                 <div style={{overflowX: 'auto'}}>
                     <Form.Group className="my-2">
-                        <Form.Label>By room</Form.Label>
-                        <Form.Select value={selectedRoomId} onChange={e => setSelectedRoomId(e.target.value)}
-                                     disabled={roomSelectDisabled}>
+                        <Form.Label>By hotel</Form.Label>
+                        <Form.Select value={selectedHotelId} onChange={e => setSelectedHotelId(e.target.value)}>
                             <option value="">All</option>
-                            {roomsForManagement && roomsForManagement.map(room =>
-                                <option value={room.id}>{room.roomNumber}</option>
+                            {hotelsForManagement && hotelsForManagement.map(hotel =>
+                                <option value={hotel.id}>{hotel.name}</option>
                             )}
                         </Form.Select>
                     </Form.Group>
                     <Form.Group className="my-2">
                         <Form.Label>By user</Form.Label>
-                        <Form.Select value={selectedUserId} onChange={e => setSelectedUserId(e.target.value)}
-                                     disabled={userSelectDisabled}>
+                        <Form.Select value={selectedUserId} onChange={e => setSelectedUserId(e.target.value)}>
                             <option value="">All</option>
                             {users && users.map(user =>
                                 <option value={user.id}>{user.username}</option>

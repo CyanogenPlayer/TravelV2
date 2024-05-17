@@ -93,8 +93,7 @@ public class HotelController {
 
     @DeleteMapping("/{id}/photos")
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<Void> deletePhotoOfHotel(@PathVariable String id,
-                                       @RequestParam("photoUrl") String photoUrl) throws IOException {
+    public ResponseEntity<Void> deletePhotoOfHotel(@PathVariable String id, @RequestParam("photoUrl") String photoUrl) {
         HotelDTO hotelDTO = hotelService.getById(id).orElseThrow();
 
         Set<String> photosUrls = hotelDTO.getPhotosUrls();

@@ -6,6 +6,7 @@ const countries = '/countries'
 const hotels = '/hotels'
 const photos = '/photos'
 const rooms = '/rooms'
+const search = '/search'
 const users = '/users'
 
 const urls = {
@@ -24,6 +25,7 @@ const urls = {
     },
     countries: {
         allCountries: `${countries}`,
+        byId: (countryId: string) => `${countries}/${countryId}`,
         create: `${countries}`,
         update: (countryId: string) => `${countries}/${countryId}`,
         deleteCountry: (countryId: string) => `${countries}/${countryId}`
@@ -41,13 +43,18 @@ const urls = {
     rooms: {
         allRooms: `${rooms}`,
         roomsByHotelId: (hotelId: string): string => `${hotels}/${hotelId}${rooms}`,
+        byId: (roomId: string): string => `${rooms}/${roomId}`,
         allAvailableForPeriod: (hotelId: string): string => `${hotels}/${hotelId}${rooms}`,
         create: `${rooms}`,
         update: (roomId: string) => `${rooms}/${roomId}`,
         deleteRoom: (roomId: string) => `${rooms}/${roomId}`
     },
+    search: {
+        bookingsByUserAndHotel: `${search}${bookings}`
+    },
     users: {
         allUsers: `${users}`,
+        byId: (userId: string) => `${users}/${userId}`,
         updateRoles: (userId: string) => `${users}/${userId}`
     }
 }

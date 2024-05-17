@@ -107,18 +107,35 @@ const deleteBooking = createAsyncThunk<void, { bookingId: string },
     }
 );
 
+const getByUserAndHotel = createAsyncThunk<IBooking[], { userId?: string, hotelId?: string },
+    { rejectValue: IMessage }>(
+    'bookingSlice/getByUserAndHotel',
+    async ({userId, hotelId}, {rejectWithValue}) => {
+        try {
+            const {data} = await bookingService.getByUserAndHotel(userId, hotelId)
+            return data
+        } catch (e) {
+            const err = e as AxiosError
+            return rejectWithValue(err.response.data as IMessage)
+        }
+    }
+)
+
 const bookingSlice = createSlice({
     name: 'bookingSlice',
     initialState,
     reducers: {},
     extraReducers: builder => {
         builder
-            .addCase(getByUserId.fulfilled, (state, action) => {
+            .addMatcher(isFulfilled(getByUserId, getByUserId), (state, action) => {
                 state.bookings = action.payload
             })
 
-            .addMatcher(isFulfilled(getAll, getByRoomId, getByUserId), (state, action) => {
+            .addMatcher(isFulfilled(getAll, getByUserAndHotel), (state, action) => {
                 state.bookingsForManagement = action.payload
+            })
+
+            .addMatcher(isFulfilled(getAll, getByRoomId, getByUserId, getByUserAndHotel), state => {
                 state.isLoading = false
             })
 
@@ -126,11 +143,11 @@ const bookingSlice = createSlice({
                 state.trigger = !state.trigger
             })
 
-            .addMatcher(isRejected(getAll, getByRoomId, getByUserId), state => {
+            .addMatcher(isRejected(getAll, getByRoomId, getByUserId, getByUserAndHotel), state => {
                 state.isLoading = false
             })
 
-            .addMatcher(isPending(getAll, getByRoomId, getByUserId), state => {
+            .addMatcher(isPending(getAll, getByRoomId, getByUserId, getByUserAndHotel), state => {
                 state.isLoading = true
             })
     }
@@ -145,7 +162,8 @@ const bookingActions = {
     getByUserId,
     create,
     update,
-    deleteBooking
+    deleteBooking,
+    getByUserAndHotel
 }
 
 export {

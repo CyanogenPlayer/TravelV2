@@ -6,8 +6,8 @@ import {alertActions} from "../../../redux";
 
 const ErrorAlert = () => {
     const {error} = useAppSelector(state => state.alerts);
-    const dispatch = useAppDispatch();
     const [show, setShow] = useState<boolean>(null);
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         if (error) {

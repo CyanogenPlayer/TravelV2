@@ -1,5 +1,5 @@
 import {Button, Modal} from "react-bootstrap";
-import {Dispatch, FC, SetStateAction, useState} from "react";
+import {Dispatch, FC, SetStateAction} from "react";
 
 interface IProp {
     show: boolean,

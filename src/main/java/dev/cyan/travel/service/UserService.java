@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +22,12 @@ public class UserService {
                 .stream()
                 .map(userMapper::toDTO)
                 .toList();
+    }
+
+    public Optional<UserDTO> getById(String id) {
+        return userRepository
+                .findById(id)
+                .map(userMapper::toDTO);
     }
 
     public UserDTO updateRoles(String id, UserDTO userDTO) {

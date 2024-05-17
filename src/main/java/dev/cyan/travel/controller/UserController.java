@@ -23,6 +23,11 @@ public class UserController {
         return ResponseEntity.ok(userService.getAll());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDTO> getById(@PathVariable String id) {
+        return ResponseEntity.of(userService.getById(id));
+    }
+
     @PatchMapping("/{id}")
     public ResponseEntity<UserDTO> updateRoles(@PathVariable String id, @Valid @RequestBody UserDTO userDTO) {
         return ResponseEntity.ok(userService.updateRoles(id, userDTO));

@@ -12,6 +12,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -56,15 +57,15 @@ public class WebSecurityConfig {
                 })
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/api-docs/**").permitAll()
                         .requestMatchers(
+                                "/bookings/**",
                                 "/countries/**",
                                 "/hotels/**",
                                 "/photos/**",
                                 "/rooms/**",
-                                "/bookings/**",
-                                "/users/**",
-                                "/api-docs/**",
-                                "/swagger-ui/**")
+                                "/search/**",
+                                "/users/**")
                         .permitAll().anyRequest().authenticated());
 
         http.authenticationProvider(authenticationProvider());
