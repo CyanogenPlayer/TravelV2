@@ -37,6 +37,7 @@ const RoomForm: FC<IProp> = ({show, setShow, submit, room}) => {
         if (room) {
             setValue('roomNumber', room.roomNumber)
             setValue('capacity', room.capacity)
+            setValue('price', room.price)
             if (hotelsForManagement.length > 0) {
                 setValue('hotelId', room.hotelId ? room.hotelId : hotelsForManagement[0].id)
             }
@@ -67,6 +68,15 @@ const RoomForm: FC<IProp> = ({show, setShow, submit, room}) => {
                             {...register('capacity')}
                         />
                         {errors.capacity && <ErrorTextBox error={errors.capacity.message}/>}
+                    </Form.Group>
+                    <Form.Group className="my-2">
+                        <Form.Label>Price</Form.Label>
+                        <Form.Control
+                            type="number"
+                            defaultValue={room ? room.price : 100}
+                            {...register('price')}
+                        />
+                        {errors.price && <ErrorTextBox error={errors.price.message}/>}
                     </Form.Group>
                     <Form.Group className="my-2">
                         <Form.Label>Hotel</Form.Label>

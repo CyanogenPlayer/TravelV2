@@ -14,9 +14,10 @@ const RoomsTable: FC<IProp> = ({rooms}) => {
             <thead>
             <tr>
                 <th>ID</th>
+                <th>Hotel</th>
                 <th>Room Number</th>
                 <th>Capacity</th>
-                <th>Hotel</th>
+                <th>Price</th>
                 <th>Actions</th>
             </tr>
             </thead>

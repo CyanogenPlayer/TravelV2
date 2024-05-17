@@ -18,6 +18,7 @@ public class Booking {
     private String id;
     private LocalDate bookedSince;
     private LocalDate bookedTo;
+    private int price;
     @DBRef
     private Room room;
     @DBRef

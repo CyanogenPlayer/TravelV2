@@ -14,6 +14,12 @@ const roomValidator = Joi.object<IRoom>({
         'number.max': 'capacity must be less than or equal to {#limit}',
         'any.required': 'capacity is required field'
     }),
+    price: Joi.number().integer().min(100).max(10000).required().messages({
+        'number.integer': 'price must be integer',
+        'number.min': 'price must be equal to or greater than {#limit}',
+        'number.max': 'price must be less than or equal to {#limit}',
+        'any.required': 'price is required field'
+    }),
     hotelId: Joi.string().hex().length(24).required().messages({
         'string.hex': 'hotel must be in hex format',
         'string.length': 'hotel must be 24 characters long',

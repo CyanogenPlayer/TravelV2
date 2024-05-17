@@ -16,6 +16,7 @@ public class Room {
     private String id;
     private int roomNumber;
     private int capacity;
+    private int price;
     @DBRef
     private Hotel hotel;
 }

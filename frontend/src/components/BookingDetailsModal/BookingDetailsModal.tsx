@@ -50,6 +50,7 @@ const BookingDetailsModal: FC<IProp> = ({show, setShow, booking}) => {
                             <p>User: {user.username}</p>
                             <p>Booked Since: {booking.bookedSince.toString()}</p>
                             <p>Booked To: {booking.bookedSince.toString()}</p>
+                            <p>Price: {booking.price}&#8372;</p>
                         </>
                     }
                 </Modal.Body>

@@ -54,9 +54,10 @@ const RoomRow: FC<IProp> = ({room}) => {
         <>
             <tr>
                 <th>{room.id}</th>
+                <th>{hotelName ? hotelName : 'Hotel not found'}</th>
                 <th>{room.roomNumber}</th>
                 <th>{room.capacity}</th>
-                <th>{hotelName ? hotelName : 'Hotel not found'}</th>
+                <th>{room.price}&#8372;</th>
                 <th>
                     <Button variant="primary" className="me-1" onClick={handleShowBookingsModal}>View Bookings</Button>
                     <Button variant="success" className="me-1" onClick={handleShowUpdateForm}>Update</Button>
@@ -68,7 +69,7 @@ const RoomRow: FC<IProp> = ({room}) => {
                          deleteAction={deleteRoom}/>
             <TableModal show={showBookingsModal} setShow={setShowBookingsModal}
                         title={`Bookings for ${room.roomNumber}`}>
-                <BookingsTable bookings={bookings}/>
+                <BookingsTable bookings={bookings} manager/>
             </TableModal>
         </>
     );

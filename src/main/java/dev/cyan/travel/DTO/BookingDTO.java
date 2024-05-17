@@ -1,6 +1,7 @@
 package dev.cyan.travel.DTO;
 
 import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,8 @@ public class BookingDTO {
     private LocalDate bookedSince;
     @FutureOrPresent(message = "not valid bookedTo date")
     private LocalDate bookedTo;
+    @Min(value = 100, message = "price must be greater than 0")
+    private int price;
     @NotBlank
     private String roomId;
     @NotBlank

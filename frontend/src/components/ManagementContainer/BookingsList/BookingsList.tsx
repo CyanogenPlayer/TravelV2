@@ -59,7 +59,7 @@ const BookingsList = () => {
                     <Button className="my-2" size="sm" variant="outline-primary" onClick={resetSelects}>
                         Reset
                     </Button>
-                    <BookingsTable bookings={bookingsForManagement}/>
+                    <BookingsTable bookings={bookingsForManagement} manager/>
                 </div>
             </Collapse>
         </div>

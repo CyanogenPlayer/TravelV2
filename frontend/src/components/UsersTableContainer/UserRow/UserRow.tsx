@@ -47,7 +47,7 @@ const UserRow: FC<IProp> = ({user}) => {
             </tr>
             <UserRoleForm show={showUpdateForm} setShow={setShowUpdateForm} user={user} submit={update}/>
             <TableModal show={showBookingsModal} setShow={setShowBookingsModal} title={`Bookings of ${user.username}`}>
-                <BookingsTable bookings={bookings}/>
+                <BookingsTable bookings={bookings} manager/>
             </TableModal>
         </>
     );

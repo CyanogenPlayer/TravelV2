@@ -5,10 +5,11 @@ import {BookingRow} from "../BookingRow";
 import {IBooking} from "../../../interfaces";
 
 interface IProp {
-    bookings: IBooking[]
+    bookings: IBooking[],
+    manager?: boolean
 }
 
-const BookingsTable: FC<IProp> = ({bookings}) => {
+const BookingsTable: FC<IProp> = ({bookings, manager}) => {
     return (
         <Table striped bordered hover responsive>
             <thead>
@@ -16,13 +17,18 @@ const BookingsTable: FC<IProp> = ({bookings}) => {
                 <th>ID</th>
                 <th>Booked since date</th>
                 <th>Booked to date</th>
-                <th>Hotel</th>
-                <th>User</th>
+                <th>Price</th>
+                {manager &&
+                    <>
+                        <th>Hotel</th>
+                        <th>User</th>
+                    </>
+                }
                 <th>Actions</th>
             </tr>
             </thead>
             <tbody>
-            {bookings && bookings.map(booking => <BookingRow key={booking.id} booking={booking}/>)}
+            {bookings && bookings.map(booking => <BookingRow key={booking.id} booking={booking} manager={manager}/>)}
             </tbody>
         </Table>
     );
