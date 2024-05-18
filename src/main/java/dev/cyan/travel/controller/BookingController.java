@@ -3,7 +3,7 @@ package dev.cyan.travel.controller;
 import dev.cyan.travel.DTO.BookingDTO;
 import dev.cyan.travel.enums.EBookingState;
 import dev.cyan.travel.response.MessageResponse;
-import dev.cyan.travel.service.BookingService;
+import dev.cyan.travel.service.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,6 +19,10 @@ import java.util.Optional;
 @RequestMapping("/bookings")
 public class BookingController {
     private final BookingService bookingService;
+    private final UserService userService;
+    private final MailService mailService;
+    private final RoomService roomService;
+    private final HotelService hotelService;
 
     @GetMapping
     @PreAuthorize("hasRole('MANAGER')")
@@ -39,6 +43,20 @@ public class BookingController {
         if (optionalBookingDTO.isEmpty()) {
             return ResponseEntity.badRequest().body(new MessageResponse("Booking isn't available for those dates"));
         }
+
+        return sendMessageAndGetResponse(optionalBookingDTO);
+    }
+
+    private ResponseEntity<?> sendMessageAndGetResponse(Optional<BookingDTO> optionalBookingDTO) {
+        BookingDTO bookingDTO = optionalBookingDTO.get();
+
+        String email = userService.getById(bookingDTO.getUserId()).get().getEmail();
+        int roomNumber = roomService.getById(bookingDTO.getRoomId()).get().getRoomNumber();
+        String hotelName = hotelService.getById(
+                roomService.getById(bookingDTO.getRoomId()).get().getHotelId()).get().getName();
+
+        mailService.send(email, "Your booking for room " + roomNumber + " in " + hotelName + " status is - <b>"
+                + bookingDTO.getState() + "</b>");
         return ResponseEntity.ok(optionalBookingDTO);
     }
 
@@ -62,7 +80,7 @@ public class BookingController {
                             "booking for this room with non CANCELED status"));
         }
 
-        return ResponseEntity.ok(optionalBookingDTO);
+        return sendMessageAndGetResponse(optionalBookingDTO);
     }
 
     @DeleteMapping("/{id}")
@@ -75,7 +93,9 @@ public class BookingController {
     @PostMapping("/{id}/cancel")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> cancelBooking(@PathVariable String id) {
-        return ResponseEntity.ok(bookingService.updateState(id, new BookingDTO(EBookingState.CANCELED.toString())));
+        Optional<BookingDTO> optionalBookingDTO = bookingService.updateState(id, new BookingDTO(EBookingState.CANCELED.toString()));
+
+        return sendMessageAndGetResponse(optionalBookingDTO);
     }
 
     @GetMapping("/list/{userId}")
