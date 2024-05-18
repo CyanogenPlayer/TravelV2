@@ -12,7 +12,10 @@ const bookingService = {
         axiosService.patch(urls.bookings.update(bookingId), booking),
     deleteBooking: (bookingId: string): IRes<void> => axiosService.delete(urls.bookings.deleteBooking(bookingId)),
     getByUserAndHotel: (userId?: string, hotelId?: string): IRes<IBooking[]> =>
-        axiosService.get(urls.search.bookingsByUserAndHotel, {params: {userId, hotelId}})
+        axiosService.get(urls.search.bookingsByUserAndHotel, {params: {userId, hotelId}}),
+    updateState: (bookingId: string, booking: IBooking): IRes<IBooking> =>
+        axiosService.patch(urls.bookings.updateState(bookingId), booking),
+    cancelBooking: (bookingId: string): IRes<IBooking> => axiosService.post(urls.bookings.cancelBooking(bookingId))
 }
 
 export {

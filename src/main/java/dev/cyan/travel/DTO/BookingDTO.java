@@ -25,4 +25,8 @@ public class BookingDTO {
     @NotBlank
     private String userId;
     private String state;
+
+    public BookingDTO(String state) {
+        this.state = state;
+    }
 }

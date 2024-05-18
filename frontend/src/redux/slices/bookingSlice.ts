@@ -121,6 +121,38 @@ const getByUserAndHotel = createAsyncThunk<IBooking[], { userId?: string, hotelI
     }
 )
 
+const updateState = createAsyncThunk<void, { bookingId: string, booking: IBooking },
+    { rejectValue: IMessage }>(
+    'bookingSlice/updateState',
+    async ({bookingId, booking}, {rejectWithValue, dispatch}) => {
+        try {
+            await bookingService.updateState(bookingId, booking)
+            dispatch(alertActions.setMessage('State of booking successfully updated!'))
+        } catch (e) {
+            const err = e as AxiosError;
+            const data = err.response.data as IMessage;
+            dispatch(alertActions.setError(data.message))
+            return rejectWithValue(data)
+        }
+    }
+);
+
+const cancelBooking = createAsyncThunk<void, { bookingId: string },
+    { rejectValue: IMessage }>(
+    'bookingSlice/cancelBooking',
+    async ({bookingId}, {rejectWithValue, dispatch}) => {
+        try {
+            await bookingService.cancelBooking(bookingId)
+            dispatch(alertActions.setMessage('Booking successfully canceled!'))
+        } catch (e) {
+            const err = e as AxiosError;
+            const data = err.response.data as IMessage;
+            dispatch(alertActions.setError(data.message))
+            return rejectWithValue(data)
+        }
+    }
+);
+
 const bookingSlice = createSlice({
     name: 'bookingSlice',
     initialState,
@@ -139,7 +171,7 @@ const bookingSlice = createSlice({
                 state.isLoading = false
             })
 
-            .addMatcher(isFulfilled(create, update, deleteBooking), state => {
+            .addMatcher(isFulfilled(create, update, deleteBooking, updateState, cancelBooking), state => {
                 state.trigger = !state.trigger
             })
 
@@ -163,7 +195,9 @@ const bookingActions = {
     create,
     update,
     deleteBooking,
-    getByUserAndHotel
+    getByUserAndHotel,
+    updateState,
+    cancelBooking
 }
 
 export {

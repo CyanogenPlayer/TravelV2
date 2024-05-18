@@ -17,13 +17,10 @@ const BookingsTable: FC<IProp> = ({bookings, manager}) => {
                 <th>ID</th>
                 <th>Booked since date</th>
                 <th>Booked to date</th>
+                <th>Hotel</th>
+                {manager && <th>User</th>}
                 <th>Price</th>
-                {manager &&
-                    <>
-                        <th>Hotel</th>
-                        <th>User</th>
-                    </>
-                }
+                <th>State</th>
                 <th>Actions</th>
             </tr>
             </thead>

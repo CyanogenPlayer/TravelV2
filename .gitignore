@@ -35,3 +35,6 @@ build/
 /mongodb/
 /backend/
 /client/
+
+.env
+/src/main/resources/.env

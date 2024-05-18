@@ -44,6 +44,7 @@ const BookingDetailsModal: FC<IProp> = ({show, setShow, booking}) => {
                     {country && hotel && room && user &&
                         <>
                             <p>ID: {booking.id}</p>
+                            <p>State: {booking.state}</p>
                             <p>Country: {country.name}</p>
                             <p>Hotel: {hotel.name}</p>
                             <p>Room: {room.roomNumber}</p>

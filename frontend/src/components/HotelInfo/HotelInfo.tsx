@@ -1,3 +1,4 @@
+import {Carousel} from "react-bootstrap";
 import {FC, useEffect, useState} from "react";
 
 import {useAppDispatch, useAppSelector} from "../../hooks";
@@ -6,7 +7,6 @@ import {CountryBadge} from "../CountriesBadgesListContainer";
 import {RoomsCardsList} from "../RoomsCardsListContainer";
 import {IBooking} from "../../interfaces";
 import {SearchRoomsInPeriodForm} from "../SearchRoomsInPeriodForm";
-import {Carousel} from "react-bootstrap";
 import {baseURL, urls} from "../../constants";
 
 interface IProp {
@@ -29,7 +29,7 @@ const HotelInfo: FC<IProp> = ({hotelId}) => {
     }, [dispatch]);
 
     useEffect(() => {
-        if (hotel && countries.length > 0) {
+        if (hotel && countries.length) {
             const country = countries.find(country => country.id === hotel.countryId);
             if (country) {
                 setCountryName(country.name)
@@ -70,7 +70,7 @@ const HotelInfo: FC<IProp> = ({hotelId}) => {
                         }
                     </div>
                     <SearchRoomsInPeriodForm viewRoomsInPeriod={viewRoomsInPeriod} resetRooms={resetRooms}/>
-                    {rooms.length !== 0 && <RoomsCardsList rooms={rooms}/>}
+                    {rooms.length > 0 && <RoomsCardsList rooms={rooms}/>}
                 </div>
             }
         </>

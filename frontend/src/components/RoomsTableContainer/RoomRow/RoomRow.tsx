@@ -36,7 +36,7 @@ const RoomRow: FC<IProp> = ({room}) => {
     }
 
     useEffect(() => {
-        if (hotelsForManagement.length > 0) {
+        if (hotelsForManagement.length) {
             const hotel = hotelsForManagement.find(hotel => hotel.id === room.hotelId);
             if (hotel) {
                 setHotelName(hotel.name)

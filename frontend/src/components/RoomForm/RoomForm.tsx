@@ -38,7 +38,7 @@ const RoomForm: FC<IProp> = ({show, setShow, submit, room}) => {
             setValue('roomNumber', room.roomNumber)
             setValue('capacity', room.capacity)
             setValue('price', room.price)
-            if (hotelsForManagement.length > 0) {
+            if (hotelsForManagement.length) {
                 setValue('hotelId', room.hotelId ? room.hotelId : hotelsForManagement[0].id)
             }
         }

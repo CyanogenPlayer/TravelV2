@@ -21,7 +21,9 @@ const urls = {
         bookingsByUserId: (userId: string) => `${bookings}/list/${userId}`,
         create: `${bookings}`,
         update: (bookingId: string) => `${bookings}/${bookingId}`,
-        deleteBooking: (bookingId: string) => `${bookings}/${bookingId}`
+        deleteBooking: (bookingId: string) => `${bookings}/${bookingId}`,
+        updateState: (bookingId: string) => `${bookings}/${bookingId}/state`,
+        cancelBooking: (bookingId: string) => `${bookings}/${bookingId}/cancel`,
     },
     countries: {
         allCountries: `${countries}`,

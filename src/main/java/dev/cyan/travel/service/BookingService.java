@@ -100,12 +100,16 @@ public class BookingService {
         return Optional.empty();
     }
 
-    public BookingDTO updateState(String id, BookingDTO bookingDTO) {
+    public Optional<BookingDTO> updateState(String id, BookingDTO bookingDTO) {
         Booking booking = bookingRepository.findById(id).orElseThrow();
-        String state = bookingDTO.getState();
-        booking.setState(bookingStateRepository.getByName(Enum.valueOf(EBookingState.class, state)));
-        Booking modifiedBooking = bookingRepository.save(booking);
-        return bookingMapper.toDTO(modifiedBooking);
+        if (checkIfBookingIsAvailable(booking.getRoom(), booking.getBookedSince(), booking.getBookedTo(), id)) {
+            String state = bookingDTO.getState();
+            booking.setState(bookingStateRepository.getByName(Enum.valueOf(EBookingState.class, state)));
+            Booking modifiedBooking = bookingRepository.save(booking);
+            return Optional.of(bookingMapper.toDTO(modifiedBooking));
+        }
+
+        return Optional.empty();
     }
 
     public void delete(String id) {

@@ -36,7 +36,7 @@ const HotelForm: FC<IProp> = ({show, setShow, submit, hotel}) => {
     useEffect(() => {
         if (hotel) {
             setValue('name', hotel.name)
-            if (countriesForManagement.length > 0) {
+            if (countriesForManagement.length) {
                 setValue('countryId', hotel.countryId ? hotel.countryId : countriesForManagement[0].id)
             }
         }

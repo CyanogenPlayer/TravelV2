@@ -47,7 +47,7 @@ const HotelRow: FC<IProp> = ({hotel}) => {
     }
 
     useEffect(() => {
-        if (countriesForManagement.length > 0) {
+        if (countriesForManagement.length) {
             const country = countriesForManagement.find(country => country.id === hotel.countryId);
             if (country) {
                 setCountryName(country.name)

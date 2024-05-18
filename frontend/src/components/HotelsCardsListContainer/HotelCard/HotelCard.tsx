@@ -23,7 +23,7 @@ const HotelCard: FC<IProp> = ({hotel}) => {
     }
 
     useEffect(() => {
-        if (countries.length > 0) {
+        if (countries.length) {
             const country = countries.find(country => country.id === countryId)
             if (country) {
                 setCountryName(country.name)
@@ -36,7 +36,7 @@ const HotelCard: FC<IProp> = ({hotel}) => {
             <div className="d-flex justify-content-center align-items-center bg-dark rounded-top"
                  style={{height: '50%'}}>
                 <img
-                    src={photosIds.length > 0 ? `${baseURL}${urls.photos.byId(photosIds[0])}` : 'https://placehold.co/550x250?text=Image+Not+Found'}
+                    src={photosIds.length ? `${baseURL}${urls.photos.byId(photosIds[0])}` : 'https://placehold.co/550x250?text=Image+Not+Found'}
                     style={{maxHeight: '100%', maxWidth: '100%', display: 'block'}} alt={hotel.name}/>
             </div>
             <Card.Header>

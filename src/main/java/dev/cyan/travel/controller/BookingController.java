@@ -1,6 +1,7 @@
 package dev.cyan.travel.controller;
 
 import dev.cyan.travel.DTO.BookingDTO;
+import dev.cyan.travel.enums.EBookingState;
 import dev.cyan.travel.response.MessageResponse;
 import dev.cyan.travel.service.BookingService;
 import jakarta.validation.Valid;
@@ -36,32 +37,45 @@ public class BookingController {
     public ResponseEntity<?> create(@Valid @RequestBody BookingDTO bookingDTO) {
         Optional<BookingDTO> optionalBookingDTO = bookingService.create(bookingDTO);
         if (optionalBookingDTO.isEmpty()) {
-            return ResponseEntity.badRequest().body(new MessageResponse("BookingRow isn't available for those dates"));
+            return ResponseEntity.badRequest().body(new MessageResponse("Booking isn't available for those dates"));
         }
         return ResponseEntity.ok(optionalBookingDTO);
     }
 
     @PatchMapping("/{id}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<?> update(@PathVariable String id, @Valid @RequestBody BookingDTO bookingDTO) {
         Optional<BookingDTO> optionalBookingDTO = bookingService.update(id, bookingDTO);
         if (optionalBookingDTO.isEmpty()) {
-            return ResponseEntity.badRequest().body(new MessageResponse("BookingRow isn't available for those dates"));
+            return ResponseEntity.badRequest().body(new MessageResponse("Booking isn't available for those dates"));
         }
         return ResponseEntity.ok(optionalBookingDTO);
     }
 
     @PatchMapping("/{id}/state")
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<BookingDTO> updateState(@PathVariable String id, @RequestBody BookingDTO bookingDTO) {
-        return ResponseEntity.ok(bookingService.updateState(id, bookingDTO));
+    public ResponseEntity<?> updateState(@PathVariable String id, @RequestBody BookingDTO bookingDTO) {
+        Optional<BookingDTO> optionalBookingDTO = bookingService.updateState(id, bookingDTO);
+        if (optionalBookingDTO.isEmpty()) {
+            return ResponseEntity.badRequest().body(new MessageResponse(
+                    "Can't change state of this booking because exists another " +
+                            "booking for this room with non CANCELED status"));
+        }
+
+        return ResponseEntity.ok(optionalBookingDTO);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<Void> delete(@PathVariable String id) {
         bookingService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}/cancel")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> cancelBooking(@PathVariable String id) {
+        return ResponseEntity.ok(bookingService.updateState(id, new BookingDTO(EBookingState.CANCELED.toString())));
     }
 
     @GetMapping("/list/{userId}")

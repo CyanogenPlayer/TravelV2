@@ -7,6 +7,8 @@ import {bookingActions} from "../../../redux";
 import {BookingForm} from "../../BookingForm";
 import {DeleteModal} from "../../DeleteModal";
 import {BookingDetailsModal} from "../../BookingDetailsModal";
+import {EBookingState} from "../../../enums";
+import {BookingStateForm} from "../../BookingStateForm";
 
 interface IProp {
     booking: IBooking,
@@ -18,6 +20,7 @@ const BookingRow: FC<IProp> = ({booking, manager}) => {
     const [showUpdateForm, setShowUpdateForm] = useState<boolean>(null)
     const [showDeleteModal, setShowDeleteModal] = useState<boolean>(null)
     const [showBookingDetailsModal, setShowBookingDetailsModal] = useState<boolean>(null)
+    const [showBookingStateForm, setShowBookingStateForm] = useState<boolean>(null)
     const [hotelName, setHotelName] = useState<string>(null)
     const [username, setUsername] = useState<string>(null)
     const [price, setPrice] = useState<number>(null)
@@ -26,6 +29,7 @@ const BookingRow: FC<IProp> = ({booking, manager}) => {
     const handleShowUpdateForm = () => setShowUpdateForm(true)
     const handleShowDeleteModal = () => setShowDeleteModal(true)
     const handleShowBookingDetailsModal = () => setShowBookingDetailsModal(true)
+    const handleShowBookingStateForm = () => setShowBookingStateForm(true)
 
     const update = (updatedBooking: IBooking) => {
         updatedBooking.roomId = booking.roomId
@@ -34,24 +38,34 @@ const BookingRow: FC<IProp> = ({booking, manager}) => {
     }
 
     const deleteBooking = () => {
-        dispatch(bookingActions.deleteBooking({bookingId: booking.id}))
+        if (manager) {
+            dispatch(bookingActions.deleteBooking({bookingId: booking.id}))
+        } else {
+            dispatch(bookingActions.cancelBooking({bookingId: booking.id}))
+        }
+    }
+
+    const changeState = (updatedBooking: IBooking) => {
+        dispatch(bookingActions.updateState({bookingId: booking.id, booking: updatedBooking}))
     }
 
     useEffect(() => {
-        if (hotelsForManagement.length > 0) {
+        if (roomsForManagement.length) {
             const room = roomsForManagement.find(({id}) => id === booking.roomId)
             if (room) {
                 setPrice(room.price)
-                const hotel = hotelsForManagement.find(({id}) => id === room?.hotelId)
-                if (hotel) {
-                    setHotelName(hotel.name)
+                if (hotelsForManagement.length) {
+                    const hotel = hotelsForManagement.find(({id}) => id === room?.hotelId)
+                    if (hotel) {
+                        setHotelName(hotel.name)
+                    }
                 }
             }
         }
     }, [roomsForManagement, booking.roomId, hotelsForManagement]);
 
     useEffect(() => {
-        if (users.length > 0) {
+        if (users.length) {
             const user = users.find(({id}) => id === booking.userId)
             if (user) {
                 setUsername(user.username)
@@ -65,26 +79,36 @@ const BookingRow: FC<IProp> = ({booking, manager}) => {
                 <th>{booking.id}</th>
                 <th>{booking.bookedSince.toString()}</th>
                 <th>{booking.bookedTo.toString()}</th>
+                <th>{hotelName}</th>
+                {manager && <th>{username}</th>}
                 <th>{booking.price}&#8372;</th>
-                {manager &&
-                    <>
-                        <th>{hotelName}</th>
-                        <th>{username}</th>
-                    </>
-                }
+                <th>{booking.state}</th>
                 <th>
                     <Button variant="primary" className="me-1" onClick={handleShowBookingDetailsModal}>View
                         Details</Button>
                     {manager &&
-                        <Button variant="success" className="me-1" onClick={handleShowUpdateForm}>Update</Button>}
-                    <Button variant="danger" className="me-1" onClick={handleShowDeleteModal}>Delete</Button>
+                        <Button variant="success" className="me-1" onClick={handleShowUpdateForm}>Update</Button>
+                    }
+                    {manager &&
+                        <Button variant="success" className="me-1" onClick={handleShowBookingStateForm}>
+                            Change State
+                        </Button>
+                    }
+                    <Button variant="danger" className="me-1" onClick={handleShowDeleteModal}
+                            disabled={!manager && booking.state === EBookingState.CANCELED}>
+                        {manager ? 'Delete' : 'Cancel'}
+                    </Button>
                 </th>
             </tr>
             <BookingForm show={showUpdateForm} setShow={setShowUpdateForm} price={price} booking={booking}
                          submit={update}/>
             <DeleteModal show={showDeleteModal} setShow={setShowDeleteModal} objName="booking"
-                         deleteAction={deleteBooking}/>
+                         deleteAction={deleteBooking} cancel={!manager}/>
             <BookingDetailsModal show={showBookingDetailsModal} setShow={setShowBookingDetailsModal} booking={booking}/>
+            {manager &&
+                <BookingStateForm show={showBookingStateForm} setShow={setShowBookingStateForm} booking={booking}
+                                  submit={changeState}/>
+            }
         </>
     );
 };
