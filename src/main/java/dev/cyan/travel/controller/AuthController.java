@@ -1,18 +1,18 @@
 package dev.cyan.travel.controller;
 
 import dev.cyan.travel.DTO.UserDTO;
+import dev.cyan.travel.config.jwt.JwtUtils;
+import dev.cyan.travel.config.jwt.UserDetailsImpl;
 import dev.cyan.travel.entity.Role;
 import dev.cyan.travel.entity.User;
 import dev.cyan.travel.enums.ERole;
 import dev.cyan.travel.mapper.UserMapper;
+import dev.cyan.travel.repository.RoleRepository;
+import dev.cyan.travel.repository.UserRepository;
 import dev.cyan.travel.request.LoginRequest;
 import dev.cyan.travel.request.SignUpRequest;
 import dev.cyan.travel.response.JwtResponse;
 import dev.cyan.travel.response.MessageResponse;
-import dev.cyan.travel.repository.RoleRepository;
-import dev.cyan.travel.repository.UserRepository;
-import dev.cyan.travel.config.jwt.JwtUtils;
-import dev.cyan.travel.config.jwt.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

@@ -5,6 +5,7 @@ import {Card} from "react-bootstrap";
 import {IHotel} from "../../../interfaces";
 import css from './HotelCard.module.css'
 import {useAppSelector} from "../../../hooks";
+import {baseURL, urls} from "../../../constants";
 
 interface IProp {
     hotel: IHotel
@@ -15,7 +16,7 @@ const HotelCard: FC<IProp> = ({hotel}) => {
     const [countryName, setCountryName] = useState<string>(null)
     const navigate = useNavigate();
 
-    const {id, name, countryId, photosUrls} = hotel;
+    const {id, name, countryId, photosIds} = hotel;
 
     const navigateToHotelInfo = () => {
         navigate(`${id}`)
@@ -34,8 +35,9 @@ const HotelCard: FC<IProp> = ({hotel}) => {
         <Card border="primary" className={css.HotelCard} onClick={navigateToHotelInfo}>
             <div className="d-flex justify-content-center align-items-center bg-dark rounded-top"
                  style={{height: '50%'}}>
-                <img src={photosUrls.length > 0 ? photosUrls[0] : 'https://placehold.co/550x250?text=Image+Not+Found'}
-                     style={{maxHeight: '100%', maxWidth: '100%', display: 'block'}} alt={hotel.name}/>
+                <img
+                    src={photosIds.length > 0 ? `${baseURL}${urls.photos.byId(photosIds[0])}` : 'https://placehold.co/550x250?text=Image+Not+Found'}
+                    style={{maxHeight: '100%', maxWidth: '100%', display: 'block'}} alt={hotel.name}/>
             </div>
             <Card.Header>
                 <Card.Title>{name}</Card.Title>

@@ -7,6 +7,7 @@ import {RoomsCardsList} from "../RoomsCardsListContainer";
 import {IBooking} from "../../interfaces";
 import {SearchRoomsInPeriodForm} from "../SearchRoomsInPeriodForm";
 import {Carousel} from "react-bootstrap";
+import {baseURL, urls} from "../../constants";
 
 interface IProp {
     hotelId: string
@@ -55,12 +56,12 @@ const HotelInfo: FC<IProp> = ({hotelId}) => {
                             <h6>id: {hotel.id}</h6>
                             {countryName && <CountryBadge id={hotel.countryId} name={countryName}/>}
                         </div>
-                        {hotel.photosUrls.length > 0 &&
+                        {hotel.photosIds.length > 0 &&
                             <Carousel className="col-12 col-md-7 my-2 my-md-0 bg-dark z-0">
-                                {hotel.photosUrls.map(photoUrl =>
+                                {hotel.photosIds.map(photoId =>
                                     <Carousel.Item interval={10000}>
                                         <div className="d-flex justify-content-center" style={{height: '20rem'}}>
-                                            <img src={photoUrl} alt={hotel.name}
+                                            <img src={`${baseURL}${urls.photos.byId(photoId)}`} alt={hotel.name}
                                                  style={{maxWidth: '100%', maxHeight: '100%', display: 'block'}}/>
                                         </div>
                                     </Carousel.Item>

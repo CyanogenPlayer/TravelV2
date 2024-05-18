@@ -31,7 +31,6 @@ const HotelRow: FC<IProp> = ({hotel}) => {
     const handleShowRoomsModal = () => setShowRoomsModal(true)
 
     const update = (updatedHotel: IHotel) => {
-        updatedHotel.photosUrls = hotel.photosUrls
         dispatch(hotelActions.update({hotelId: hotel.id, hotel: updatedHotel}))
     }
 
@@ -43,8 +42,8 @@ const HotelRow: FC<IProp> = ({hotel}) => {
         dispatch(hotelActions.addPhotos({hotelId: hotel.id, photos}))
     }
 
-    const deletePhoto = (photoUrl: string) => {
-        dispatch(hotelActions.deletePhoto({hotelId: hotel.id, photoUrl}))
+    const deletePhoto = (photoId: string) => {
+        dispatch(hotelActions.deletePhoto({hotelId: hotel.id, photoId}))
     }
 
     useEffect(() => {
@@ -77,7 +76,7 @@ const HotelRow: FC<IProp> = ({hotel}) => {
             </tr>
             <HotelForm show={showUpdateForm} setShow={setShowUpdateForm} submit={update} hotel={hotel}/>
             <HotelPhotoModal show={showPhotoModal} setShow={setShowPhotoModal} objName={hotel.name}
-                             photosUrls={hotel.photosUrls} addAction={addPhotos} deleteAction={deletePhoto}/>
+                             photosIds={hotel.photosIds} addAction={addPhotos} deleteAction={deletePhoto}/>
             <DeleteModal show={showDeleteModal} setShow={setShowDeleteModal} objName={hotel.name}
                          deleteAction={deleteHotel}/>
             <TableModal show={showRoomsModal} setShow={setShowRoomsModal} title={`Rooms in ${hotel.name}`}>

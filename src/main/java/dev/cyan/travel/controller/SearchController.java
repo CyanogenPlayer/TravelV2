@@ -1,7 +1,6 @@
 package dev.cyan.travel.controller;
 
 import dev.cyan.travel.DTO.BookingDTO;
-import dev.cyan.travel.DTO.RoomDTO;
 import dev.cyan.travel.service.BookingService;
 import dev.cyan.travel.service.RoomService;
 import lombok.RequiredArgsConstructor;
@@ -27,26 +26,24 @@ public class SearchController {
     public ResponseEntity<List<BookingDTO>> searchForBookings(@RequestParam(value = "userId", required = false) String userId,
                                                               @RequestParam(value = "hotelId", required = false) String hotelId) {
         if (userId != null && hotelId != null) {
-            List<BookingDTO> bookingsByUserId = bookingService.getBookingsByUserId(userId);
-            return getListResponseEntity(hotelId, bookingsByUserId);
+            return ResponseEntity.ok(getBookingsList(hotelId, bookingService.getBookingsByUserId(userId)));
         } else if (userId != null) {
             ResponseEntity.ok(bookingService.getBookingsByUserId(userId));
         } else if (hotelId != null) {
-            List<BookingDTO> all = bookingService.getAll();
-            return getListResponseEntity(hotelId, all);
+            return ResponseEntity.ok(getBookingsList(hotelId, bookingService.getAll()));
         }
 
         return ResponseEntity.ok(bookingService.getAll());
     }
 
-    private ResponseEntity<List<BookingDTO>> getListResponseEntity(String hotelId, List<BookingDTO> all) {
+    private List<BookingDTO> getBookingsList(String hotelId, List<BookingDTO> list) {
         List<BookingDTO> toReturn = new ArrayList<>();
-        for (BookingDTO bookingDTO : all) {
+        for (BookingDTO bookingDTO : list) {
             String tempId = roomService.getById(bookingDTO.getRoomId()).orElseThrow().getHotelId();
             if (tempId.equals(hotelId)) {
                 toReturn.add(bookingDTO);
             }
         }
-        return ResponseEntity.ok(toReturn);
+        return toReturn;
     }
 }

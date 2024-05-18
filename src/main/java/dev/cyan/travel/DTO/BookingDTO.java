@@ -24,4 +24,5 @@ public class BookingDTO {
     private String roomId;
     @NotBlank
     private String userId;
+    private String state;
 }

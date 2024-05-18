@@ -40,6 +40,9 @@ const urls = {
         addPhotos: (hotelId: string) => `${hotels}/${hotelId}${photos}`,
         deletePhoto: (hotelId: string) => `${hotels}/${hotelId}${photos}`,
     },
+    photos: {
+        byId: (photoId: string): string => `${photos}/${photoId}`
+    },
     rooms: {
         allRooms: `${rooms}`,
         roomsByHotelId: (hotelId: string): string => `${hotels}/${hotelId}${rooms}`,

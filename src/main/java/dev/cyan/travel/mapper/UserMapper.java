@@ -9,7 +9,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Mapper(componentModel = "spring", uses = {RoleRepository.class})
@@ -22,12 +21,12 @@ public interface UserMapper {
     })
     User fromDTO(UserDTO userDTO);
 
-    HashSet<String> rolesToStrings(Set<Role> value);
+    Set<String> rolesToStrings(Set<Role> value);
 
     default String roleToString(Role role) {
         return role.getName().toString();
     }
 
     @InheritConfiguration
-    HashSet<Role> stringsToRoles(Set<String> value);
+    Set<Role> stringsToRoles(Set<String> value);
 }

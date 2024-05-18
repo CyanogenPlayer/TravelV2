@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.time.LocalDate;
@@ -23,4 +24,6 @@ public class Booking {
     private Room room;
     @DBRef
     private User user;
+    @DocumentReference
+    private BookingState state;
 }

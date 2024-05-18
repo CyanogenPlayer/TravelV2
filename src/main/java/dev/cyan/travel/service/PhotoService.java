@@ -7,7 +7,6 @@ import org.bson.BsonBinarySubType;
 import org.bson.types.Binary;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
 
@@ -27,14 +26,10 @@ public class PhotoService {
                 .image(new Binary(BsonBinarySubType.BINARY, file.getBytes()))
                 .build());
 
-        return ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/photos/")
-                .path(saved.getId())
-                .toUriString();
+        return saved.getId();
     }
 
-    public void delete(String photoUrl) {
-        String key = "/photos/";
-        photoRepository.deleteById(photoUrl.substring(photoUrl.indexOf(key) + key.length()));
+    public void delete(String photoId) {
+        photoRepository.deleteById(photoId);
     }
 }

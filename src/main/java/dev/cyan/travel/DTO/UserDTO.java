@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -16,5 +15,5 @@ public class UserDTO {
     private String username;
     private String email;
     @NotEmpty
-    private Set<String> roles = new HashSet<>();
+    private Set<String> roles;
 }

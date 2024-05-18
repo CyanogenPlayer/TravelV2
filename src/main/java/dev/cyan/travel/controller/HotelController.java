@@ -77,15 +77,15 @@ public class HotelController {
     @PostMapping("/{id}/photos")
     @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<MessageResponse> addPhotosOfHotel(@PathVariable String id,
-                                                           @RequestParam("photos") MultipartFile[] files) throws IOException {
+                                                            @RequestParam("photos") MultipartFile[] files) throws IOException {
         HotelDTO hotelDTO = hotelService.getById(id).orElseThrow();
 
-        Set<String> photosUrls = hotelDTO.getPhotosUrls();
+        Set<String> photosIds = hotelDTO.getPhotosIds();
         for (MultipartFile file : files) {
-            photosUrls.add(photoService.add(file));
+            photosIds.add(photoService.add(file));
         }
 
-        hotelDTO.setPhotosUrls(photosUrls);
+        hotelDTO.setPhotosIds(photosIds);
         hotelService.update(id, hotelDTO);
 
         return ResponseEntity.ok(new MessageResponse("Photo uploaded successfully!"));
@@ -93,16 +93,16 @@ public class HotelController {
 
     @DeleteMapping("/{id}/photos")
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<Void> deletePhotoOfHotel(@PathVariable String id, @RequestParam("photoUrl") String photoUrl) {
+    public ResponseEntity<Void> deletePhotoOfHotel(@PathVariable String id, @RequestParam("photoId") String photoId) {
         HotelDTO hotelDTO = hotelService.getById(id).orElseThrow();
 
-        Set<String> photosUrls = hotelDTO.getPhotosUrls();
-        photosUrls.removeIf(url -> url.equals(photoUrl));
+        Set<String> photosIds = hotelDTO.getPhotosIds();
+        photosIds.removeIf(pId -> pId.equals(photoId));
 
-        hotelDTO.setPhotosUrls(photosUrls);
+        hotelDTO.setPhotosIds(photosIds);
         hotelService.update(id, hotelDTO);
 
-        photoService.delete(photoUrl);
+        photoService.delete(photoId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

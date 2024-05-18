@@ -51,6 +51,12 @@ public class BookingController {
         return ResponseEntity.ok(optionalBookingDTO);
     }
 
+    @PatchMapping("/{id}/state")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ResponseEntity<BookingDTO> updateState(@PathVariable String id, @RequestBody BookingDTO bookingDTO) {
+        return ResponseEntity.ok(bookingService.updateState(id, bookingDTO));
+    }
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Void> delete(@PathVariable String id) {

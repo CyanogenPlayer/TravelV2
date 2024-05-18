@@ -4,8 +4,10 @@ import dev.cyan.travel.DTO.BookingDTO;
 import dev.cyan.travel.entity.Booking;
 import dev.cyan.travel.entity.Room;
 import dev.cyan.travel.entity.User;
+import dev.cyan.travel.enums.EBookingState;
 import dev.cyan.travel.mapper.BookingMapper;
 import dev.cyan.travel.repository.BookingRepository;
+import dev.cyan.travel.repository.BookingStateRepository;
 import dev.cyan.travel.repository.RoomRepository;
 import dev.cyan.travel.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +27,7 @@ public class BookingService {
     private final BookingRepository bookingRepository;
     private final RoomRepository roomRepository;
     private final UserRepository userRepository;
+    private final BookingStateRepository bookingStateRepository;
     private final BookingMapper bookingMapper;
     private final MongoTemplate mongoTemplate;
 
@@ -46,6 +50,7 @@ public class BookingService {
         userRepository.findById(bookingDTO.getUserId()).orElseThrow();
         Booking booking = bookingMapper.fromDTO(bookingDTO);
         if (checkIfBookingIsAvailable(booking.getRoom(), booking.getBookedSince(), booking.getBookedTo(), null)) {
+            booking.setState(bookingStateRepository.getByName(EBookingState.PENDING));
             Booking createdBooking = bookingRepository.save(booking);
             return Optional.of(bookingMapper.toDTO(createdBooking));
         }
@@ -67,11 +72,18 @@ public class BookingService {
                 )));
         List<Booking> bookings = mongoTemplate.find(query, Booking.class);
 
-        if (id != null) {
-            bookings.removeIf(booking -> id.equals(booking.getId()));
+        List<Booking> filtered = new ArrayList<>();
+        for (Booking booking : bookings) {
+            if (booking.getState().getName() != EBookingState.CANCELED) {
+                filtered.add(booking);
+            }
         }
 
-        return bookings.isEmpty();
+        if (id != null) {
+            filtered.removeIf(booking -> id.equals(booking.getId()));
+        }
+
+        return filtered.isEmpty();
     }
 
     public Optional<BookingDTO> update(String id, BookingDTO bookingDTO) {
@@ -86,6 +98,14 @@ public class BookingService {
         }
 
         return Optional.empty();
+    }
+
+    public BookingDTO updateState(String id, BookingDTO bookingDTO) {
+        Booking booking = bookingRepository.findById(id).orElseThrow();
+        String state = bookingDTO.getState();
+        booking.setState(bookingStateRepository.getByName(Enum.valueOf(EBookingState.class, state)));
+        Booking modifiedBooking = bookingRepository.save(booking);
+        return bookingMapper.toDTO(modifiedBooking);
     }
 
     public void delete(String id) {

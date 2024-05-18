@@ -124,12 +124,12 @@ const addPhotos = createAsyncThunk<IMessage, { hotelId: string, photos: FormData
     }
 );
 
-const deletePhoto = createAsyncThunk<void, { hotelId: string, photoUrl: string },
+const deletePhoto = createAsyncThunk<void, { hotelId: string, photoId: string },
     { rejectValue: IMessage }>(
     'hotelSlice/deletePhoto',
-    async ({hotelId, photoUrl}, {rejectWithValue, dispatch}) => {
+    async ({hotelId, photoId}, {rejectWithValue, dispatch}) => {
         try {
-            await hotelService.deletePhoto(hotelId, photoUrl)
+            await hotelService.deletePhoto(hotelId, photoId)
             dispatch(alertActions.setMessage('Photo successfully deleted!'))
         } catch (e) {
             const err = e as AxiosError;

@@ -50,7 +50,7 @@ const BookingForm: FC<IProp> = ({show, setShow, roomNumber, price, booking, subm
             const difference = (new Date(bookTo).getTime() - new Date(bookSince).getTime()) / (1000 * 3600 * 24)
             setCurrentPrice(difference * price)
         }
-    }, [show, bookSince, bookTo]);
+    }, [show, bookSince, bookTo, booking]);
 
     useEffect(() => {
         if (booking) {

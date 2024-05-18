@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -19,5 +18,5 @@ public class HotelDTO {
     private String name;
     @NotBlank
     private String countryId;
-    private Set<String> photosUrls = new HashSet<>();
+    private Set<String> photosIds;
 }
