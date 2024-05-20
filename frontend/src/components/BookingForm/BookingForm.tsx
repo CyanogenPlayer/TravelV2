@@ -8,7 +8,6 @@ import {ErrorTextBox} from "../ErrorTextBox";
 import {IBooking} from "../../interfaces";
 import {bookingValidator} from "../../validators";
 
-
 interface IProp {
     show: boolean,
     setShow: Dispatch<SetStateAction<boolean>>
@@ -22,7 +21,7 @@ interface IProp {
 const BookingForm: FC<IProp> = ({show, setShow, roomNumber, price, booking, submit}) => {
     const [currentPrice, setCurrentPrice] = useState<number>(null)
     const [query] = useSearchParams();
-    const {register, handleSubmit, formState: {errors, isValid}} = useForm<IBooking>({
+    const {reset, register, handleSubmit, setValue, formState: {errors, isValid}} = useForm<IBooking>({
         mode: 'onTouched',
         resolver: joiResolver(bookingValidator)
     });
@@ -47,12 +46,7 @@ const BookingForm: FC<IProp> = ({show, setShow, roomNumber, price, booking, subm
 
     const handleClose = () => {
         setShow(false)
-        setBookSince(
-            bookedSince?.substring(0, 10) ||
-            booking?.bookedSince.toString() ||
-            new Date().toISOString().substring(0, 10)
-        )
-        setBookTo(bookedTo?.substring(0, 10) || booking?.bookedTo.toString() || getTomorrowDate())
+        reset()
     }
 
     const handleForm = (booking: IBooking) => {
@@ -70,16 +64,27 @@ const BookingForm: FC<IProp> = ({show, setShow, roomNumber, price, booking, subm
 
     useEffect(() => {
         if (bookedSince && bookedTo) {
+            // @ts-ignore
+            setValue('bookedSince', bookedSince.substring(0, 10))
             setBookSince(bookedSince.substring(0, 10))
+
+            // @ts-ignore
+            setValue('bookedTo', bookedTo.substring(0, 10))
             setBookTo(bookedTo.substring(0, 10))
         } else if (booking) {
+            // @ts-ignore
+            setValue('bookedSince', booking.bookedSince.toString())
             setBookSince(booking.bookedSince.toString())
+
+            // @ts-ignore
+            setValue('bookedTo', booking.bookedTo.toString())
             setBookTo(booking.bookedTo.toString())
         } else {
+            reset()
             setBookSince(new Date().toISOString().substring(0, 10))
             setBookTo(getTomorrowDate())
         }
-    }, [bookedSince, bookedTo, booking]);
+    }, [show, setValue, bookedSince, bookedTo, booking]);
 
     return (
         <Modal show={show} onHide={handleClose}>
@@ -92,7 +97,11 @@ const BookingForm: FC<IProp> = ({show, setShow, roomNumber, price, booking, subm
                         <Form.Label>Booking since</Form.Label>
                         <Form.Control
                             type="date"
-                            value={bookSince}
+                            defaultValue={
+                                bookedSince?.substring(0, 10) ||
+                                booking?.bookedSince.toString() ||
+                                new Date().toISOString().substring(0, 10)
+                            }
                             {...register('bookedSince', {onChange: e => setBookSince(e.target.value)})}
                         />
                         {errors.bookedSince && <ErrorTextBox error={errors.bookedSince.message}/>}
@@ -101,7 +110,11 @@ const BookingForm: FC<IProp> = ({show, setShow, roomNumber, price, booking, subm
                         <Form.Label>Booking to</Form.Label>
                         <Form.Control
                             type="date"
-                            value={bookTo}
+                            defaultValue={
+                                bookedTo?.substring(0, 10) ||
+                                booking?.bookedTo.toString() ||
+                                getTomorrowDate()
+                            }
                             {...register('bookedTo', {onChange: e => setBookTo(e.target.value)})}
                         />
                         {errors.bookedTo && <ErrorTextBox error={errors.bookedTo.message}/>}

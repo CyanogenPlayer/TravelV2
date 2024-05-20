@@ -1,5 +1,6 @@
 import {Carousel} from "react-bootstrap";
 import {FC, useEffect} from "react";
+import {useSearchParams} from "react-router-dom";
 
 import {useAppDispatch, useAppSelector} from "../../hooks";
 import {countryActions, hotelActions, roomActions} from "../../redux";
@@ -8,7 +9,6 @@ import {RoomsCardsList} from "../RoomsCardsListContainer";
 import {IBooking} from "../../interfaces";
 import {SearchInPeriodForm} from "../SearchInPeriodForm";
 import {baseURL, urls} from "../../constants";
-import {useSearchParams} from "react-router-dom";
 
 interface IProp {
     hotelId: string

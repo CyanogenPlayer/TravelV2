@@ -34,7 +34,7 @@ const RoomCard: FC<IProp> = ({room}) => {
                 </Card.Header>
                 <Card.Body>
                     <Card.Subtitle className="mb-2">capacity: {capacity}</Card.Subtitle>
-                    <Card.Subtitle className="mb-2">{price}&#8372;</Card.Subtitle>
+                    <Card.Subtitle className="mb-2">{price}&#8372; - per night</Card.Subtitle>
                     <Button variant="primary" disabled={!isAuth} onClick={handleShowBookingForm}>Book</Button>
                 </Card.Body>
             </Card>
