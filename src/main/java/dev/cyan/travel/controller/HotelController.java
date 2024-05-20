@@ -61,14 +61,16 @@ public class HotelController {
     @GetMapping("/{id}/rooms")
     public ResponseEntity<List<RoomDTO>> getRoomsInHotel(@PathVariable String id,
                                                          @RequestParam(value = "bookedSince", required = false) String bookedSince,
-                                                         @RequestParam(value = "bookedTo", required = false) String bookedTo) {
+                                                         @RequestParam(value = "bookedTo", required = false) String bookedTo,
+                                                         @RequestParam(value = "capacity", required = false) Integer capacity) {
         if (bookedSince != null && bookedTo != null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
             return ResponseEntity.ok(
                     roomService.getAllAvailableRoomsForPeriod(id,
                             LocalDate.parse(bookedSince, formatter),
-                            LocalDate.parse(bookedTo, formatter)));
+                            LocalDate.parse(bookedTo, formatter),
+                            capacity));
         }
 
         return ResponseEntity.ok(roomService.getRoomsByHotelId(id));

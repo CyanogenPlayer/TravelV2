@@ -55,7 +55,8 @@ const urls = {
         deleteRoom: (roomId: string) => `${rooms}/${roomId}`
     },
     search: {
-        bookingsByUserAndHotel: `${search}${bookings}`
+        bookingsByUserAndHotel: `${search}${bookings}`,
+        hotelsWithAvailableRooms: `${search}${hotels}`
     },
     users: {
         allUsers: `${users}`,

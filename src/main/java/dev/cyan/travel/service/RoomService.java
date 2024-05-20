@@ -79,13 +79,19 @@ public class RoomService {
                 .toList();
     }
 
-    public List<RoomDTO> getAllAvailableRoomsForPeriod(String hotelId, LocalDate bookedSince, LocalDate bookedTo) {
+    public List<RoomDTO> getAllAvailableRoomsForPeriod(String hotelId, LocalDate bookedSince, LocalDate bookedTo, Integer capacity) {
         Hotel hotel = hotelRepository.findById(hotelId).orElseThrow();
         List<Room> roomsByHotel = roomRepository.findRoomsByHotel(hotel);
         List<Room> availableRooms = new ArrayList<>();
         for (Room room : roomsByHotel) {
             if (bookingService.checkIfBookingIsAvailable(room, bookedSince, bookedTo, null)) {
-                availableRooms.add(room);
+                if (capacity != null) {
+                    if (room.getCapacity() == capacity) {
+                        availableRooms.add(room);
+                    }
+                } else {
+                    availableRooms.add(room);
+                }
             }
         }
 

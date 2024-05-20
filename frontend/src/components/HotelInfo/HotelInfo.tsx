@@ -1,50 +1,71 @@
 import {Carousel} from "react-bootstrap";
-import {FC, useEffect, useState} from "react";
+import {FC, useEffect} from "react";
 
 import {useAppDispatch, useAppSelector} from "../../hooks";
 import {countryActions, hotelActions, roomActions} from "../../redux";
 import {CountryBadge} from "../CountriesBadgesListContainer";
 import {RoomsCardsList} from "../RoomsCardsListContainer";
 import {IBooking} from "../../interfaces";
-import {SearchRoomsInPeriodForm} from "../SearchRoomsInPeriodForm";
+import {SearchInPeriodForm} from "../SearchInPeriodForm";
 import {baseURL, urls} from "../../constants";
+import {useSearchParams} from "react-router-dom";
 
 interface IProp {
     hotelId: string
 }
 
 const HotelInfo: FC<IProp> = ({hotelId}) => {
-    const {hotels: {hotel}, rooms: {rooms}, countries: {countries}} =
+    const {hotels: {hotel}, rooms: {rooms}, countries: {country}} =
         useAppSelector(state => state);
-    const [countryName, setCountryName] = useState<string>(null)
+    const [query, setQuery] = useSearchParams();
     const dispatch = useAppDispatch();
 
-    useEffect(() => {
-        dispatch(hotelActions.getById({hotelId}));
-        dispatch(roomActions.getByHotelId({hotelId}));
-    }, [dispatch, hotelId]);
-
-    useEffect(() => {
-        dispatch(countryActions.getAll())
-    }, [dispatch]);
-
-    useEffect(() => {
-        if (hotel && countries.length) {
-            const country = countries.find(country => country.id === hotel.countryId);
-            if (country) {
-                setCountryName(country.name)
-            }
-        }
-    }, [hotel, countries]);
+    const bookedSince = query.get('bookedSince');
+    const bookedTo = query.get('bookedTo');
+    const capacity = query.get('capacity');
 
     const viewRoomsInPeriod = (booking: IBooking) => {
-        const {bookedSince, bookedTo} = booking;
-        dispatch(roomActions.getAllAvailableForPeriod({hotelId, bookedSince, bookedTo}));
+        setQuery(prev => {
+            prev.set('bookedSince', booking.bookedSince.toISOString())
+            prev.set('bookedTo', booking.bookedTo.toISOString())
+            prev.delete('capacity')
+            return prev;
+        })
+
+        if (booking.capacity !== "") {
+            setQuery(prev => {
+                prev.set('capacity', booking.capacity)
+                return prev;
+            })
+        }
     }
 
     const resetRooms = () => {
-        dispatch(roomActions.getByHotelId({hotelId}));
+        setQuery(prev => {
+            prev.delete('bookedSince')
+            prev.delete('bookedTo')
+            prev.delete('capacity')
+            return prev;
+        })
     }
+
+    useEffect(() => {
+        dispatch(hotelActions.getById({hotelId}));
+    }, [dispatch, hotelId]);
+
+    useEffect(() => {
+        if (hotel) {
+            dispatch(countryActions.getById({countryId: hotel.countryId}))
+        }
+    }, [dispatch, hotel]);
+
+    useEffect(() => {
+        if (bookedSince && bookedTo) {
+            dispatch(roomActions.getAllAvailableForPeriod({hotelId, bookedSince, bookedTo, capacity}));
+        } else {
+            dispatch(roomActions.getByHotelId({hotelId}));
+        }
+    }, [dispatch, hotelId, bookedSince, bookedTo, capacity]);
 
     return (
         <>
@@ -54,7 +75,7 @@ const HotelInfo: FC<IProp> = ({hotelId}) => {
                         <div>
                             <h4>{hotel.name}</h4>
                             <h6>id: {hotel.id}</h6>
-                            {countryName && <CountryBadge id={hotel.countryId} name={countryName}/>}
+                            {country && <CountryBadge id={country.id} name={country.name}/>}
                         </div>
                         {hotel.photosIds.length > 0 &&
                             <Carousel className="col-12 col-md-7 my-2 my-md-0 bg-dark z-0">
@@ -69,7 +90,7 @@ const HotelInfo: FC<IProp> = ({hotelId}) => {
                             </Carousel>
                         }
                     </div>
-                    <SearchRoomsInPeriodForm viewRoomsInPeriod={viewRoomsInPeriod} resetRooms={resetRooms}/>
+                    <SearchInPeriodForm viewObjects={viewRoomsInPeriod} resetObjects={resetRooms}/>
                     {rooms.length > 0 && <RoomsCardsList rooms={rooms}/>}
                 </div>
             }

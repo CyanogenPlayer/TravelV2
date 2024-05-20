@@ -8,4 +8,6 @@ export interface IBooking {
     roomId: string,
     userId: string,
     state: EBookingState
+
+    capacity?: string
 }

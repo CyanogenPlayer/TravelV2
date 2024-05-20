@@ -19,7 +19,7 @@ public class RoomDTO {
     private Integer capacity;
     @Min(value = 100, message = "price must be greater than 0")
     @Max(value = 10_000, message = "price must be less than or equal to 10000")
-    private int price;
+    private Integer price;
     @NotBlank
     private String hotelId;
 }

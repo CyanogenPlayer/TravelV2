@@ -140,6 +140,29 @@ const deletePhoto = createAsyncThunk<void, { hotelId: string, photoId: string },
     }
 );
 
+const getHotelsWithAvailableRooms = createAsyncThunk<IHotel[], {
+    countryId: string,
+    bookedSince: string,
+    bookedTo: string,
+    capacity: string
+},
+    { rejectValue: IMessage }>(
+    'hotelSlice/getHotelsWithAvailableRooms',
+    async ({countryId, bookedSince, bookedTo, capacity}, {rejectWithValue}) => {
+        try {
+            const {data} = await hotelService.getHotelsWithAvailableRooms(
+                countryId,
+                bookedSince,
+                bookedTo,
+                capacity)
+            return data
+        } catch (e) {
+            const err = e as AxiosError
+            return rejectWithValue(err.response.data as IMessage);
+        }
+    }
+)
+
 const hotelSlice = createSlice({
     name: 'hotelSlice',
     initialState,
@@ -150,12 +173,15 @@ const hotelSlice = createSlice({
                 state.hotel = action.payload
             })
 
-            .addMatcher(isFulfilled(getAll, getByCountryId), (state, action) => {
+            .addMatcher(isFulfilled(getAll, getByCountryId, getHotelsWithAvailableRooms), (state, action) => {
                 state.hotels = action.payload;
+            })
+
+            .addMatcher(isFulfilled(getAll, getByCountryId), (state, action) => {
                 state.hotelsForManagement = action.payload
             })
 
-            .addMatcher(isFulfilled(getAll, getByCountryId, getById), state => {
+            .addMatcher(isFulfilled(getAll, getByCountryId, getById, getHotelsWithAvailableRooms), state => {
                 state.isLoading = false
             })
 
@@ -163,11 +189,11 @@ const hotelSlice = createSlice({
                 state.trigger = !state.trigger
             })
 
-            .addMatcher(isRejected(getAll, getByCountryId, getById), state => {
+            .addMatcher(isRejected(getAll, getByCountryId, getById, getHotelsWithAvailableRooms), state => {
                 state.isLoading = false
             })
 
-            .addMatcher(isPending(getAll, getByCountryId, getById), state => {
+            .addMatcher(isPending(getAll, getByCountryId, getById, getHotelsWithAvailableRooms), state => {
                 state.isLoading = true
             })
     }
@@ -184,7 +210,8 @@ const hotelActions = {
     update,
     deleteHotel,
     addPhotos,
-    deletePhoto
+    deletePhoto,
+    getHotelsWithAvailableRooms
 }
 
 export {

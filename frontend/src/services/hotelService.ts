@@ -13,7 +13,17 @@ const hotelService = {
     addPhotos: (hotelId: string, photos: FormData): IRes<IMessage> => axiosService.post(
         urls.hotels.addPhotos(hotelId), photos, {headers: {'Content-Type': 'multipart/form-data'}}),
     deletePhoto: (hotelId: string, photoId: string): IRes<void> => axiosService.delete(
-        urls.hotels.deletePhoto(hotelId), {params: {photoId}})
+        urls.hotels.deletePhoto(hotelId), {params: {photoId}}),
+    getHotelsWithAvailableRooms:
+        (countryId: string, bookedSince: string, bookedTo: string, capacity: string): IRes<IHotel[]> =>
+            axiosService.get(urls.search.hotelsWithAvailableRooms, {
+                params: {
+                    countryId,
+                    bookedSince,
+                    bookedTo,
+                    capacity
+                }
+            })
 }
 
 export {

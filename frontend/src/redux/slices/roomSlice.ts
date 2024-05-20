@@ -48,16 +48,18 @@ const getByHotelId = createAsyncThunk<IRoom[], { hotelId: string },
 
 const getAllAvailableForPeriod = createAsyncThunk<IRoom[], {
     hotelId: string,
-    bookedSince: Date,
-    bookedTo: Date
+    bookedSince: string,
+    bookedTo: string,
+    capacity: string
 }, { rejectValue: IMessage }>(
     'roomSlice/getAllAvailableForPeriod',
-    async ({hotelId, bookedSince, bookedTo}, {rejectWithValue}) => {
+    async ({hotelId, bookedSince, bookedTo, capacity}, {rejectWithValue}) => {
         try {
             const {data} = await roomService.getAllAvailableForPeriod(
                 hotelId,
-                bookedSince.toISOString(),
-                bookedTo.toISOString())
+                bookedSince,
+                bookedTo,
+                capacity)
             return data
         } catch (e) {
             const err = e as AxiosError

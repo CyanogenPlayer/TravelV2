@@ -1,6 +1,7 @@
 package dev.cyan.travel.service;
 
 import dev.cyan.travel.DTO.HotelDTO;
+import dev.cyan.travel.DTO.RoomDTO;
 import dev.cyan.travel.entity.Country;
 import dev.cyan.travel.entity.Hotel;
 import dev.cyan.travel.entity.Room;
@@ -12,6 +13,8 @@ import dev.cyan.travel.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +25,7 @@ public class HotelService {
     private final CountryRepository countryRepository;
     private final RoomRepository roomRepository;
     private final HotelMapper hotelMapper;
+    private final RoomService roomService;
 
     public List<HotelDTO> getAll() {
         return hotelRepository
@@ -71,6 +75,31 @@ public class HotelService {
         List<Hotel> hotelsByCountry = hotelRepository
                 .findHotelsByCountry(country);
         return hotelsByCountry
+                .stream()
+                .map(hotelMapper::toDTO)
+                .toList();
+    }
+
+    public List<HotelDTO> getHotelsWithAvailableRooms(String countryId, LocalDate bookedSince, LocalDate bookedTo, Integer capacity) {
+        List<Hotel> hotels;
+        if (countryId != null) {
+            Country country = countryRepository.findById(countryId).orElseThrow();
+            hotels = hotelRepository.findHotelsByCountry(country);
+        } else {
+            hotels = hotelRepository.findAll();
+        }
+
+        ArrayList<Hotel> availableHotels = new ArrayList<>();
+        for (Hotel hotel : hotels) {
+            List<RoomDTO> availableRoomsInHotel =
+                    roomService.getAllAvailableRoomsForPeriod(hotel.getId(), bookedSince, bookedTo, capacity);
+            if (!availableRoomsInHotel.isEmpty()) {
+                availableHotels.add(hotel);
+            }
+        }
+
+
+        return availableHotels
                 .stream()
                 .map(hotelMapper::toDTO)
                 .toList();

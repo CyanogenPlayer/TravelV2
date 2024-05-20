@@ -2,10 +2,12 @@ import {Button, Form, Modal} from "react-bootstrap";
 import {Dispatch, FC, SetStateAction, useEffect, useState} from "react";
 import {useForm} from "react-hook-form";
 import {joiResolver} from "@hookform/resolvers/joi";
+import {useSearchParams} from "react-router-dom";
 
 import {ErrorTextBox} from "../ErrorTextBox";
 import {IBooking} from "../../interfaces";
 import {bookingValidator} from "../../validators";
+
 
 interface IProp {
     show: boolean,
@@ -19,7 +21,8 @@ interface IProp {
 
 const BookingForm: FC<IProp> = ({show, setShow, roomNumber, price, booking, submit}) => {
     const [currentPrice, setCurrentPrice] = useState<number>(null)
-    const {reset, register, handleSubmit, setValue, formState: {errors, isValid}} = useForm<IBooking>({
+    const [query] = useSearchParams();
+    const {register, handleSubmit, formState: {errors, isValid}} = useForm<IBooking>({
         mode: 'onTouched',
         resolver: joiResolver(bookingValidator)
     });
@@ -31,12 +34,25 @@ const BookingForm: FC<IProp> = ({show, setShow, roomNumber, price, booking, subm
         return tomorrow.toISOString().substring(0, 10);
     };
 
-    const [bookSince, setBookSince] = useState<string>(booking?.bookedSince.toString() || new Date().toISOString().substring(0, 10))
-    const [bookTo, setBookTo] = useState<string>(booking?.bookedTo.toString() || getTomorrowDate())
+    const bookedSince = query.get('bookedSince');
+    const bookedTo = query.get('bookedTo');
+
+    const [bookSince, setBookSince] = useState<string>(
+        bookedSince?.substring(0, 10) ||
+        booking?.bookedSince.toString() ||
+        new Date().toISOString().substring(0, 10)
+    )
+    const [bookTo, setBookTo] = useState<string>(
+        bookedTo?.substring(0, 10) || booking?.bookedTo.toString() || getTomorrowDate())
 
     const handleClose = () => {
         setShow(false)
-        reset()
+        setBookSince(
+            bookedSince?.substring(0, 10) ||
+            booking?.bookedSince.toString() ||
+            new Date().toISOString().substring(0, 10)
+        )
+        setBookTo(bookedTo?.substring(0, 10) || booking?.bookedTo.toString() || getTomorrowDate())
     }
 
     const handleForm = (booking: IBooking) => {
@@ -53,11 +69,17 @@ const BookingForm: FC<IProp> = ({show, setShow, roomNumber, price, booking, subm
     }, [show, bookSince, bookTo, price]);
 
     useEffect(() => {
-        if (booking) {
-            setValue('bookedSince', booking.bookedSince)
-            setValue('bookedTo', booking.bookedTo)
+        if (bookedSince && bookedTo) {
+            setBookSince(bookedSince.substring(0, 10))
+            setBookTo(bookedTo.substring(0, 10))
+        } else if (booking) {
+            setBookSince(booking.bookedSince.toString())
+            setBookTo(booking.bookedTo.toString())
+        } else {
+            setBookSince(new Date().toISOString().substring(0, 10))
+            setBookTo(getTomorrowDate())
         }
-    }, [setValue, booking]);
+    }, [bookedSince, bookedTo, booking]);
 
     return (
         <Modal show={show} onHide={handleClose}>
@@ -70,7 +92,7 @@ const BookingForm: FC<IProp> = ({show, setShow, roomNumber, price, booking, subm
                         <Form.Label>Booking since</Form.Label>
                         <Form.Control
                             type="date"
-                            defaultValue={bookSince}
+                            value={bookSince}
                             {...register('bookedSince', {onChange: e => setBookSince(e.target.value)})}
                         />
                         {errors.bookedSince && <ErrorTextBox error={errors.bookedSince.message}/>}
@@ -79,7 +101,7 @@ const BookingForm: FC<IProp> = ({show, setShow, roomNumber, price, booking, subm
                         <Form.Label>Booking to</Form.Label>
                         <Form.Control
                             type="date"
-                            defaultValue={bookTo}
+                            value={bookTo}
                             {...register('bookedTo', {onChange: e => setBookTo(e.target.value)})}
                         />
                         {errors.bookedTo && <ErrorTextBox error={errors.bookedTo.message}/>}

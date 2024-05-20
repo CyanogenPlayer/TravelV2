@@ -1,5 +1,5 @@
 import {FC, useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useSearchParams} from "react-router-dom";
 import {Card} from "react-bootstrap";
 
 import {IHotel} from "../../../interfaces";
@@ -15,11 +15,26 @@ const HotelCard: FC<IProp> = ({hotel}) => {
     const {countries} = useAppSelector(state => state.countries);
     const [countryName, setCountryName] = useState<string>(null)
     const navigate = useNavigate();
+    const [query] = useSearchParams();
+
+    const bookedSince = query.get('bookedSince');
+    const bookedTo = query.get('bookedTo');
+    const capacity = query.get('capacity');
 
     const {id, name, countryId, photosIds} = hotel;
 
     const navigateToHotelInfo = () => {
-        navigate(`${id}`)
+        let url = `${id}`;
+
+        if (bookedSince && bookedTo) {
+            if (capacity) {
+                url += `?bookedSince=${bookedSince}&bookedTo=${bookedTo}&capacity=${capacity}`
+            } else {
+                url += `?bookedSince=${bookedSince}&bookedTo=${bookedTo}`
+            }
+        }
+
+        navigate(url)
     }
 
     useEffect(() => {
