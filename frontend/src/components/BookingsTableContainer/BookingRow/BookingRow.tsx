@@ -1,4 +1,4 @@
-import {Button} from "react-bootstrap";
+import {Button, Modal} from "react-bootstrap";
 import {FC, useEffect, useState} from "react";
 
 import {IBooking} from "../../../interfaces";
@@ -7,7 +7,7 @@ import {bookingActions} from "../../../redux";
 import {BookingForm} from "../../BookingForm";
 import {DeleteModal} from "../../DeleteModal";
 import {BookingDetailsModal} from "../../BookingDetailsModal";
-import {EBookingState} from "../../../enums";
+import {EBookingState, ERole} from "../../../enums";
 import {BookingStateForm} from "../../BookingStateForm";
 
 interface IProp {
@@ -16,9 +16,15 @@ interface IProp {
 }
 
 const BookingRow: FC<IProp> = ({booking, manager}) => {
-    const {hotels: {hotelsForManagement}, rooms: {roomsForManagement}, users: {users}} = useAppSelector(state => state);
+    const {
+        hotels: {hotelsForManagement},
+        rooms: {roomsForManagement},
+        users: {users},
+        auth: {user: {roles}}
+    } = useAppSelector(state => state);
     const [showUpdateForm, setShowUpdateForm] = useState<boolean>(null)
     const [showDeleteModal, setShowDeleteModal] = useState<boolean>(null)
+    const [showCancelModal, setShowCancelModal] = useState<boolean>(null)
     const [showBookingDetailsModal, setShowBookingDetailsModal] = useState<boolean>(null)
     const [showBookingStateForm, setShowBookingStateForm] = useState<boolean>(null)
     const [hotelName, setHotelName] = useState<string>(null)
@@ -28,6 +34,7 @@ const BookingRow: FC<IProp> = ({booking, manager}) => {
 
     const handleShowUpdateForm = () => setShowUpdateForm(true)
     const handleShowDeleteModal = () => setShowDeleteModal(true)
+    const handleShowCancelModal = () => setShowCancelModal(true)
     const handleShowBookingDetailsModal = () => setShowBookingDetailsModal(true)
     const handleShowBookingStateForm = () => setShowBookingStateForm(true)
 
@@ -38,11 +45,12 @@ const BookingRow: FC<IProp> = ({booking, manager}) => {
     }
 
     const deleteBooking = () => {
-        if (manager) {
-            dispatch(bookingActions.deleteBooking({bookingId: booking.id}))
-        } else {
-            dispatch(bookingActions.cancelBooking({bookingId: booking.id}))
-        }
+        dispatch(bookingActions.deleteBooking({bookingId: booking.id}))
+    }
+
+    const cancelBooking = () => {
+        dispatch(bookingActions.cancelBooking({bookingId: booking.id}))
+        setShowCancelModal(false)
     }
 
     const changeState = (updatedBooking: IBooking) => {
@@ -86,28 +94,44 @@ const BookingRow: FC<IProp> = ({booking, manager}) => {
                 <th>
                     <Button variant="primary" className="me-1" onClick={handleShowBookingDetailsModal}>View
                         Details</Button>
-                    {manager &&
-                        <Button variant="success" className="me-1" onClick={handleShowUpdateForm}>Update</Button>
+                    {manager ?
+                        <>
+                            <Button variant="success" className="me-1" onClick={handleShowUpdateForm}>Update</Button>
+                            <Button variant="warning" className="me-1" onClick={handleShowBookingStateForm}>Change
+                                State</Button>
+                            {roles.includes(ERole.ROLE_ADMIN) &&
+                            <Button variant="danger" className="me-1" onClick={handleShowDeleteModal}
+                                    disabled={!manager && booking.state === EBookingState.CANCELED}>Delete</Button>
+                            }
+                        </>
+                        :
+                        <Button variant="danger" className="me-1" onClick={handleShowCancelModal}
+                                disabled={!manager && booking.state === EBookingState.CANCELED}>Cancel</Button>
                     }
-                    {manager &&
-                        <Button variant="success" className="me-1" onClick={handleShowBookingStateForm}>
-                            Change State
-                        </Button>
-                    }
-                    <Button variant="danger" className="me-1" onClick={handleShowDeleteModal}
-                            disabled={!manager && booking.state === EBookingState.CANCELED}>
-                        {manager ? 'Delete' : 'Cancel'}
-                    </Button>
                 </th>
             </tr>
-            <BookingForm show={showUpdateForm} setShow={setShowUpdateForm} price={price} booking={booking}
-                         submit={update}/>
-            <DeleteModal show={showDeleteModal} setShow={setShowDeleteModal} objName="booking"
-                         deleteAction={deleteBooking} cancel={!manager}/>
             <BookingDetailsModal show={showBookingDetailsModal} setShow={setShowBookingDetailsModal} booking={booking}/>
-            {manager &&
-                <BookingStateForm show={showBookingStateForm} setShow={setShowBookingStateForm} booking={booking}
-                                  submit={changeState}/>
+            {manager ?
+                <>
+                    <BookingForm show={showUpdateForm} setShow={setShowUpdateForm} price={price} booking={booking}
+                                 submit={update}/>
+                    {roles.includes(ERole.ROLE_ADMIN) &&
+                    <DeleteModal show={showDeleteModal} setShow={setShowDeleteModal} objName="booking"
+                                 deleteAction={deleteBooking}/>
+                    }
+                    <BookingStateForm show={showBookingStateForm} setShow={setShowBookingStateForm} booking={booking}
+                                      submit={changeState}/>
+                </>
+                :
+                <Modal show={showCancelModal} onHide={() => setShowCancelModal(false)}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Cancel booking for room </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>Are you sure want to cancel booking?</Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="danger" onClick={cancelBooking}>Cancel</Button>
+                    </Modal.Footer>
+                </Modal>
             }
         </>
     );

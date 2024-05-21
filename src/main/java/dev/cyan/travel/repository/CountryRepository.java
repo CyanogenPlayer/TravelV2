@@ -11,4 +11,6 @@ public interface CountryRepository extends MongoRepository<Country, String> {
     List<Country> findAllByOrderByName();
 
     Country getById(String id);
+
+    List<Country> findCountriesByEnabledIsTrueOrderByName();
 }

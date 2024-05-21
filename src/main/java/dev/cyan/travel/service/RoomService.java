@@ -1,10 +1,11 @@
 package dev.cyan.travel.service;
 
+import dev.cyan.travel.DTO.BookingDTO;
 import dev.cyan.travel.DTO.RoomDTO;
 import dev.cyan.travel.entity.Booking;
 import dev.cyan.travel.entity.Hotel;
 import dev.cyan.travel.entity.Room;
-import dev.cyan.travel.exception.CannotDeleteException;
+import dev.cyan.travel.enums.EBookingState;
 import dev.cyan.travel.mapper.RoomMapper;
 import dev.cyan.travel.repository.BookingRepository;
 import dev.cyan.travel.repository.HotelRepository;
@@ -26,6 +27,14 @@ public class RoomService {
     private final BookingRepository bookingRepository;
     private final BookingService bookingService;
 
+    public List<RoomDTO> getAllEnabled() {
+        return roomRepository
+                .findRoomsByEnabledIsTrue()
+                .stream()
+                .map(roomMapper::toDTO)
+                .toList();
+    }
+
     public List<RoomDTO> getAll() {
         return roomRepository
                 .findAll()
@@ -43,6 +52,7 @@ public class RoomService {
     public RoomDTO create(RoomDTO roomDTO) {
         hotelRepository.findById(roomDTO.getHotelId()).orElseThrow();
         Room room = roomMapper.fromDTO(roomDTO);
+        room.setEnabled(true);
         Room createdRoom = roomRepository.save(room);
         return roomMapper.toDTO(createdRoom);
     }
@@ -57,16 +67,49 @@ public class RoomService {
         return roomMapper.toDTO(modifiedRoom);
     }
 
-    public void delete(String id) throws CannotDeleteException {
+    public void disable(String id) {
         Room room = roomRepository
                 .findById(id)
                 .orElseThrow();
+        room.setEnabled(false);
+
         List<Booking> bookings = bookingRepository.findBookingsByRoom(room);
-        if (bookings.isEmpty()) {
-            roomRepository.deleteById(id);
-        } else {
-            throw new CannotDeleteException("Cannot delete this room because there are bookings for this room");
+        for (Booking booking : bookings) {
+            bookingService.updateState(booking.getId(), new BookingDTO(EBookingState.CANCELED.toString()));
         }
+
+        roomRepository.save(room);
+    }
+
+    public void enable(String id) {
+        Room room = roomRepository
+                .findById(id)
+                .orElseThrow();
+        room.setEnabled(true);
+        roomRepository.save(room);
+    }
+
+    public void delete(String id) {
+        Room room = roomRepository
+                .findById(id)
+                .orElseThrow();
+
+        List<Booking> bookings = bookingRepository.findBookingsByRoom(room);
+        for (Booking booking : bookings) {
+            bookingService.delete(booking.getId());
+        }
+
+        roomRepository.deleteById(id);
+    }
+
+    public List<RoomDTO> getEnabledRoomsByHotelId(String id) {
+        Hotel hotel = hotelRepository.findById(id).orElseThrow();
+        List<Room> roomsByHotel = roomRepository
+                .findRoomsByEnabledIsTrueAndHotel(hotel);
+        return roomsByHotel
+                .stream()
+                .map(roomMapper::toDTO)
+                .toList();
     }
 
     public List<RoomDTO> getRoomsByHotelId(String id) {
@@ -81,7 +124,7 @@ public class RoomService {
 
     public List<RoomDTO> getAllAvailableRoomsForPeriod(String hotelId, LocalDate bookedSince, LocalDate bookedTo, Integer capacity) {
         Hotel hotel = hotelRepository.findById(hotelId).orElseThrow();
-        List<Room> roomsByHotel = roomRepository.findRoomsByHotel(hotel);
+        List<Room> roomsByHotel = roomRepository.findRoomsByEnabledIsTrueAndHotel(hotel);
         List<Room> availableRooms = new ArrayList<>();
         for (Room room : roomsByHotel) {
             if (bookingService.checkIfBookingIsAvailable(room, bookedSince, bookedTo, null)) {

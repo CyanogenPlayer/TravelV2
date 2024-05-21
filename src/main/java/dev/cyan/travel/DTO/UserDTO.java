@@ -16,4 +16,5 @@ public class UserDTO {
     private String email;
     @NotEmpty
     private Set<String> roles;
+    private Boolean enabled;
 }

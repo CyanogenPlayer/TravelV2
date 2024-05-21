@@ -1,9 +1,9 @@
 import {Button, Form, Modal} from "react-bootstrap";
-import {Dispatch, FC, SetStateAction, useEffect} from "react";
+import {Dispatch, FC, SetStateAction, useCallback, useEffect, useState} from "react";
 import {useForm} from "react-hook-form";
 import {joiResolver} from "@hookform/resolvers/joi";
 
-import {IHotel} from "../../interfaces";
+import {ICity, IHotel} from "../../interfaces";
 import {hotelValidator} from "../../validators";
 import {ErrorTextBox} from "../ErrorTextBox";
 import {useAppSelector} from "../../hooks";
@@ -17,7 +17,9 @@ interface IProp {
 }
 
 const HotelForm: FC<IProp> = ({show, setShow, submit, hotel}) => {
-    const {countriesForManagement} = useAppSelector(state => state.countries);
+    const {countries: {countriesForManagement}, cities: {citiesForManagement}} = useAppSelector(state => state);
+    const [selectedCityId, setSelectedCityId] = useState<string>(null)
+    const [cities, setCities] = useState<ICity[]>([])
     const {reset, register, handleSubmit, setValue, formState: {errors, isValid}} = useForm<IHotel>({
         mode: 'onTouched',
         resolver: joiResolver(hotelValidator)
@@ -33,14 +35,29 @@ const HotelForm: FC<IProp> = ({show, setShow, submit, hotel}) => {
         handleClose()
     }
 
+    const setCitiesForSelect = useCallback((countryId: string) => {
+        const filter = citiesForManagement.filter(city => city.countryId === countryId);
+        setCities(filter)
+        setSelectedCityId(filter[0].id)
+    }, [citiesForManagement]);
+
     useEffect(() => {
-        if (hotel) {
-            setValue('name', hotel.name)
-            if (countriesForManagement.length) {
-                setValue('countryId', hotel.countryId ? hotel.countryId : countriesForManagement[0].id)
+        if (show) {
+            if (hotel) {
+                setValue('name', hotel.name)
+                setValue('countryId', hotel.countryId)
+                if (citiesForManagement.length) {
+                    setCities(citiesForManagement.filter(city => city.countryId === hotel.countryId))
+                    setSelectedCityId(hotel.cityId)
+                }
+            } else if (countriesForManagement.length) {
+                setValue('countryId', countriesForManagement[0].id)
+                if (citiesForManagement.length) {
+                    setCitiesForSelect(countriesForManagement[0].id)
+                }
             }
         }
-    }, [setValue, hotel, countriesForManagement]);
+    }, [show, hotel, setValue, countriesForManagement, citiesForManagement, setCitiesForSelect]);
 
     return (
         <Modal show={show} onHide={handleClose}>
@@ -62,13 +79,26 @@ const HotelForm: FC<IProp> = ({show, setShow, submit, hotel}) => {
                         <Form.Label>Country</Form.Label>
                         <Form.Select
                             defaultValue={hotel ? hotel.countryId : 0}
-                            {...register('countryId')}
+                            {...register('countryId', {onChange: e => setCitiesForSelect(e.target.value)})}
                         >
                             {countriesForManagement && countriesForManagement.map(country =>
                                 <option value={country.id}>{country.name}</option>
                             )}
                         </Form.Select>
                         {errors.countryId && <ErrorTextBox error={errors.countryId.message}/>}
+                    </Form.Group>
+                    <Form.Group className="my-2">
+                        <Form.Label>City</Form.Label>
+                        <Form.Select
+                            value={selectedCityId}
+                            // defaultValue={hotel ? hotel.cityId : 0}
+                            {...register('cityId', {onChange: e => setSelectedCityId(e.target.value)})}
+                        >
+                            {cities && cities.map(city =>
+                                <option value={city.id}>{city.name}</option>
+                            )}
+                        </Form.Select>
+                        {errors.cityId && <ErrorTextBox error={errors.cityId.message}/>}
                     </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>

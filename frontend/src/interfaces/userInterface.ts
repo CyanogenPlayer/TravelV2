@@ -4,7 +4,8 @@ export interface IUser {
     id: string,
     username: string,
     email: string,
-    roles: ERole[]
+    roles: ERole[],
+    enabled: boolean
 }
 
 export interface JwtResponse extends IUser {

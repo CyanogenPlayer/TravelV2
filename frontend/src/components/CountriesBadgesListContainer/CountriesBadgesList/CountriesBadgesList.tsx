@@ -9,7 +9,7 @@ const CountriesBadgesList = () => {
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        dispatch(countryActions.getAll())
+        dispatch(countryActions.getAllEnabled())
     }, [dispatch])
 
     return (

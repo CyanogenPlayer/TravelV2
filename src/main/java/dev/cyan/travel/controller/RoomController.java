@@ -2,7 +2,6 @@ package dev.cyan.travel.controller;
 
 import dev.cyan.travel.DTO.BookingDTO;
 import dev.cyan.travel.DTO.RoomDTO;
-import dev.cyan.travel.exception.CannotDeleteException;
 import dev.cyan.travel.service.BookingService;
 import dev.cyan.travel.service.RoomService;
 import jakarta.validation.Valid;
@@ -22,6 +21,11 @@ public class RoomController {
     private final BookingService bookingService;
 
     @GetMapping
+    public ResponseEntity<List<RoomDTO>> getAllEnabled() {
+        return ResponseEntity.ok(roomService.getAllEnabled());
+    }
+
+    @GetMapping("/all")
     public ResponseEntity<List<RoomDTO>> getAll() {
         return ResponseEntity.ok(roomService.getAll());
     }
@@ -43,9 +47,23 @@ public class RoomController {
         return ResponseEntity.ok(roomService.update(id, roomDTO));
     }
 
-    @DeleteMapping("/{id}")
+    @PatchMapping("/{id}/disable")
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<Void> delete(@PathVariable String id) throws CannotDeleteException {
+    public ResponseEntity<Void> disable(@PathVariable String id){
+        roomService.disable(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PatchMapping("/{id}/enable")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ResponseEntity<Void> enable(@PathVariable String id){
+        roomService.enable(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> delete(@PathVariable String id){
         roomService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }

@@ -22,4 +22,5 @@ public class RoomDTO {
     private Integer price;
     @NotBlank
     private String hotelId;
+    private Boolean enabled;
 }

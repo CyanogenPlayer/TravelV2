@@ -32,6 +32,7 @@ public class User {
     private String password;
     @DocumentReference
     private Set<Role> roles = new HashSet<>();
+    private boolean enabled;
 
     public User(String username, String email, String password) {
         this.username = username;

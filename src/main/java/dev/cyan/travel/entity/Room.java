@@ -19,4 +19,5 @@ public class Room {
     private int price;
     @DBRef
     private Hotel hotel;
+    private boolean enabled;
 }

@@ -21,5 +21,8 @@ public class Hotel {
     @DBRef
     private Country country;
     @DBRef
+    private City city;
+    @DBRef
     private Set<Photo> photos = new HashSet<>();
+    private boolean enabled;
 }

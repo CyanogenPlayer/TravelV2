@@ -3,5 +3,6 @@ export interface IRoom {
     roomNumber: number,
     capacity: number,
     price: number
-    hotelId: string
+    hotelId: string,
+    enabled: boolean
 }

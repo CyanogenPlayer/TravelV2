@@ -63,7 +63,7 @@ const HotelInfo: FC<IProp> = ({hotelId}) => {
         if (bookedSince && bookedTo) {
             dispatch(roomActions.getAllAvailableForPeriod({hotelId, bookedSince, bookedTo, capacity}));
         } else {
-            dispatch(roomActions.getByHotelId({hotelId}));
+            dispatch(roomActions.getEnabledByHotelId({hotelId}));
         }
     }, [dispatch, hotelId, bookedSince, bookedTo, capacity]);
 

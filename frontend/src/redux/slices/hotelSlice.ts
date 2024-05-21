@@ -4,6 +4,8 @@ import {AxiosError} from "axios";
 import {IHotel, IMessage} from "../../interfaces";
 import {hotelService} from "../../services";
 import {alertActions} from "./alertSlice";
+import {roomActions} from "./roomSlice";
+import {bookingActions} from "./bookingSlice";
 
 interface IState {
     hotel: IHotel,
@@ -34,6 +36,19 @@ const getAll = createAsyncThunk<IHotel[], void, { rejectValue: IMessage }>(
     }
 )
 
+const getAllEnabled = createAsyncThunk<IHotel[], void, { rejectValue: IMessage }>(
+    'hotelSlice/getAllEnabled',
+    async (_, {rejectWithValue}) => {
+        try {
+            const {data} = await hotelService.getAllEnabled()
+            return data
+        } catch (e) {
+            const err = e as AxiosError
+            return rejectWithValue(err.response.data as IMessage);
+        }
+    }
+)
+
 const getByCountryId = createAsyncThunk<IHotel[], { countryId: string },
     { rejectValue: IMessage }>(
     'hotelSlice/getByCountryId',
@@ -48,7 +63,49 @@ const getByCountryId = createAsyncThunk<IHotel[], { countryId: string },
     }
 )
 
-const getById = createAsyncThunk<IHotel, { hotelId: string }>(
+const getEnabledByCountryId = createAsyncThunk<IHotel[], { countryId: string },
+    { rejectValue: IMessage }>(
+    'hotelSlice/getEnabledByCountryId',
+    async ({countryId}, {rejectWithValue}) => {
+        try {
+            const {data} = await hotelService.getEnabledByCountryId(countryId)
+            return data
+        } catch (e) {
+            const err = e as AxiosError
+            return rejectWithValue(err.response.data as IMessage);
+        }
+    }
+)
+
+const getByCityId = createAsyncThunk<IHotel[], { cityId: string },
+    { rejectValue: IMessage }>(
+    'hotelSlice/getByCityId',
+    async ({cityId}, {rejectWithValue}) => {
+        try {
+            const {data} = await hotelService.getByCityId(cityId)
+            return data
+        } catch (e) {
+            const err = e as AxiosError
+            return rejectWithValue(err.response.data as IMessage);
+        }
+    }
+)
+
+const getEnabledByCityId = createAsyncThunk<IHotel[], { cityId: string },
+    { rejectValue: IMessage }>(
+    'hotelSlice/getEnabledByCityId',
+    async ({cityId}, {rejectWithValue}) => {
+        try {
+            const {data} = await hotelService.getEnabledByCityId(cityId)
+            return data
+        } catch (e) {
+            const err = e as AxiosError
+            return rejectWithValue(err.response.data as IMessage);
+        }
+    }
+)
+
+const getById = createAsyncThunk<IHotel, { hotelId: string }, { rejectValue: IMessage }>(
     'hotelSlice/getById',
     async ({hotelId}, {rejectWithValue}) => {
         try {
@@ -56,7 +113,7 @@ const getById = createAsyncThunk<IHotel, { hotelId: string }>(
             return data
         } catch (e) {
             const err = e as AxiosError
-            return rejectWithValue(err.response.data);
+            return rejectWithValue(err.response.data as IMessage);
         }
     }
 )
@@ -92,12 +149,48 @@ const update = createAsyncThunk<void, { hotelId: string, hotel: IHotel },
     }
 );
 
+const disableHotel = createAsyncThunk<void, { hotelId: string },
+    { rejectValue: IMessage }>(
+    'hotelSlice/disableHotel',
+    async ({hotelId}, {rejectWithValue, dispatch}) => {
+        try {
+            await hotelService.disableHotel(hotelId)
+            dispatch(roomActions.changeTrigger())
+            dispatch(bookingActions.changeTrigger())
+            dispatch(alertActions.setMessage('Hotel successfully disabled!'))
+        } catch (e) {
+            const err = e as AxiosError;
+            const data = err.response.data as IMessage;
+            dispatch(alertActions.setError(data.message))
+            return rejectWithValue(data)
+        }
+    }
+);
+
+const enableHotel = createAsyncThunk<void, { hotelId: string },
+    { rejectValue: IMessage }>(
+    'hotelSlice/enableHotel',
+    async ({hotelId}, {rejectWithValue, dispatch}) => {
+        try {
+            await hotelService.enableHotel(hotelId)
+            dispatch(alertActions.setMessage('Hotel successfully enabled!'))
+        } catch (e) {
+            const err = e as AxiosError;
+            const data = err.response.data as IMessage;
+            dispatch(alertActions.setError(data.message))
+            return rejectWithValue(data)
+        }
+    }
+);
+
 const deleteHotel = createAsyncThunk<void, { hotelId: string },
     { rejectValue: IMessage }>(
     'hotelSlice/deleteHotel',
     async ({hotelId}, {rejectWithValue, dispatch}) => {
         try {
             await hotelService.deleteHotel(hotelId)
+            dispatch(roomActions.changeTrigger())
+            dispatch(bookingActions.changeTrigger())
             dispatch(alertActions.setMessage('Hotel successfully deleted!'))
         } catch (e) {
             const err = e as AxiosError;
@@ -145,8 +238,7 @@ const getHotelsWithAvailableRooms = createAsyncThunk<IHotel[], {
     bookedSince: string,
     bookedTo: string,
     capacity: string
-},
-    { rejectValue: IMessage }>(
+}, { rejectValue: IMessage }>(
     'hotelSlice/getHotelsWithAvailableRooms',
     async ({countryId, bookedSince, bookedTo, capacity}, {rejectWithValue}) => {
         try {
@@ -166,34 +258,38 @@ const getHotelsWithAvailableRooms = createAsyncThunk<IHotel[], {
 const hotelSlice = createSlice({
     name: 'hotelSlice',
     initialState,
-    reducers: {},
+    reducers: {
+        changeTrigger: state => {
+            state.trigger = !state.trigger
+        }
+    },
     extraReducers: builder => {
         builder
             .addCase(getById.fulfilled, (state, action) => {
                 state.hotel = action.payload
             })
 
-            .addMatcher(isFulfilled(getAll, getByCountryId, getHotelsWithAvailableRooms), (state, action) => {
+            .addMatcher(isFulfilled(getAllEnabled, getEnabledByCountryId, getEnabledByCityId, getHotelsWithAvailableRooms), (state, action) => {
                 state.hotels = action.payload;
             })
 
-            .addMatcher(isFulfilled(getAll, getByCountryId), (state, action) => {
+            .addMatcher(isFulfilled(getAll, getByCountryId, getByCityId), (state, action) => {
                 state.hotelsForManagement = action.payload
             })
 
-            .addMatcher(isFulfilled(getAll, getByCountryId, getById, getHotelsWithAvailableRooms), state => {
+            .addMatcher(isFulfilled(getAll, getAllEnabled, getByCountryId, getEnabledByCountryId, getByCityId, getEnabledByCityId, getById, getHotelsWithAvailableRooms), state => {
                 state.isLoading = false
             })
 
-            .addMatcher(isFulfilled(create, update, deleteHotel, addPhotos, deletePhoto), state => {
+            .addMatcher(isFulfilled(create, update, disableHotel, enableHotel, deleteHotel, addPhotos, deletePhoto), state => {
                 state.trigger = !state.trigger
             })
 
-            .addMatcher(isRejected(getAll, getByCountryId, getById, getHotelsWithAvailableRooms), state => {
+            .addMatcher(isRejected(getAll, getAllEnabled, getByCountryId, getEnabledByCountryId, getByCityId, getEnabledByCityId, getById, getHotelsWithAvailableRooms), state => {
                 state.isLoading = false
             })
 
-            .addMatcher(isPending(getAll, getByCountryId, getById, getHotelsWithAvailableRooms), state => {
+            .addMatcher(isPending(getAll, getAllEnabled, getByCountryId, getEnabledByCountryId, getByCityId, getEnabledByCityId, getById, getHotelsWithAvailableRooms), state => {
                 state.isLoading = true
             })
     }
@@ -204,10 +300,16 @@ const {reducer: hotelReducer, actions} = hotelSlice;
 const hotelActions = {
     ...actions,
     getAll,
+    getAllEnabled,
     getByCountryId,
+    getEnabledByCountryId,
+    getByCityId,
+    getEnabledByCityId,
     getById,
     create,
     update,
+    disableHotel,
+    enableHotel,
     deleteHotel,
     addPhotos,
     deletePhoto,

@@ -52,6 +52,7 @@ public class SearchController {
     @GetMapping("/hotels")
     public ResponseEntity<List<HotelDTO>> searchForHotelsWithAvailableRooms(
             @RequestParam(value = "countryId", required = false) String countryId,
+            @RequestParam(value = "cityId", required = false) String cityId,
             @RequestParam(value = "bookedSince", required = false) String bookedSince,
             @RequestParam(value = "bookedTo", required = false) String bookedTo,
             @RequestParam(value = "capacity", required = false) Integer capacity) {
@@ -59,15 +60,17 @@ public class SearchController {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
             return ResponseEntity.ok(
-                    hotelService.getHotelsWithAvailableRooms(countryId,
+                    hotelService.getHotelsWithAvailableRooms(
+                            countryId,
+                            cityId,
                             LocalDate.parse(bookedSince, formatter),
                             LocalDate.parse(bookedTo, formatter),
                             capacity));
         }
         if (countryId != null) {
-            return ResponseEntity.ok(hotelService.getHotelsByCountryId(countryId));
+            return ResponseEntity.ok(hotelService.getEnabledHotelsByCountryId(countryId));
         }
 
-        return ResponseEntity.ok(hotelService.getAll());
+        return ResponseEntity.ok(hotelService.getAllEnabled());
     }
 }

@@ -156,7 +156,11 @@ const cancelBooking = createAsyncThunk<void, { bookingId: string },
 const bookingSlice = createSlice({
     name: 'bookingSlice',
     initialState,
-    reducers: {},
+    reducers: {
+        changeTrigger: state => {
+            state.trigger = !state.trigger
+        }
+    },
     extraReducers: builder => {
         builder
             .addMatcher(isFulfilled(getByUserId, getByUserId), (state, action) => {

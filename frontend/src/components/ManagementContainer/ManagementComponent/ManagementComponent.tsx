@@ -7,6 +7,7 @@ import {HotelsList} from "../HotelsList";
 import {RoomsList} from "../RoomsList";
 import {UsersList} from "../UsersList";
 import {BookingsList} from "../BookingsList";
+import {CitiesList} from "../CitiesList";
 
 const ManagementComponent = () => {
     const {user} = useAppSelector(state => state.auth);
@@ -23,6 +24,7 @@ const ManagementComponent = () => {
             {roles.includes(ERole.ROLE_MANAGER) &&
                 <div>
                     <CountriesList/>
+                    <CitiesList/>
                     <HotelsList/>
                     <RoomsList/>
                     <UsersList/>

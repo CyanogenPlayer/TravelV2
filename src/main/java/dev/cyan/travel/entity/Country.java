@@ -16,4 +16,5 @@ public class Country {
     private String id;
     @Indexed(unique = true)
     private String name;
+    private boolean enabled;
 }

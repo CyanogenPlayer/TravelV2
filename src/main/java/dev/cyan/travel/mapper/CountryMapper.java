@@ -8,7 +8,10 @@ import org.mapstruct.*;
 public interface CountryMapper {
     CountryDTO toDTO(Country country);
 
-    @Mapping(target = "id", ignore = true)
+    @Mappings({
+            @Mapping(target = "id", ignore = true),
+            @Mapping(target = "enabled", ignore = true)
+    })
     Country fromDTO(CountryDTO countryDTO);
 
     @InheritConfiguration

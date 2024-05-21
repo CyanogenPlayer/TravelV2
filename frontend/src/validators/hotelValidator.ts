@@ -13,6 +13,11 @@ const hotelValidator = Joi.object<IHotel>({
         'string.hex': 'country must be in hex format',
         'string.length': 'country must be 24 characters long',
         'any.required': 'country is required field'
+    }),
+    cityId: Joi.string().hex().length(24).required().messages({
+        'string.hex': 'city must be in hex format',
+        'string.length': 'city must be 24 characters long',
+        'any.required': 'city is required field'
     })
 });
 

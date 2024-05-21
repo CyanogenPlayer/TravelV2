@@ -15,6 +15,7 @@ const CountriesTable: FC<IProp> = ({countries}) => {
             <tr>
                 <th>ID</th>
                 <th>Name</th>
+                <th>Enabled</th>
                 <th>Actions</th>
             </tr>
             </thead>

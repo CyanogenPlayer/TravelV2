@@ -1,4 +1,5 @@
 export * from './bookingInterface'
+export * from './cityInterface'
 export * from './countryInterface'
 export * from './hotelInterface'
 export * from './messageInterface'

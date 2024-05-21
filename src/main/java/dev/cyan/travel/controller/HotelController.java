@@ -2,7 +2,6 @@ package dev.cyan.travel.controller;
 
 import dev.cyan.travel.DTO.HotelDTO;
 import dev.cyan.travel.DTO.RoomDTO;
-import dev.cyan.travel.exception.CannotDeleteException;
 import dev.cyan.travel.response.MessageResponse;
 import dev.cyan.travel.service.HotelService;
 import dev.cyan.travel.service.PhotoService;
@@ -30,6 +29,11 @@ public class HotelController {
     private final PhotoService photoService;
 
     @GetMapping
+    public ResponseEntity<List<HotelDTO>> getAllEnabled() {
+        return ResponseEntity.ok(hotelService.getAllEnabled());
+    }
+
+    @GetMapping("/all")
     public ResponseEntity<List<HotelDTO>> getAll() {
         return ResponseEntity.ok(hotelService.getAll());
     }
@@ -51,18 +55,32 @@ public class HotelController {
         return ResponseEntity.ok(hotelService.update(id, hotelDTO));
     }
 
-    @DeleteMapping("/{id}")
+    @PatchMapping("/{id}/disable")
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<Void> delete(@PathVariable String id) throws CannotDeleteException {
+    public ResponseEntity<Void> disable(@PathVariable String id) {
+        hotelService.disable(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PatchMapping("/{id}/enable")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ResponseEntity<Void> enable(@PathVariable String id) {
+        hotelService.enable(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> delete(@PathVariable String id) {
         hotelService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/{id}/rooms")
-    public ResponseEntity<List<RoomDTO>> getRoomsInHotel(@PathVariable String id,
-                                                         @RequestParam(value = "bookedSince", required = false) String bookedSince,
-                                                         @RequestParam(value = "bookedTo", required = false) String bookedTo,
-                                                         @RequestParam(value = "capacity", required = false) Integer capacity) {
+    public ResponseEntity<List<RoomDTO>> getEnabledRoomsInHotel(@PathVariable String id,
+                                                                @RequestParam(value = "bookedSince", required = false) String bookedSince,
+                                                                @RequestParam(value = "bookedTo", required = false) String bookedTo,
+                                                                @RequestParam(value = "capacity", required = false) Integer capacity) {
         if (bookedSince != null && bookedTo != null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
@@ -73,6 +91,11 @@ public class HotelController {
                             capacity));
         }
 
+        return ResponseEntity.ok(roomService.getEnabledRoomsByHotelId(id));
+    }
+
+    @GetMapping("/all/{id}/rooms")
+    public ResponseEntity<List<RoomDTO>> getRoomsInHotel(@PathVariable String id) {
         return ResponseEntity.ok(roomService.getRoomsByHotelId(id));
     }
 

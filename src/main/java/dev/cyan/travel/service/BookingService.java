@@ -24,12 +24,12 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class BookingService {
+    private final BookingMapper bookingMapper;
     private final BookingRepository bookingRepository;
+    private final BookingStateRepository bookingStateRepository;
+    private final MongoTemplate mongoTemplate;
     private final RoomRepository roomRepository;
     private final UserRepository userRepository;
-    private final BookingStateRepository bookingStateRepository;
-    private final BookingMapper bookingMapper;
-    private final MongoTemplate mongoTemplate;
 
     public List<BookingDTO> getAll() {
         return bookingRepository
@@ -46,13 +46,16 @@ public class BookingService {
     }
 
     public Optional<BookingDTO> create(BookingDTO bookingDTO) {
-        roomRepository.findById(bookingDTO.getRoomId()).orElseThrow();
-        userRepository.findById(bookingDTO.getUserId()).orElseThrow();
-        Booking booking = bookingMapper.fromDTO(bookingDTO);
-        if (checkIfBookingIsAvailable(booking.getRoom(), booking.getBookedSince(), booking.getBookedTo(), null)) {
-            booking.setState(bookingStateRepository.getByName(EBookingState.PENDING));
-            Booking createdBooking = bookingRepository.save(booking);
-            return Optional.of(bookingMapper.toDTO(createdBooking));
+        Room room = roomRepository.findById(bookingDTO.getRoomId()).orElseThrow();
+        User user = userRepository.findById(bookingDTO.getUserId()).orElseThrow();
+
+        if (room.isEnabled() && user.isEnabled()) {
+            Booking booking = bookingMapper.fromDTO(bookingDTO);
+            if (checkIfBookingIsAvailable(booking.getRoom(), booking.getBookedSince(), booking.getBookedTo(), null)) {
+                booking.setState(bookingStateRepository.getByName(EBookingState.PENDING));
+                Booking createdBooking = bookingRepository.save(booking);
+                return Optional.of(bookingMapper.toDTO(createdBooking));
+            }
         }
 
         return Optional.empty();
@@ -102,6 +105,7 @@ public class BookingService {
 
     public Optional<BookingDTO> updateState(String id, BookingDTO bookingDTO) {
         Booking booking = bookingRepository.findById(id).orElseThrow();
+
         if (checkIfBookingIsAvailable(booking.getRoom(), booking.getBookedSince(), booking.getBookedTo(), id)) {
             String state = bookingDTO.getState();
             booking.setState(bookingStateRepository.getByName(Enum.valueOf(EBookingState.class, state)));

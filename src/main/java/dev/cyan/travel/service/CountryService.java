@@ -1,12 +1,11 @@
 package dev.cyan.travel.service;
 
 import dev.cyan.travel.DTO.CountryDTO;
+import dev.cyan.travel.entity.City;
 import dev.cyan.travel.entity.Country;
-import dev.cyan.travel.entity.Hotel;
-import dev.cyan.travel.exception.CannotDeleteException;
 import dev.cyan.travel.mapper.CountryMapper;
+import dev.cyan.travel.repository.CityRepository;
 import dev.cyan.travel.repository.CountryRepository;
-import dev.cyan.travel.repository.HotelRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +16,17 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CountryService {
     private final CountryRepository countryRepository;
-    private final HotelRepository hotelRepository;
+    private final CityRepository cityRepository;
+    private final CityService cityService;
     private final CountryMapper countryMapper;
+
+    public List<CountryDTO> getAllEnabled() {
+        return countryRepository
+                .findCountriesByEnabledIsTrueOrderByName()
+                .stream()
+                .map(countryMapper::toDTO)
+                .toList();
+    }
 
     public List<CountryDTO> getAll() {
         return countryRepository
@@ -36,6 +44,7 @@ public class CountryService {
 
     public CountryDTO create(CountryDTO countryDTO) {
         Country country = countryMapper.fromDTO(countryDTO);
+        country.setEnabled(true);
         Country createdCountry = countryRepository.save(country);
         return countryMapper.toDTO(createdCountry);
     }
@@ -49,15 +58,34 @@ public class CountryService {
         return countryMapper.toDTO(modifiedCountry);
     }
 
-    public void delete(String id) throws CannotDeleteException {
+    public void disable(String id) {
+        Country country = countryRepository.findById(id).orElseThrow();
+        country.setEnabled(false);
+
+        List<City> cities = cityRepository.findCitiesByCountryOrderByName(country);
+        for (City city : cities) {
+            cityService.disable(city.getId());
+        }
+
+        countryRepository.save(country);
+    }
+
+    public void enable(String id) {
+        Country country = countryRepository.findById(id).orElseThrow();
+        country.setEnabled(true);
+        countryRepository.save(country);
+    }
+
+    public void delete(String id) {
         Country country = countryRepository
                 .findById(id)
                 .orElseThrow();
-        List<Hotel> hotels = hotelRepository.findHotelsByCountry(country);
-        if (hotels.isEmpty()) {
-            countryRepository.deleteById(id);
-        } else {
-            throw new CannotDeleteException("Cannot delete this country because there are hotels in this country");
+        List<City> cities = cityRepository.findCitiesByCountryOrderByName(country);
+
+        for (City city : cities) {
+            cityService.delete(city.getId());
         }
+
+        countryRepository.deleteById(id);
     }
 }

@@ -1,9 +1,10 @@
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+import {createAsyncThunk, createSlice, isFulfilled} from "@reduxjs/toolkit";
 import {AxiosError} from "axios";
 
 import {IMessage, IUser} from "../../interfaces";
 import {userService} from "../../services";
 import {alertActions} from "./alertSlice";
+import {bookingActions} from "./bookingSlice";
 
 interface IState {
     users: IUser[],
@@ -46,6 +47,37 @@ const updateRoles = createAsyncThunk<void, { userId: string, user: IUser },
     }
 );
 
+const disableUser = createAsyncThunk<void, { userId: string }, { rejectValue: IMessage }>(
+    'userSlice/disableUser',
+    async ({userId}, {rejectWithValue, dispatch}) => {
+        try {
+            await userService.disableUser(userId);
+            dispatch(bookingActions.changeTrigger())
+            dispatch(alertActions.setMessage('User successfully disabled!'))
+        } catch (e) {
+            const err = e as AxiosError;
+            const data = err.response.data as IMessage;
+            dispatch(alertActions.setError(data.message))
+            return rejectWithValue(data)
+        }
+    }
+);
+
+const enableUser = createAsyncThunk<void, { userId: string }, { rejectValue: IMessage }>(
+    'userSlice/enableUser',
+    async ({userId}, {rejectWithValue, dispatch}) => {
+        try {
+            await userService.enableUser(userId);
+            dispatch(alertActions.setMessage('User successfully enabled!'))
+        } catch (e) {
+            const err = e as AxiosError;
+            const data = err.response.data as IMessage;
+            dispatch(alertActions.setError(data.message))
+            return rejectWithValue(data)
+        }
+    }
+);
+
 const userSlice = createSlice({
     name: 'userSlice',
     initialState,
@@ -57,16 +89,16 @@ const userSlice = createSlice({
                 state.isLoading = false
             })
 
-            .addCase(updateRoles.fulfilled, state => {
-                state.trigger = !state.trigger
-            })
-
             .addCase(getAll.rejected, state => {
                 state.isLoading = false
             })
 
             .addCase(getAll.pending, state => {
                 state.isLoading = true
+            })
+
+            .addMatcher(isFulfilled(updateRoles, disableUser, enableUser), state => {
+                state.trigger = !state.trigger
             })
     }
 });
@@ -76,7 +108,9 @@ const {reducer: userReducer, actions} = userSlice;
 const userActions = {
     ...actions,
     getAll,
-    updateRoles
+    updateRoles,
+    disableUser,
+    enableUser
 }
 
 export {

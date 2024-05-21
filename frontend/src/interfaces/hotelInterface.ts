@@ -2,5 +2,7 @@ export interface IHotel {
     id: string,
     name: string,
     countryId: string,
-    photosIds: string[]
+    cityId: string,
+    photosIds: string[],
+    enabled: boolean
 }

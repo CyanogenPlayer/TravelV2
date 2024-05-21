@@ -12,6 +12,7 @@ public interface RoomMapper {
 
     @Mappings({
             @Mapping(target = "id", ignore = true),
+            @Mapping(target = "enabled", ignore = true),
             @Mapping(source = "hotelId", target = "hotel")
     })
     Room fromDTO(RoomDTO roomDTO);

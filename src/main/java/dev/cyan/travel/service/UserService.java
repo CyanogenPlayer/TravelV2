@@ -1,8 +1,12 @@
 package dev.cyan.travel.service;
 
+import dev.cyan.travel.DTO.BookingDTO;
 import dev.cyan.travel.DTO.UserDTO;
+import dev.cyan.travel.entity.Booking;
 import dev.cyan.travel.entity.User;
+import dev.cyan.travel.enums.EBookingState;
 import dev.cyan.travel.mapper.UserMapper;
+import dev.cyan.travel.repository.BookingRepository;
 import dev.cyan.travel.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +19,8 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final BookingRepository bookingRepository;
+    private final BookingService bookingService;
 
     public List<UserDTO> getAll() {
         return userRepository
@@ -39,7 +45,25 @@ public class UserService {
         return userMapper.toDTO(modifiedUser);
     }
 
-    public void delete(String id) {
-        userRepository.deleteById(id);
+    public void disable(String id) {
+        User user = userRepository.findById(id).orElseThrow();
+        user.setEnabled(false);
+
+        List<Booking> bookings = bookingRepository.findBookingsByUser(user);
+        for (Booking booking : bookings) {
+            bookingService.updateState(booking.getId(), new BookingDTO(EBookingState.CANCELED.toString()));
+        }
+
+        userRepository.save(user);
     }
+
+    public void enable(String id) {
+        User user = userRepository.findById(id).orElseThrow();
+        user.setEnabled(true);
+        userRepository.save(user);
+    }
+
+//    public void delete(String id) {
+//        userRepository.deleteById(id);
+//    }
 }

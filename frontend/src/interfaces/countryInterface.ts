@@ -1,4 +1,5 @@
 export interface ICountry {
     id: string,
-    name: string
+    name: string,
+    enabled: boolean
 }

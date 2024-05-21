@@ -15,7 +15,8 @@ const HotelsTable: FC<IProp> = ({hotels}) => {
             <tr>
                 <th>ID</th>
                 <th>Name</th>
-                <th>Country</th>
+                <th>Location</th>
+                <th>Enabled</th>
                 <th>Actions</th>
             </tr>
             </thead>

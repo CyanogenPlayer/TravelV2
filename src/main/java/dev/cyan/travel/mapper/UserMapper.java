@@ -17,6 +17,7 @@ public interface UserMapper {
 
     @Mappings({
             @Mapping(target = "id", ignore = true),
+            @Mapping(target = "enabled", ignore = true),
             @Mapping(target = "password", ignore = true)
     })
     User fromDTO(UserDTO userDTO);

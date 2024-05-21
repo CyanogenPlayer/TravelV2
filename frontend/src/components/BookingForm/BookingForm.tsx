@@ -84,7 +84,7 @@ const BookingForm: FC<IProp> = ({show, setShow, roomNumber, price, booking, subm
             setBookSince(new Date().toISOString().substring(0, 10))
             setBookTo(getTomorrowDate())
         }
-    }, [show, setValue, bookedSince, bookedTo, booking]);
+    }, [show, setValue, bookedSince, bookedTo, booking, reset]);
 
     return (
         <Modal show={show} onHide={handleClose}>

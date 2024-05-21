@@ -35,11 +35,14 @@ const RoomCard: FC<IProp> = ({room}) => {
                 <Card.Body>
                     <Card.Subtitle className="mb-2">capacity: {capacity}</Card.Subtitle>
                     <Card.Subtitle className="mb-2">{price}&#8372; - per night</Card.Subtitle>
-                    <Button variant="primary" disabled={!isAuth} onClick={handleShowBookingForm}>Book</Button>
+                    <Button variant="primary" disabled={!isAuth || !user.enabled}
+                            onClick={handleShowBookingForm}>Book</Button>
                 </Card.Body>
             </Card>
-            <BookingForm show={showBookingForm} setShow={setShowBookingForm} roomNumber={roomNumber} price={price}
-                         submit={book}/>
+            {!isAuth || !user.enabled &&
+                <BookingForm show={showBookingForm} setShow={setShowBookingForm} roomNumber={roomNumber} price={price}
+                             submit={book}/>
+            }
         </>
     );
 };

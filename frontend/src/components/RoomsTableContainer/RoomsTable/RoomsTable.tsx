@@ -18,6 +18,7 @@ const RoomsTable: FC<IProp> = ({rooms}) => {
                 <th>Room Number</th>
                 <th>Capacity</th>
                 <th>Price</th>
+                <th>Enabled</th>
                 <th>Actions</th>
             </tr>
             </thead>

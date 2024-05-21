@@ -18,5 +18,8 @@ public class HotelDTO {
     private String name;
     @NotBlank
     private String countryId;
+    @NotBlank
+    private String cityId;
     private Set<String> photosIds;
+    private Boolean enabled;
 }

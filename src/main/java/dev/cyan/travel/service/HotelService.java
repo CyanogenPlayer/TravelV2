@@ -2,14 +2,9 @@ package dev.cyan.travel.service;
 
 import dev.cyan.travel.DTO.HotelDTO;
 import dev.cyan.travel.DTO.RoomDTO;
-import dev.cyan.travel.entity.Country;
-import dev.cyan.travel.entity.Hotel;
-import dev.cyan.travel.entity.Room;
-import dev.cyan.travel.exception.CannotDeleteException;
+import dev.cyan.travel.entity.*;
 import dev.cyan.travel.mapper.HotelMapper;
-import dev.cyan.travel.repository.CountryRepository;
-import dev.cyan.travel.repository.HotelRepository;
-import dev.cyan.travel.repository.RoomRepository;
+import dev.cyan.travel.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +21,16 @@ public class HotelService {
     private final RoomRepository roomRepository;
     private final HotelMapper hotelMapper;
     private final RoomService roomService;
+    private final CityRepository cityRepository;
+    private final PhotoRepository photoRepository;
+
+    public List<HotelDTO> getAllEnabled() {
+        return hotelRepository
+                .findHotelsByEnabledIsTrue()
+                .stream()
+                .map(hotelMapper::toDTO)
+                .toList();
+    }
 
     public List<HotelDTO> getAll() {
         return hotelRepository
@@ -43,13 +48,16 @@ public class HotelService {
 
     public HotelDTO create(HotelDTO hotelDTO) {
         countryRepository.findById(hotelDTO.getCountryId()).orElseThrow();
+        cityRepository.findById(hotelDTO.getCityId()).orElseThrow();
         Hotel hotel = hotelMapper.fromDTO(hotelDTO);
+        hotel.setEnabled(true);
         Hotel createdHotel = hotelRepository.save(hotel);
         return hotelMapper.toDTO(createdHotel);
     }
 
     public HotelDTO update(String id, HotelDTO hotelDTO) {
         countryRepository.findById(hotelDTO.getCountryId()).orElseThrow();
+        cityRepository.findById(hotelDTO.getCityId()).orElseThrow();
         Hotel hotel = hotelRepository
                 .findById(id)
                 .orElseThrow();
@@ -58,16 +66,49 @@ public class HotelService {
         return hotelMapper.toDTO(modifiedHotel);
     }
 
-    public void delete(String id) throws CannotDeleteException {
+    public void disable(String id) {
+        Hotel hotel = hotelRepository.findById(id).orElseThrow();
+        hotel.setEnabled(false);
+
+        List<Room> rooms = roomRepository.findRoomsByHotel(hotel);
+        for (Room room : rooms) {
+            roomService.disable(room.getId());
+        }
+
+        hotelRepository.save(hotel);
+    }
+
+    public void enable(String id) {
+        Hotel hotel = hotelRepository.findById(id).orElseThrow();
+        hotel.setEnabled(true);
+        hotelRepository.save(hotel);
+    }
+
+    public void delete(String id) {
         Hotel hotel = hotelRepository
                 .findById(id)
                 .orElseThrow();
+
         List<Room> rooms = roomRepository.findRoomsByHotel(hotel);
-        if (rooms.isEmpty()) {
-            hotelRepository.deleteById(id);
-        } else {
-            throw new CannotDeleteException("Cannot delete this hotel because there are rooms in this hotel");
+        for (Room room : rooms) {
+            roomService.delete(room.getId());
         }
+
+        for (Photo photo: hotel.getPhotos()) {
+            photoRepository.deleteById(photo.getId());
+        }
+
+        hotelRepository.deleteById(id);
+    }
+
+    public List<HotelDTO> getEnabledHotelsByCountryId(String id) {
+        Country country = countryRepository.findById(id).orElseThrow();
+        List<Hotel> hotelsByCountry = hotelRepository
+                .findHotelsByEnabledIsTrueAndCountry(country);
+        return hotelsByCountry
+                .stream()
+                .map(hotelMapper::toDTO)
+                .toList();
     }
 
     public List<HotelDTO> getHotelsByCountryId(String id) {
@@ -80,13 +121,37 @@ public class HotelService {
                 .toList();
     }
 
-    public List<HotelDTO> getHotelsWithAvailableRooms(String countryId, LocalDate bookedSince, LocalDate bookedTo, Integer capacity) {
+    public List<HotelDTO> getEnabledHotelsByCityId(String id) {
+        City city = cityRepository.findById(id).orElseThrow();
+        List<Hotel> hotelsByCity = hotelRepository
+                .findHotelsByEnabledIsTrueAndCity(city);
+        return hotelsByCity
+                .stream()
+                .map(hotelMapper::toDTO)
+                .toList();
+    }
+
+    public List<HotelDTO> getHotelsByCityId(String id) {
+        City city = cityRepository.findById(id).orElseThrow();
+        List<Hotel> hotelsByCity = hotelRepository
+                .findHotelsByCity(city);
+        return hotelsByCity
+                .stream()
+                .map(hotelMapper::toDTO)
+                .toList();
+    }
+
+    public List<HotelDTO> getHotelsWithAvailableRooms(String countryId, String cityId, LocalDate bookedSince,
+                                                      LocalDate bookedTo, Integer capacity) {
         List<Hotel> hotels;
-        if (countryId != null) {
+        if (cityId != null) {
+            City city = cityRepository.findById(cityId).orElseThrow();
+            hotels = hotelRepository.findHotelsByEnabledIsTrueAndCity(city);
+        } else if (countryId != null) {
             Country country = countryRepository.findById(countryId).orElseThrow();
-            hotels = hotelRepository.findHotelsByCountry(country);
+            hotels = hotelRepository.findHotelsByEnabledIsTrueAndCountry(country);
         } else {
-            hotels = hotelRepository.findAll();
+            hotels = hotelRepository.findHotelsByEnabledIsTrue();
         }
 
         ArrayList<Hotel> availableHotels = new ArrayList<>();

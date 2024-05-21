@@ -1,4 +1,5 @@
 export * from './bookingValidator'
+export * from './cityValidator'
 export * from './countryValidator'
 export * from './hotelValidator'
 export * from './roomValidator'

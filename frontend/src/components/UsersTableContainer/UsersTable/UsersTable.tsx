@@ -17,6 +17,7 @@ const UsersTable: FC<IProp> = ({users}) => {
                 <th>Username</th>
                 <th>Email</th>
                 <th>Roles</th>
+                <th>Enabled</th>
                 <th>Actions</th>
             </tr>
             </thead>

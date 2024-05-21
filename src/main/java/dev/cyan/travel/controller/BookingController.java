@@ -55,7 +55,7 @@ public class BookingController {
         String hotelName = hotelService.getById(
                 roomService.getById(bookingDTO.getRoomId()).get().getHotelId()).get().getName();
 
-        mailService.send(email, "Your booking for room " + roomNumber + " in " + hotelName + " status is - <b>"
+        mailService.send(email, "The status of your booking for room " + roomNumber + " in " + hotelName + " is - <b>"
                 + bookingDTO.getState() + "</b>");
         return ResponseEntity.ok(optionalBookingDTO);
     }
