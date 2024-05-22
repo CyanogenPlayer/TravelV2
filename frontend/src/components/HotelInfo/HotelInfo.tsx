@@ -3,19 +3,20 @@ import {FC, useEffect} from "react";
 import {useSearchParams} from "react-router-dom";
 
 import {useAppDispatch, useAppSelector} from "../../hooks";
-import {countryActions, hotelActions, roomActions} from "../../redux";
+import {cityActions, countryActions, hotelActions, roomActions} from "../../redux";
 import {CountryBadge} from "../CountriesBadgesListContainer";
 import {RoomsCardsList} from "../RoomsCardsListContainer";
 import {IBooking} from "../../interfaces";
 import {SearchInPeriodForm} from "../SearchInPeriodForm";
 import {baseURL, urls} from "../../constants";
+import {CityBadge} from "../CityBadge";
 
 interface IProp {
     hotelId: string
 }
 
 const HotelInfo: FC<IProp> = ({hotelId}) => {
-    const {hotels: {hotel}, rooms: {rooms}, countries: {country}} =
+    const {hotels: {hotel}, rooms: {rooms}, countries: {country}, cities: {city}} =
         useAppSelector(state => state);
     const [query, setQuery] = useSearchParams();
     const dispatch = useAppDispatch();
@@ -56,6 +57,7 @@ const HotelInfo: FC<IProp> = ({hotelId}) => {
     useEffect(() => {
         if (hotel) {
             dispatch(countryActions.getById({countryId: hotel.countryId}))
+            dispatch(cityActions.getById({cityId: hotel.cityId}))
         }
     }, [dispatch, hotel]);
 
@@ -76,6 +78,7 @@ const HotelInfo: FC<IProp> = ({hotelId}) => {
                             <h4>{hotel.name}</h4>
                             <h6>id: {hotel.id}</h6>
                             {country && <CountryBadge id={country.id} name={country.name}/>}
+                            {city && <CityBadge id={city.id} name={city.name}/>}
                         </div>
                         {hotel.photosIds.length > 0 &&
                             <Carousel className="col-12 col-md-7 my-2 my-md-0 bg-dark z-0">

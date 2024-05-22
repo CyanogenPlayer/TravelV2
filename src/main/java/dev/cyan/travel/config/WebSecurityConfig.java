@@ -59,6 +59,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/api-docs/**").permitAll()
                         .requestMatchers(
                                 "/bookings/**",
+                                "/cities/**",
                                 "/countries/**",
                                 "/hotels/**",
                                 "/photos/**",

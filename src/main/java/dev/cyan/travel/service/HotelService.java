@@ -46,24 +46,34 @@ public class HotelService {
                 .map(hotelMapper::toDTO);
     }
 
-    public HotelDTO create(HotelDTO hotelDTO) {
+    public Optional<HotelDTO> create(HotelDTO hotelDTO) {
         countryRepository.findById(hotelDTO.getCountryId()).orElseThrow();
-        cityRepository.findById(hotelDTO.getCityId()).orElseThrow();
-        Hotel hotel = hotelMapper.fromDTO(hotelDTO);
-        hotel.setEnabled(true);
-        Hotel createdHotel = hotelRepository.save(hotel);
-        return hotelMapper.toDTO(createdHotel);
+        City city = cityRepository.findById(hotelDTO.getCityId()).orElseThrow();
+
+        if (city.getCountry().getId().equals(hotelDTO.getCountryId())) {
+            Hotel hotel = hotelMapper.fromDTO(hotelDTO);
+            hotel.setEnabled(true);
+            Hotel createdHotel = hotelRepository.save(hotel);
+            return Optional.of(hotelMapper.toDTO(createdHotel));
+        }
+
+        return Optional.empty();
     }
 
-    public HotelDTO update(String id, HotelDTO hotelDTO) {
+    public Optional<HotelDTO> update(String id, HotelDTO hotelDTO) {
         countryRepository.findById(hotelDTO.getCountryId()).orElseThrow();
-        cityRepository.findById(hotelDTO.getCityId()).orElseThrow();
-        Hotel hotel = hotelRepository
-                .findById(id)
-                .orElseThrow();
-        hotelMapper.updateHotel(hotel, hotelDTO);
-        Hotel modifiedHotel = hotelRepository.save(hotel);
-        return hotelMapper.toDTO(modifiedHotel);
+        City city = cityRepository.findById(hotelDTO.getCityId()).orElseThrow();
+
+        if (city.getCountry().getId().equals(hotelDTO.getCountryId())) {
+            Hotel hotel = hotelRepository
+                    .findById(id)
+                    .orElseThrow();
+            hotelMapper.updateHotel(hotel, hotelDTO);
+            Hotel modifiedHotel = hotelRepository.save(hotel);
+            return Optional.of(hotelMapper.toDTO(modifiedHotel));
+        }
+
+        return Optional.empty();
     }
 
     public void disable(String id) {
@@ -94,7 +104,7 @@ public class HotelService {
             roomService.delete(room.getId());
         }
 
-        for (Photo photo: hotel.getPhotos()) {
+        for (Photo photo : hotel.getPhotos()) {
             photoRepository.deleteById(photo.getId());
         }
 

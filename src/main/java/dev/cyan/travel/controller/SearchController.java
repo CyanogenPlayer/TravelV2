@@ -67,6 +67,9 @@ public class SearchController {
                             LocalDate.parse(bookedTo, formatter),
                             capacity));
         }
+        if (cityId != null) {
+            return ResponseEntity.ok(hotelService.getEnabledHotelsByCityId(cityId));
+        }
         if (countryId != null) {
             return ResponseEntity.ok(hotelService.getEnabledHotelsByCountryId(countryId));
         }

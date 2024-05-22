@@ -235,15 +235,17 @@ const deletePhoto = createAsyncThunk<void, { hotelId: string, photoId: string },
 
 const getHotelsWithAvailableRooms = createAsyncThunk<IHotel[], {
     countryId: string,
+    cityId: string,
     bookedSince: string,
     bookedTo: string,
     capacity: string
 }, { rejectValue: IMessage }>(
     'hotelSlice/getHotelsWithAvailableRooms',
-    async ({countryId, bookedSince, bookedTo, capacity}, {rejectWithValue}) => {
+    async ({countryId, cityId, bookedSince, bookedTo, capacity}, {rejectWithValue}) => {
         try {
             const {data} = await hotelService.getHotelsWithAvailableRooms(
                 countryId,
+                cityId,
                 bookedSince,
                 bookedTo,
                 capacity)

@@ -38,6 +38,7 @@ const HotelForm: FC<IProp> = ({show, setShow, submit, hotel}) => {
     const setCitiesForSelect = useCallback((countryId: string) => {
         const filter = citiesForManagement.filter(city => city.countryId === countryId);
         setCities(filter)
+        setValue('cityId', filter[0].id)
         setSelectedCityId(filter[0].id)
     }, [citiesForManagement]);
 
@@ -91,7 +92,6 @@ const HotelForm: FC<IProp> = ({show, setShow, submit, hotel}) => {
                         <Form.Label>City</Form.Label>
                         <Form.Select
                             value={selectedCityId}
-                            // defaultValue={hotel ? hotel.cityId : 0}
                             {...register('cityId', {onChange: e => setSelectedCityId(e.target.value)})}
                         >
                             {cities && cities.map(city =>

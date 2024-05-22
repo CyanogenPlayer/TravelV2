@@ -13,6 +13,7 @@ const HotelsPage = () => {
     const navigate = useNavigate();
 
     const countryId = query.get('countryId');
+    const cityId = query.get('cityId');
     const bookedSince = query.get('bookedSince');
     const bookedTo = query.get('bookedTo');
     const capacity = query.get('capacity');
@@ -34,7 +35,7 @@ const HotelsPage = () => {
     }
 
     const resetHotels = () => {
-        if (countryId != null) {
+        if (countryId != null || cityId != null) {
             setQuery(prev => {
                 prev.delete('bookedSince')
                 prev.delete('bookedTo')
@@ -47,8 +48,8 @@ const HotelsPage = () => {
     }
 
     useEffect(() => {
-        dispatch(hotelActions.getHotelsWithAvailableRooms({countryId, bookedSince, bookedTo, capacity}))
-    }, [dispatch, countryId, bookedSince, bookedTo, capacity]);
+        dispatch(hotelActions.getHotelsWithAvailableRooms({countryId, cityId, bookedSince, bookedTo, capacity}))
+    }, [dispatch, countryId, cityId, bookedSince, bookedTo, capacity]);
 
     return (
         <div>

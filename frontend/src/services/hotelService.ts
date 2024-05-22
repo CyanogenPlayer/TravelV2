@@ -22,10 +22,11 @@ const hotelService = {
     deletePhoto: (hotelId: string, photoId: string): IRes<void> => axiosService.delete(
         urls.hotels.deletePhoto(hotelId), {params: {photoId}}),
     getHotelsWithAvailableRooms:
-        (countryId: string, bookedSince: string, bookedTo: string, capacity: string): IRes<IHotel[]> =>
+        (countryId: string, cityId: string, bookedSince: string, bookedTo: string, capacity: string): IRes<IHotel[]> =>
             axiosService.get(urls.search.hotelsWithAvailableRooms, {
                 params: {
                     countryId,
+                    cityId,
                     bookedSince,
                     bookedTo,
                     capacity

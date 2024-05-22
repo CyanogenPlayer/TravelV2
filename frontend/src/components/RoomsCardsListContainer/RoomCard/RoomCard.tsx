@@ -39,7 +39,7 @@ const RoomCard: FC<IProp> = ({room}) => {
                             onClick={handleShowBookingForm}>Book</Button>
                 </Card.Body>
             </Card>
-            {!isAuth || !user.enabled &&
+            {(isAuth && user.enabled) &&
                 <BookingForm show={showBookingForm} setShow={setShowBookingForm} roomNumber={roomNumber} price={price}
                              submit={book}/>
             }

@@ -12,8 +12,8 @@ interface IProp {
 }
 
 const HotelCard: FC<IProp> = ({hotel}) => {
-    const {countries} = useAppSelector(state => state.countries);
-    const [countryName, setCountryName] = useState<string>(null)
+    const {countries: {countries}, cities: {cities}} = useAppSelector(state => state);
+    const [location, setLocation] = useState<string>(null)
     const navigate = useNavigate();
     const [query] = useSearchParams();
 
@@ -21,7 +21,7 @@ const HotelCard: FC<IProp> = ({hotel}) => {
     const bookedTo = query.get('bookedTo');
     const capacity = query.get('capacity');
 
-    const {id, name, countryId, photosIds} = hotel;
+    const {id, name, countryId, cityId, photosIds} = hotel;
 
     const navigateToHotelInfo = () => {
         let url = `${id}`;
@@ -38,13 +38,14 @@ const HotelCard: FC<IProp> = ({hotel}) => {
     }
 
     useEffect(() => {
-        if (countries.length) {
+        if (countries.length && cities.length) {
             const country = countries.find(country => country.id === countryId)
-            if (country) {
-                setCountryName(country.name)
+            const city = cities.find(city => city.id === cityId);
+            if (country && city) {
+                setLocation(`${city.name}, ${country.name}`)
             }
         }
-    }, [countries, countryId]);
+    }, [countries, cities, countryId, cityId]);
 
     return (
         <Card border="primary" className={css.HotelCard} onClick={navigateToHotelInfo}>
@@ -59,7 +60,7 @@ const HotelCard: FC<IProp> = ({hotel}) => {
                 <Card.Text style={{fontSize: 'smaller'}}>id: {id}</Card.Text>
             </Card.Header>
             <Card.Body>
-                <Card.Subtitle>{countryName ? countryName : 'Country not found'}</Card.Subtitle>
+                <Card.Subtitle>{location ? location : 'Not found'}</Card.Subtitle>
             </Card.Body>
         </Card>
     );

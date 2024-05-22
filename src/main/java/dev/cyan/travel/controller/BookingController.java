@@ -44,12 +44,10 @@ public class BookingController {
             return ResponseEntity.badRequest().body(new MessageResponse("Booking isn't available for those dates"));
         }
 
-        return sendMessageAndGetResponse(optionalBookingDTO);
+        return sendMessageAndGetResponse(optionalBookingDTO.get());
     }
 
-    private ResponseEntity<?> sendMessageAndGetResponse(Optional<BookingDTO> optionalBookingDTO) {
-        BookingDTO bookingDTO = optionalBookingDTO.get();
-
+    private ResponseEntity<BookingDTO> sendMessageAndGetResponse(BookingDTO bookingDTO) {
         String email = userService.getById(bookingDTO.getUserId()).get().getEmail();
         int roomNumber = roomService.getById(bookingDTO.getRoomId()).get().getRoomNumber();
         String hotelName = hotelService.getById(
@@ -57,7 +55,7 @@ public class BookingController {
 
         mailService.send(email, "The status of your booking for room " + roomNumber + " in " + hotelName + " is - <b>"
                 + bookingDTO.getState() + "</b>");
-        return ResponseEntity.ok(optionalBookingDTO);
+        return ResponseEntity.ok(bookingDTO);
     }
 
     @PatchMapping("/{id}")
@@ -67,7 +65,7 @@ public class BookingController {
         if (optionalBookingDTO.isEmpty()) {
             return ResponseEntity.badRequest().body(new MessageResponse("Booking isn't available for those dates"));
         }
-        return ResponseEntity.ok(optionalBookingDTO);
+        return ResponseEntity.ok(optionalBookingDTO.get());
     }
 
     @PatchMapping("/{id}/state")
@@ -80,7 +78,7 @@ public class BookingController {
                             "booking for this room with non CANCELED status"));
         }
 
-        return sendMessageAndGetResponse(optionalBookingDTO);
+        return sendMessageAndGetResponse(optionalBookingDTO.get());
     }
 
     @DeleteMapping("/{id}")
@@ -94,8 +92,11 @@ public class BookingController {
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> cancelBooking(@PathVariable String id) {
         Optional<BookingDTO> optionalBookingDTO = bookingService.updateState(id, new BookingDTO(EBookingState.CANCELED.toString()));
+        if (optionalBookingDTO.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
-        return sendMessageAndGetResponse(optionalBookingDTO);
+        return sendMessageAndGetResponse(optionalBookingDTO.get());
     }
 
     @GetMapping("/list/{userId}")

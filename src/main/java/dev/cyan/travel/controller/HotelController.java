@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @RestController
@@ -45,14 +46,24 @@ public class HotelController {
 
     @PostMapping
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<HotelDTO> create(@Valid @RequestBody HotelDTO hotelDTO) {
-        return ResponseEntity.ok(hotelService.create(hotelDTO));
+    public ResponseEntity<?> create(@Valid @RequestBody HotelDTO hotelDTO) {
+        Optional<HotelDTO> optionalHotelDTO = hotelService.create(hotelDTO);
+        if (optionalHotelDTO.isEmpty()) {
+            return ResponseEntity.badRequest().body(new MessageResponse("City in this country doesn't exist"));
+        }
+
+        return ResponseEntity.ok(optionalHotelDTO.get());
     }
 
     @PatchMapping("/{id}")
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<HotelDTO> update(@PathVariable String id, @Valid @RequestBody HotelDTO hotelDTO) {
-        return ResponseEntity.ok(hotelService.update(id, hotelDTO));
+    public ResponseEntity<?> update(@PathVariable String id, @Valid @RequestBody HotelDTO hotelDTO) {
+        Optional<HotelDTO> optionalHotelDTO = hotelService.update(id, hotelDTO);
+        if (optionalHotelDTO.isEmpty()) {
+            return ResponseEntity.badRequest().body(new MessageResponse("City in this country doesn't exist"));
+        }
+
+        return ResponseEntity.ok(optionalHotelDTO.get());
     }
 
     @PatchMapping("/{id}/disable")
