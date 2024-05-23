@@ -55,16 +55,16 @@ const BookingDetailsModal: FC<IProp> = ({show, setShow, booking}) => {
                         <p>ID: {booking.id}</p>
                         <p>State: {booking.state}</p>
                         <p>Country:{' '}
-                            <CardLink
-                                onClick={() => navigate(`/hotels?countryId=${country.id}`)}>{country.name}</CardLink>
+                            <CardLink onClick={() => navigate(`/hotels?countryId=${country.id}`)}
+                                      style={{cursor: 'pointer'}}>{country.name}</CardLink>
                         </p>
                         <p>City:{' '}
-                            <CardLink
-                                onClick={() => navigate(`/hotels?cityId=${city.id}`)}>{city.name}</CardLink>
+                            <CardLink onClick={() => navigate(`/hotels?cityId=${city.id}`)}
+                                      style={{cursor: 'pointer'}}>{city.name}</CardLink>
                         </p>
                         <p>Hotel:{' '}
-                            <CardLink
-                                onClick={() => navigate(`/hotels/${hotel.id}`)}>{hotel.name}</CardLink>
+                            <CardLink onClick={() => navigate(`/hotels/${hotel.id}`)}
+                                      style={{cursor: 'pointer'}}>{hotel.name}</CardLink>
                         </p>
                         <p>Room: {room.roomNumber}</p>
                         {user && roles.includes(ERole.ROLE_MANAGER) && <p>User: {user.username}</p>}
