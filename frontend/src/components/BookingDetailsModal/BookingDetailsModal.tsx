@@ -3,6 +3,8 @@ import {Dispatch, FC, SetStateAction, useEffect, useState} from "react";
 
 import {IBooking, ICountry, IHotel, IRoom, IUser} from "../../interfaces";
 import {countryService, hotelService, roomService, userService} from "../../services";
+import {useAppSelector} from "../../hooks";
+import {ERole} from "../../enums";
 
 interface IProp {
     show: boolean,
@@ -11,6 +13,7 @@ interface IProp {
 }
 
 const BookingDetailsModal: FC<IProp> = ({show, setShow, booking}) => {
+    const {user: {roles}} = useAppSelector(state => state.auth);
     const [country, setCountry] = useState<ICountry>(null)
     const [hotel, setHotel] = useState<IHotel>(null)
     const [room, setRoom] = useState<IRoom>(null)
@@ -19,9 +22,11 @@ const BookingDetailsModal: FC<IProp> = ({show, setShow, booking}) => {
     useEffect(() => {
         if (show) {
             roomService.getById(booking.roomId).then(({data}) => setRoom(data))
-            userService.getById(booking.userId).then(({data}) => setUser(data))
+            if (roles.includes(ERole.ROLE_MANAGER)) {
+                userService.getById(booking.userId).then(({data}) => setUser(data))
+            }
         }
-    }, [show, booking]);
+    }, [show, booking, roles]);
 
     useEffect(() => {
         if (room) {
@@ -40,21 +45,21 @@ const BookingDetailsModal: FC<IProp> = ({show, setShow, booking}) => {
             <Modal.Header closeButton>
                 <Modal.Title>Details of booking</Modal.Title>
             </Modal.Header>
-                <Modal.Body>
-                    {country && hotel && room && user &&
-                        <>
-                            <p>ID: {booking.id}</p>
-                            <p>State: {booking.state}</p>
-                            <p>Country: {country.name}</p>
-                            <p>Hotel: {hotel.name}</p>
-                            <p>Room: {room.roomNumber}</p>
-                            <p>User: {user.username}</p>
-                            <p>Booked Since: {booking.bookedSince.toString()}</p>
-                            <p>Booked To: {booking.bookedTo.toString()}</p>
-                            <p>Price: {booking.price}&#8372;</p>
-                        </>
-                    }
-                </Modal.Body>
+            <Modal.Body>
+                {country && hotel && room &&
+                    <>
+                        <p>ID: {booking.id}</p>
+                        <p>State: {booking.state}</p>
+                        <p>Country: {country.name}</p>
+                        <p>Hotel: {hotel.name}</p>
+                        <p>Room: {room.roomNumber}</p>
+                        {(user && roles.includes(ERole.ROLE_MANAGER)) && <p>User: {user.username}</p>}
+                        <p>Booked Since: {booking.bookedSince.toString()}</p>
+                        <p>Booked To: {booking.bookedTo.toString()}</p>
+                        <p>Price: {booking.price}&#8372;</p>
+                    </>
+                }
+            </Modal.Body>
         </Modal>
     );
 };
