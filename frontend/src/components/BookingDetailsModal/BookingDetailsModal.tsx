@@ -1,10 +1,11 @@
-import {Modal} from "react-bootstrap";
+import {CardLink, Modal} from "react-bootstrap";
 import {Dispatch, FC, SetStateAction, useEffect, useState} from "react";
 
-import {IBooking, ICountry, IHotel, IRoom, IUser} from "../../interfaces";
-import {countryService, hotelService, roomService, userService} from "../../services";
+import {IBooking, ICity, ICountry, IHotel, IRoom, IUser} from "../../interfaces";
+import {cityService, countryService, hotelService, roomService, userService} from "../../services";
 import {useAppSelector} from "../../hooks";
 import {ERole} from "../../enums";
+import {useNavigate} from "react-router-dom";
 
 interface IProp {
     show: boolean,
@@ -15,9 +16,11 @@ interface IProp {
 const BookingDetailsModal: FC<IProp> = ({show, setShow, booking}) => {
     const {user: {roles}} = useAppSelector(state => state.auth);
     const [country, setCountry] = useState<ICountry>(null)
+    const [city, setCity] = useState<ICity>(null)
     const [hotel, setHotel] = useState<IHotel>(null)
     const [room, setRoom] = useState<IRoom>(null)
     const [user, setUser] = useState<IUser>(null)
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (show) {
@@ -36,6 +39,7 @@ const BookingDetailsModal: FC<IProp> = ({show, setShow, booking}) => {
 
     useEffect(() => {
         if (hotel) {
+            cityService.getById(hotel.cityId).then(({data}) => setCity(data))
             countryService.getById(hotel.countryId).then(({data}) => setCountry(data))
         }
     }, [hotel]);
@@ -46,14 +50,24 @@ const BookingDetailsModal: FC<IProp> = ({show, setShow, booking}) => {
                 <Modal.Title>Details of booking</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                {country && hotel && room &&
+                {country && city && hotel && room &&
                     <>
                         <p>ID: {booking.id}</p>
                         <p>State: {booking.state}</p>
-                        <p>Country: {country.name}</p>
-                        <p>Hotel: {hotel.name}</p>
+                        <p>Country:{' '}
+                            <CardLink
+                                onClick={() => navigate(`/hotels?countryId=${country.id}`)}>{country.name}</CardLink>
+                        </p>
+                        <p>City:{' '}
+                            <CardLink
+                                onClick={() => navigate(`/hotels?cityId=${city.id}`)}>{city.name}</CardLink>
+                        </p>
+                        <p>Hotel:{' '}
+                            <CardLink
+                                onClick={() => navigate(`/hotels/${hotel.id}`)}>{hotel.name}</CardLink>
+                        </p>
                         <p>Room: {room.roomNumber}</p>
-                        {(user && roles.includes(ERole.ROLE_MANAGER)) && <p>User: {user.username}</p>}
+                        {user && roles.includes(ERole.ROLE_MANAGER) && <p>User: {user.username}</p>}
                         <p>Booked Since: {booking.bookedSince.toString()}</p>
                         <p>Booked To: {booking.bookedTo.toString()}</p>
                         <p>Price: {booking.price}&#8372;</p>
