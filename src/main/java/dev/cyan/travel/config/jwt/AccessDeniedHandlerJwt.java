@@ -20,7 +20,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class AccessDeniedHandlerJwt implements AccessDeniedHandler {
     private final ObjectMapper objectMapper;
-    private static final Logger logger = LoggerFactory.getLogger(AuthEntryPointJwt.class);
+    private static final Logger logger = LoggerFactory.getLogger(AccessDeniedHandlerJwt.class);
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response,

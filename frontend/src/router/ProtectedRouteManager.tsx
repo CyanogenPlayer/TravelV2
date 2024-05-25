@@ -3,27 +3,29 @@ import {useEffect} from "react";
 import {decodeJwt} from "jose";
 
 import {authService} from "../services";
-import {JwtType} from "../types";
 import {ERole} from "../enums";
+import {useAppSelector} from "../hooks";
 
 const ProtectedRouteManager = () => {
+    const {user} = useAppSelector(state => state.auth);
     const navigate = useNavigate();
+
     const token = authService.getToken();
 
     useEffect(() => {
-        if (token && !decodeJwt<JwtType>(token).roles.includes(ERole.ROLE_MANAGER)) {
-            navigate('/')
+        if (token) {
+            if (user) {
+                if (!user.roles.includes(ERole.ROLE_MANAGER)) {
+                    navigate('/')
+                }
+            }
         }
-    }, [navigate, token]);
+    }, [navigate, token, user]);
 
-
-    if (!token) {
-        return <Navigate to="/"/>
-    } else if (decodeJwt<JwtType>(token).roles.includes(ERole.ROLE_MANAGER) &&
-        Date.now() <= decodeJwt<JwtType>(token).exp * 1000) {
-        return <Outlet/>;
+    if (!token || Date.now() > decodeJwt(token).exp * 1000) {
+        return <Navigate to="/auth"/>
     }
-    return <Navigate to="/"/>
+    return <Outlet/>;
 };
 
 export {

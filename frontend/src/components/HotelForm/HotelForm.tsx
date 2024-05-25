@@ -35,12 +35,13 @@ const HotelForm: FC<IProp> = ({show, setShow, submit, hotel}) => {
         handleClose()
     }
 
-    const setCitiesForSelect = useCallback((countryId: string) => {
+    const setCitiesForSelect = useCallback((countryId: string, cityId?: string) => {
         const filter = citiesForManagement.filter(city => city.countryId === countryId);
         setCities(filter)
-        setValue('cityId', filter[0].id)
-        setSelectedCityId(filter[0].id)
-    }, [citiesForManagement]);
+        const city = cityId ? cityId : filter[0].id
+        setValue('cityId', city)
+        setSelectedCityId(city)
+    }, [citiesForManagement, setValue]);
 
     useEffect(() => {
         if (show) {
@@ -48,8 +49,7 @@ const HotelForm: FC<IProp> = ({show, setShow, submit, hotel}) => {
                 setValue('name', hotel.name)
                 setValue('countryId', hotel.countryId)
                 if (citiesForManagement.length) {
-                    setCities(citiesForManagement.filter(city => city.countryId === hotel.countryId))
-                    setSelectedCityId(hotel.cityId)
+                    setCitiesForSelect(hotel.countryId, hotel.cityId)
                 }
             } else if (countriesForManagement.length) {
                 setValue('countryId', countriesForManagement[0].id)
