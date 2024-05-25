@@ -1,7 +1,11 @@
 package dev.cyan.travel.controller;
 
 import dev.cyan.travel.DTO.BookingDTO;
+import dev.cyan.travel.DTO.RoomDTO;
+import dev.cyan.travel.DTO.UserDTO;
+import dev.cyan.travel.config.jwt.JwtUtils;
 import dev.cyan.travel.enums.EBookingState;
+import dev.cyan.travel.repository.UserRepository;
 import dev.cyan.travel.response.MessageResponse;
 import dev.cyan.travel.service.*;
 import jakarta.validation.Valid;
@@ -11,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +28,7 @@ public class BookingController {
     private final MailService mailService;
     private final RoomService roomService;
     private final HotelService hotelService;
+    private final JwtUtils jwtUtils;
 
     @GetMapping
     @PreAuthorize("hasRole('MANAGER')")
@@ -39,6 +45,12 @@ public class BookingController {
     @PostMapping
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> create(@Valid @RequestBody BookingDTO bookingDTO) {
+        RoomDTO roomDTO = roomService.getById(bookingDTO.getRoomId()).orElseThrow();
+        long between = ChronoUnit.DAYS.between(bookingDTO.getBookedSince(), bookingDTO.getBookedTo());
+        if (bookingDTO.getPrice() != (roomDTO.getPrice() * between)) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Not correct price"));
+        }
+
         Optional<BookingDTO> optionalBookingDTO = bookingService.create(bookingDTO);
         if (optionalBookingDTO.isEmpty()) {
             return ResponseEntity.badRequest().body(new MessageResponse("Booking isn't available for those dates"));
@@ -90,7 +102,15 @@ public class BookingController {
 
     @PostMapping("/{id}/cancel")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> cancelBooking(@PathVariable String id) {
+    public ResponseEntity<?> cancelBooking(@PathVariable String id, @RequestHeader("Authorization") String jwt) {
+        BookingDTO byId = bookingService.getById(id).orElseThrow();
+
+        String username = jwtUtils.getUserNameFromJwtToken(jwt.substring(7));
+        UserDTO user = userService.getByUsername(username).orElseThrow();
+        if (!user.getId().equals(byId.getUserId())) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Can't cancel another user's booking"));
+        }
+
         Optional<BookingDTO> optionalBookingDTO = bookingService.updateState(id, new BookingDTO(EBookingState.CANCELED.toString()));
         if (optionalBookingDTO.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -101,7 +121,13 @@ public class BookingController {
 
     @GetMapping("/list/{userId}")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<List<BookingDTO>> getListForUser(@PathVariable String userId) {
+    public ResponseEntity<?> getListForUser(@PathVariable String userId, @RequestHeader("Authorization") String jwt) {
+        String username = jwtUtils.getUserNameFromJwtToken(jwt.substring(7));
+        UserDTO user = userService.getByUsername(username).orElseThrow();
+        if (!user.getId().equals(userId)) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Can't view another user's bookings"));
+        }
+
         return ResponseEntity.ok(bookingService.getBookingsByUserId(userId));
     }
 }

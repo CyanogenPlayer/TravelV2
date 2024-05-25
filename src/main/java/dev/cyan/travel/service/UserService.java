@@ -63,6 +63,12 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public Optional<UserDTO> getByUsername(String username) {
+        return userRepository
+                .findByUsername(username)
+                .map(userMapper::toDTO);
+    }
+
 //    public void delete(String id) {
 //        userRepository.deleteById(id);
 //    }
