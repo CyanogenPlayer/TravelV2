@@ -10,20 +10,22 @@ interface IProp {
 
 const CitiesTable: FC<IProp> = ({cities}) => {
     return (
-        <Table striped bordered hover responsive>
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Country</th>
-                <th>Enabled</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            {cities && cities.map(city => <CityRow key={city.id} city={city}/>)}
-            </tbody>
-        </Table>
+        <div style={{maxHeight: "340px", overflowY: "auto", overflowX: "auto"}}>
+            <Table striped bordered hover>
+                <thead style={{ position: "sticky", top: "0"}}>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Country</th>
+                    <th>Enabled</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {cities && cities.map(city => <CityRow key={city.id} city={city}/>)}
+                </tbody>
+            </Table>
+        </div>
     );
 };
 

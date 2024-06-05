@@ -10,22 +10,24 @@ interface IProp {
 
 const RoomsTable: FC<IProp> = ({rooms}) => {
     return (
-        <Table striped bordered hover responsive>
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Hotel</th>
-                <th>Room Number</th>
-                <th>Capacity</th>
-                <th>Price</th>
-                <th>Enabled</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            {rooms && rooms.map(room => <RoomRow key={room.id} room={room}/>)}
-            </tbody>
-        </Table>
+        <div style={{maxHeight: "340px", overflowY: "auto", overflowX: "auto"}}>
+            <Table striped bordered hover>
+                <thead style={{ position: "sticky", top: "0"}}>
+                <tr>
+                    <th>ID</th>
+                    <th>Hotel</th>
+                    <th>Room Number</th>
+                    <th>Capacity</th>
+                    <th>Price</th>
+                    <th>Enabled</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {rooms && rooms.map(room => <RoomRow key={room.id} room={room}/>)}
+                </tbody>
+            </Table>
+        </div>
     );
 };
 
