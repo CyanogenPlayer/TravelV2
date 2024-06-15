@@ -5,7 +5,6 @@ import dev.cyan.travel.DTO.RoomDTO;
 import dev.cyan.travel.DTO.UserDTO;
 import dev.cyan.travel.config.jwt.JwtUtils;
 import dev.cyan.travel.enums.EBookingState;
-import dev.cyan.travel.repository.UserRepository;
 import dev.cyan.travel.response.MessageResponse;
 import dev.cyan.travel.service.*;
 import jakarta.validation.Valid;
